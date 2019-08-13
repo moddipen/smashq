@@ -1,0 +1,4 @@
+Remove proxy from https whenever get error npm install time.
+
+npm config rm https-proxy
+npm config rm proxy
