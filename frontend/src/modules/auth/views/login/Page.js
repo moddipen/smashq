@@ -21,16 +21,15 @@ class Page extends React.Component {
     super(props);
 
     this.validator = new Validator({
-      email: "required|email",
+      username: "required",
       password: "required|min:6"
     });
 
     // set the state of the app
     this.state = {
       credentials: {
-        email: "",
-        password: "",
-        remember: false
+        username: "",
+        password: ""
       },
       errors: this.validator.errors
     };
@@ -91,9 +90,8 @@ class Page extends React.Component {
   render() {
     // check if user is authenticated then redirect him to home page
     const props = {
-      email: this.state.credentials.email,
+      username: this.state.credentials.username,
       password: this.state.credentials.password,
-      remember: this.state.credentials.remember,
       errors: this.state.errors,
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit
@@ -103,15 +101,7 @@ class Page extends React.Component {
       <div className="login-container">
         <div className="middle-login">
           <div className="block-flat">
-            <div className="header">
-              <h3 className="text-center">
-                <img
-                  src="/img/logo-beta-200.png"
-                  title="Cynch"
-                  className="main-logo"
-                />
-              </h3>
-            </div>
+            <div className="header" />
             <div>
               <Form {...props} />
             </div>

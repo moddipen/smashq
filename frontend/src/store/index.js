@@ -1,3 +1,3 @@
-// import storeConfig from './config'
+import storeConfig from "./config";
 
-// export default storeConfig()
+export default storeConfig();

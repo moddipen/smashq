@@ -19,6 +19,7 @@ class AsyncRequest {
     if (props === undefined) {
       props = {};
     }
+
     this.type = REQUEST;
     this.action = props.action || "";
     this.method = props.method || "get";

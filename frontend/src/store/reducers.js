@@ -8,30 +8,14 @@ import menu from "../modules/web/store/reducers/menu";
 import quickBar from "../modules/web/store/reducers/quickBar";
 import detail from "../modules/web/store/reducers/detail";
 
-import channels from "../modules/channels/store/reducer";
-import companies from "../modules/companies/store/reducer";
 import profiles from "../modules/profiles/store/reducer";
 import users from "../modules/users/store/reducer";
-import channelMessages from "../modules/channel-messages/store/reducer";
-import unreadMessages from "../modules/unread-messages/store/reducer";
-import threadMessages from "../modules/thread-messages/store/reducer";
-import searchResults from "../modules/chat-search/store/reducer";
-import media from "../modules/media/store/reducer";
-import chatSettings from "../modules/settings/store/reducer";
 
 export default {
   auth,
   data: combineReducers({
-    channels,
-    companies,
     profiles,
-    users,
-    channelMessages,
-    unreadMessages,
-    threadMessages,
-    searchResults,
-    media,
-    chatSettings
+    users
   }),
   ui: combineReducers({
     modal,

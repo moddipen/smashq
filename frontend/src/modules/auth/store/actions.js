@@ -27,7 +27,7 @@ export function authCheck() {
 
 export function authLogin(payload) {
   return AsyncRequest.createSimpleRequestFromObject(AUTH_LOGIN, {
-    path: `/login`,
+    path: `/auth/login`,
     data: payload,
     method: "post",
     additionalSuccessActions: [
@@ -43,7 +43,7 @@ export function authLogin(payload) {
 
 export function authLogout() {
   return AsyncRequest.createSimpleRequestFromObject(AUTH_LOGOUT, {
-    path: `/logout`,
+    path: `/api/users/logout`,
     method: "delete",
     onSuccess: () => {
       push("/login");

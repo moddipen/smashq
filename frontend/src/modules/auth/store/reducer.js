@@ -7,11 +7,6 @@ import {
   AUTH_REFRESH_TOKEN,
   AUTH_RESET_PASSWORD
 } from "./action-types";
-import {
-  SEARCH_RESULT_SUCCESS,
-  REMOVE_SEARCH_SUCCESS
-} from "../../chat-search/store/action.types";
-import { BROWSE_LEAVE_SUCCESS } from "../../channels/store/action-types";
 import { USER_LOAD_SUCCESS } from "../../users/store/action-types";
 
 const initialState = {
@@ -19,11 +14,7 @@ const initialState = {
   isEchoSetup: false,
   checked: false,
   initialLoad: false,
-  userId: 0,
-  companyId: 0,
-  apiKeys: {},
-  chatSearches: [],
-  companyChannels: []
+  userId: 0
 };
 
 const reducer = (state = initialState, { type, payload = null }) => {
@@ -41,12 +32,6 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return resetPassword(state);
     case USER_LOAD_SUCCESS:
       return userLoad(state, payload);
-    case SEARCH_RESULT_SUCCESS:
-      return resetSerches(state, payload);
-    case REMOVE_SEARCH_SUCCESS:
-      return resetSerches(state, payload);
-    case BROWSE_LEAVE_SUCCESS:
-      return setCompanyChannels(state, payload);
     default:
       return state;
   }
@@ -64,14 +49,15 @@ function userLoad(state, payload) {
     isAuthenticated: true,
     checked: true,
     userId: payload.id,
-    companyId: payload.companyId,
-    apiKeys: payload.apiKeys,
-    chatSearches: payload.chatSearches,
     initialLoad: true
   };
 }
 
 function login(state, payload) {
+  localStorage.setItem("access_token", payload.accessToken);
+  HTTP.defaults.headers.common["Authorization"] = `Bearer ${
+    payload.accessToken
+  }`;
   return {
     ...state,
     isAuthenticated: true,
@@ -96,6 +82,7 @@ function checkAuth(state) {
 }
 
 function logout(state) {
+  localStorage.removeItem("access_token");
   return {
     ...state,
     isAuthenticated: false,
@@ -109,20 +96,6 @@ function resetPassword(state) {
     ...state,
     resetPassword: true,
     checked: false
-  };
-}
-
-function resetSerches(state, payload) {
-  return {
-    ...state,
-    chatSearches: payload.chatSearches
-  };
-}
-
-function setCompanyChannels(state, payload) {
-  return {
-    ...state,
-    companyChannels: payload.companyChannels
   };
 }
 

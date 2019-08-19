@@ -1,107 +1,91 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model.js');
+const bcrypt = require("bcrypt-nodejs");
+const jwt = require("jsonwebtoken");
 const privateKey = process.env.JWT_SECRET_KEY;
-const saltRounds = 16;
+const My = require("jm-ez-mysql");
 
 exports.login = (req, res) => {
-    User.findOne({ "username": req.body.username })
-        .then(object => {
-            if (!object) {
-                return res.status(404).send({
-                    message: "User not found! " + req.body.username
-                });
-            } else {
-                bcrypt.compare(req.body.password, object.hashedPassword).then(isValid => {
-                    if (!isValid) {
-                        return res.status(404).send({
-                            message: "Please Enter Valid Password"
-                        });
-                    } else {
-                        jwt.sign({ id: object._id }, privateKey, {expiresIn:'24h'}, function(err, token) {
-                            var obj = JSON.parse(JSON.stringify(object));
-                            obj.token = token;
-                            res.send(obj);
-                        });
-                    }
-                });
+  const condition = "username = ? ";
+  const values = [req.body.username];
+  My.first("users", ["id, password"], condition, values)
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("Incorrect username or password !"));
+      } else {
+        if (!bcrypt.compareSync(req.body.password, object.password)) {
+          return res.send(makeError("Incorrect username or password !"));
+        } else {
+          console.log(object);
+          jwt.sign(
+            { id: object.id },
+            privateKey,
+            { expiresIn: "24h" },
+            (err, token) => {
+              var obj = JSON.parse(JSON.stringify(object));
+              obj.accessToken = token;
+              delete obj.password;
+              return res.send(makeSuccess("User successfully logged in.", obj));
             }
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "User not found with username " + req.body.username
-                });
-            }
-            return res.status(500).send({
-                message: "Error retrieving user with username :" + req.body.username
-            });
-        });
-}
+          );
+        }
+      }
+    })
+    .catch(err => {
+      return res.send(makeError("Incorrect username or password !"));
+    });
+};
 
 exports.register = (req, res) => {
-    bcrypt.hash(req.body.password, saltRounds).then(function (hash) {
-        req.body.hashedPassword = hash;
-        const user = new User(req.body);
-        user.save()
-            .then(data => {
-                res.send(data);
-            }).catch(err => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while creating."
-                });
-            });
+  try {
+    var hash = bcrypt.hashSync(req.body.password);
+    req.body.password = hash;
+    My.insert("users", req.body).then(result => {
+      My.insert("user_profiles", {
+        user_id: result.insertId,
+        description: ""
+      }).then(result => {
+        console.log("Profile inserted");
+      });
+      var replace_var = {
+        username: req.body.username,
+        link: process.env.SERVER_URL + "email/"
+      };
+      send_mail(
+        "emailverification.html",
+        replace_var,
+        req.body.email,
+        "Verify account"
+      );
+      return res.send(makeSuccess("Verification link sent to your email."));
     });
-}
+  } catch (err) {
+    return res.send(makeError("Something went wrong !"));
+  }
+};
 
 exports.forgotpassword = async (req, res) => {
-    try {
-        let data = req.body;
-        let user = await User.findOne({ username: data.username });
-        if (!user) {
-            return res.json({ data: null, is_error: true, message: 'Invalid username' });
-        } else {
-            var replace_var = {
-                username: user.firstname,
-                link: process.env.SERVER_URL + 'passwordreset/' + user._id
-            }
-            await send_mail('forgopassword.html', replace_var, user.email, 'Forgot Password');
-            return res.json({ data: data, is_error: false, message: 'Email sent' });
-        }
-    } catch (error) {
-        return res.json({ data: error, is_error: true, message: 'error while sending email' });
-    }
-}
-
-exports.changePassword = async (req, res) => {
-    try {
-        let data = req.body;
-        let user = await User.findOne({ _id: data.id });
-        if (!user) {
-            return res.json({ data: null, is_error: true, message: 'User not found' });
-        } else {
-            user.hashedPassword = bcrypt.hashSync(data.password, saltRounds);
-            await user.save();
-            return res.json({ data: null, is_error: false, message: 'Password changed successfully' });
-        }
-    } catch (error) {
-        return res.json({ data: error, is_error: true, message: 'error while changing password' });
-    }
-}
-
-exports.updatePassword = async (req, res) => {
-    try {
-        let data = req.body;
-        let user = await User.findOne({ _id: data.id });
-        const password = bcrypt.hashSync(data.password, saltRounds);
-        const checkPassword = bcrypt.compareSync(data.old_password, user.hashedPassword);
-        if (checkPassword) {
-            user.hashedPassword = password;
-            let saved = await user.save()
-            return res.send(send_response(saved, false, "Password updated successfully"));
-        } else {
-            res.send(send_response(null, true, "Old password wrong."));
-        }
-    } catch (error) {
-        return res.send(send_response(null, true, "Could not find User"));
-    }
+  const condition = "email = ? ";
+  const values = [req.body.email];
+  My.first("users", ["id, username, email"], condition, values)
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("Enter valid email address !"));
+      } else {
+        var replace_var = {
+          username: object.username,
+          link: process.env.SERVER_URL + "passwordreset/" + object.id
+        };
+        send_mail(
+          "forgopassword.html",
+          replace_var,
+          object.email,
+          "Forgot Password"
+        );
+        return res.send(
+          makeSuccess("Reset password link sent to your email address.")
+        );
+      }
+    })
+    .catch(err => {
+      return res.send(makeError("Enter valid email address !"));
+    });
 };
