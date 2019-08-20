@@ -162,8 +162,8 @@ const Form = ({
           />
           <div className="form-group form-group-custom">
             By registering you agree to our
-            <a href="#">Terms & condition</a> and
-            <a href="#">privacy policies</a>
+            <a href="#"> Terms & condition</a> and
+            <a href="#"> privacy policies</a>
           </div>
         </form>
       </div>
