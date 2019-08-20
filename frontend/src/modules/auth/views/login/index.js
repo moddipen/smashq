@@ -1,19 +1,23 @@
 // import libs
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 // import components
-import Page from './Page'
-import { authLogin } from '../../store/actions'
+import Page from "./Page";
+import { authLogin, authRegister } from "../../store/actions";
 
 const mapStateToProps = state => {
   return {
-    isAuthenticated: state.auth.isAuthenticated,
-  }
-}
+    isAuthenticated: state.auth.isAuthenticated
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
-    login: credentials => dispatch(authLogin(credentials))
-  }
-}
+    login: credentials => dispatch(authLogin(credentials)),
+    register: credentials => dispatch(authRegister(credentials))
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Page)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Page);

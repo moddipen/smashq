@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
-import moment from "moment";
+import "../../../../assets/css/login.css";
 
 // initialize component
 class Page extends React.Component {
@@ -25,21 +25,35 @@ class Page extends React.Component {
       password: "required|min:6"
     });
 
+    this.registerValidator = new Validator({
+      username: "required",
+      email: "required|email",
+      password: "required|min:6"
+    });
+
     // set the state of the app
     this.state = {
       credentials: {
         username: "",
         password: ""
       },
-      errors: this.validator.errors
+      registerDetails: {
+        username: "",
+        email: "",
+        password: ""
+      },
+      errors: this.validator.errors,
+      registerErrors: this.registerValidator.errors
     };
 
     // bind component with event handlers
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRegisterChange = this.handleRegisterChange.bind(this);
+    this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
   }
 
-  // event to handle input change
+  // event to handle login input change
   handleChange(name, value) {
     const { errors } = this.validator;
 
@@ -54,7 +68,22 @@ class Page extends React.Component {
     });
   }
 
-  // event to handle form submit
+  // event to handle register input change
+  handleRegisterChange(name, value) {
+    const { errors } = this.registerValidator;
+
+    this.setState({
+      registerDetails: { ...this.state.registerDetails, [name]: value }
+    });
+
+    errors.remove(name);
+
+    this.registerValidator.validate(name, value).then(() => {
+      this.setState({ registerErrors: errors });
+    });
+  }
+
+  // event to handle login form submit
   handleSubmit(e) {
     e.preventDefault();
     const { credentials } = this.state;
@@ -65,6 +94,21 @@ class Page extends React.Component {
         this.submit(credentials);
       } else {
         this.setState({ errors });
+      }
+    });
+  }
+
+  // event to handle login form submit
+  handleRegisterSubmit(e) {
+    e.preventDefault();
+    const { registerDetails } = this.state;
+    const { errors } = this.registerValidator;
+
+    this.registerValidator.validateAll(registerDetails).then(success => {
+      if (success) {
+        this.submitRegister(registerDetails);
+      } else {
+        this.setState({ registerErrors: errors });
       }
     });
   }
@@ -86,29 +130,28 @@ class Page extends React.Component {
     // })
   }
 
+  submitRegister(registerDetails) {
+    this.props.register(registerDetails);
+  }
+
   // render component
   render() {
     // check if user is authenticated then redirect him to home page
     const props = {
-      username: this.state.credentials.username,
-      password: this.state.credentials.password,
+      login: this.state.credentials,
+      register: this.state.registerDetails,
       errors: this.state.errors,
+      registerErrors: this.state.registerErrors,
       handleChange: this.handleChange,
-      handleSubmit: this.handleSubmit
+      handleSubmit: this.handleSubmit,
+      handleRegisterChange: this.handleRegisterChange,
+      handleRegisterSubmit: this.handleRegisterSubmit
     };
 
     return (
-      <div className="login-container">
-        <div className="middle-login">
-          <div className="block-flat">
-            <div className="header" />
-            <div>
-              <Form {...props} />
-            </div>
-          </div>
-          <div className="text-center out-links">
-            &copy; {moment().format("Y")}
-          </div>
+      <div className="row">
+        <div className="container custom-container">
+          <Form {...props} />
         </div>
       </div>
     );

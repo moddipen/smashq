@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import axios from "axios";
+import { API_URL } from "../contants/config";
 
-const URL = "http://localhost:5000";
+const URL = API_URL;
 
 axios.defaults.baseURL = URL;
 axios.defaults.headers.common.Accept = "application/json";

@@ -3,6 +3,7 @@ import {
   AUTH_CHECK,
   AUTH_ECHO_SETUP,
   AUTH_LOGIN_SUCCESS,
+  AUTH_REGISTER_SUCCESS,
   AUTH_LOGOUT_SUCCESS,
   AUTH_REFRESH_TOKEN,
   AUTH_RESET_PASSWORD
@@ -22,6 +23,8 @@ const reducer = (state = initialState, { type, payload = null }) => {
     case AUTH_REFRESH_TOKEN:
     case AUTH_LOGIN_SUCCESS:
       return login(state, payload);
+    case AUTH_REGISTER_SUCCESS:
+      return register(state, payload);
     case AUTH_ECHO_SETUP:
       return echoSetup(state, payload);
     case AUTH_CHECK:
@@ -63,6 +66,15 @@ function login(state, payload) {
     isAuthenticated: true,
     checked: true,
     initialLoad: false
+  };
+}
+
+function register(state, payload) {
+  return {
+    ...state,
+    isAuthenticated: false,
+    checked: false,
+    isEchoSetup: false
   };
 }
 

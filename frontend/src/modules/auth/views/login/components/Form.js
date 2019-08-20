@@ -3,106 +3,172 @@ import PropTypes from "prop-types";
 
 const displayName = "LoginForm";
 const propTypes = {
-  username: PropTypes.string,
-  password: PropTypes.string,
+  login: PropTypes.object.isRequired,
+  register: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  registerErrors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired
+  handleChange: PropTypes.func.isRequired,
+  handleRegisterSubmit: PropTypes.func.isRequired,
+  handleRegisterChange: PropTypes.func.isRequired
 };
 
-const Form = ({ username, password, errors, handleChange, handleSubmit }) => (
-  <form className="form" role="form" onSubmit={handleSubmit} noValidate>
-    <div className="content">
-      <h3 className="title">Sign in</h3>
-      <div className="row social-row">
-        <div className="col-md-6 left">
-          <a className="social-button facebook" href="/social/login/facebook">
-            <i className="icons-facebook" />
-            <span>Login with Facebook</span>
-          </a>
-          <a className="social-button google" href="/social/login/google">
-            <i className="icons-google-plus" />
-            <span>Login with Google+</span>
-          </a>
-        </div>
-        <div className="social-separator">
-          <div className="bar" />
-          <span>OR</span>
-        </div>
-        <div className="col-md-6 right">
+const Form = ({
+  login,
+  register,
+  errors,
+  registerErrors,
+  handleChange,
+  handleSubmit,
+  handleRegisterChange,
+  handleRegisterSubmit
+}) => (
+  <div className="login-register-form-section">
+    <ul className="nav nav-tabs" role="tablist">
+      <li className="active">
+        <a href="#login" data-toggle="tab">
+          Login
+        </a>
+      </li>
+      <li>
+        <a href="#register" data-toggle="tab">
+          Register
+        </a>
+      </li>
+    </ul>
+    <div className="tab-content">
+      <div role="tabpanel" className="tab-pane fade in active" id="login">
+        <form className="form-horizontal" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
-            <div className="col-sm-12">
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">
-                    <i className="icons-user" />
-                  </span>
+            <div className="input-all">
+              <input
+                type="text"
+                className={`form-control ${errors.has("username") &&
+                  "is-invalid"}`}
+                name="username"
+                value={login.username || ""}
+                placeholder="Username"
+                onChange={e => handleChange(e.target.name, e.target.value)}
+              />
+              {errors.has("username") && (
+                <div className="invalid-feedback">
+                  {errors.first("username")}
                 </div>
-                <input
-                  type="text"
-                  className={`form-control ${errors.has("username") &&
-                    "is-invalid"}`}
-                  name="username"
-                  value={username || ""}
-                  placeholder="Email"
-                  onChange={e => handleChange(e.target.name, e.target.value)}
-                />
-                {errors.has("username") && (
-                  <div className="invalid-feedback">
-                    {errors.first("username")}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
           <div className="form-group">
-            <div className="col-sm-12">
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">
-                    <i className="icons-lock" />
-                  </span>
+            <div className="input-all">
+              <input
+                type="password"
+                className={`form-control ${errors.has("password") &&
+                  "is-invalid"}`}
+                name="password"
+                placeholder="Password"
+                value={login.password || ""}
+                onChange={e => handleChange(e.target.name, e.target.value)}
+              />
+              {errors.has("password") && (
+                <div className="invalid-feedback">
+                  {errors.first("password")}
                 </div>
-                <input
-                  type="password"
-                  className={`form-control ${errors.has("password") &&
-                    "is-invalid"}`}
-                  name="password"
-                  placeholder="Password"
-                  value={password || ""}
-                  onChange={e => handleChange(e.target.name, e.target.value)}
-                />
-                {errors.has("password") && (
-                  <div className="invalid-feedback">
-                    {errors.first("password")}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
-          <div className="form-group">
-            <div className="row">
-              <div className="col-sm-6">
-                <a href="/password/reset">Forgot password?</a>
-              </div>
+          <input
+            type="submit"
+            value="Login"
+            className="btn btn-success btn-custom"
+          />
+          <div className="form-group form-group-custom">
+            By login in you agree to our
+            <a href="#">Terms & condition</a> and
+            <a href="#">privacy policies</a>
+          </div>
+        </form>
+      </div>
+      <div role="tabpanel" className="tab-pane fade" id="register">
+        <form
+          className="form-horizontal"
+          onSubmit={handleRegisterSubmit}
+          noValidate
+        >
+          <div className="form-group ">
+            <div className="input-all">
+              <input
+                type="text"
+                className={`form-control ${registerErrors.has("username") &&
+                  "is-invalid"}`}
+                name="username"
+                value={register.username || ""}
+                placeholder="Username"
+                onChange={e =>
+                  handleRegisterChange(e.target.name, e.target.value)
+                }
+              />
+              {registerErrors.has("username") && (
+                <div className="invalid-feedback">
+                  {registerErrors.first("username")}
+                </div>
+              )}
             </div>
           </div>
-          <div className="text-right">
-            <a href="/register" className="btn btn-default">
-              Register
-            </a>
-            <button
-              className="btn btn-primary"
-              type="submit"
-              disabled={errors.any()}
-            >
-              Log me in
-            </button>
+
+          <div className="form-group ">
+            <div className="input-all">
+              <input
+                type="text"
+                className={`form-control ${registerErrors.has("email") &&
+                  "is-invalid"}`}
+                name="email"
+                value={register.email || ""}
+                placeholder="Email"
+                onChange={e =>
+                  handleRegisterChange(e.target.name, e.target.value)
+                }
+              />
+              {registerErrors.has("email") && (
+                <div className="invalid-feedback">
+                  {registerErrors.first("email")}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+          <div className="form-group ">
+            <div className="input-all">
+              <input
+                type="password"
+                className={`form-control ${registerErrors.has("password") &&
+                  "is-invalid"}`}
+                name="password"
+                placeholder="Password"
+                value={register.password || ""}
+                onChange={e =>
+                  handleRegisterChange(e.target.name, e.target.value)
+                }
+              />
+              {registerErrors.has("password") && (
+                <div className="invalid-feedback">
+                  {registerErrors.first("password")}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <input
+            type="submit"
+            value="Register"
+            className="btn btn-success btn-custom"
+          />
+          <div className="form-group form-group-custom">
+            By registering you agree to our
+            <a href="#">Terms & condition</a> and
+            <a href="#">privacy policies</a>
+          </div>
+        </form>
       </div>
     </div>
-  </form>
+  </div>
 );
 
 Form.displayName = displayName;

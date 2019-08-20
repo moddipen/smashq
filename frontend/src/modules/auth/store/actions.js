@@ -11,10 +11,10 @@ import {
   AUTH_CHECK,
   AUTH_ECHO_SETUP,
   AUTH_LOGIN,
+  AUTH_REGISTER,
   AUTH_LOGOUT,
   AUTH_RESET_PASSWORD,
-  AUTH_USER,
-  USER_LOAD
+  AUTH_USER
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 import { userLoad } from "../../users/store/actions";
@@ -37,6 +37,17 @@ export function authLogin(payload) {
     ],
     onSuccess: () => {
       push("/");
+    }
+  });
+}
+
+export function authRegister(payload) {
+  return AsyncRequest.createSimpleRequestFromObject(AUTH_REGISTER, {
+    path: `/auth/register`,
+    data: payload,
+    method: "post",
+    onSuccess: () => {
+      push("/login");
     }
   });
 }
