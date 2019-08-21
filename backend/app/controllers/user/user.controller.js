@@ -19,33 +19,39 @@ exports.logout = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   let data = req.body;
   if (data.username) {
-    await My.update(
-      "users",
-      {
-        username: data.username
-      },
-      "id = " + req.user.id
-    )
-      .then(result => {
-        console.log("username updated !!");
-      })
-      .catch(err => {
-        return res.send(send_response(null, true, "Something went wrong !"));
-      });
+    const condition = "username = ? AND id != ?";
+    const values = [req.body.username, req.user.id];
+    My.first("users", ["id"], condition, values).then(object => {
+      if (object) {
+        return res.send(makeError("Username already registered !"));
+      } else {
+        await My.update(
+          "users",
+          {
+            username: data.username
+          },
+          "id = " + req.user.id
+        )
+          .then(result => {
+            console.log("username updated !!");
+          })
+          .catch(err => {
+            return res.send(makeError("Something went wrong !"));
+          });
+      }
+    });
     delete data.username;
   }
   if (!empty(data)) {
     My.update("user_profiles", data, "user_id = " + req.user.id)
       .then(result => {
-        return res.send(
-          send_response(null, false, "Profile updated successfully")
-        );
+        return res.send(makeSuccess("Profile updated successfully."));
       })
       .catch(err => {
-        return res.send(send_response(null, true, "Something went wrong !"));
+        return res.send(makeError("Something went wrong !"));
       });
   } else {
-    return res.send(send_response(null, false, "Profile updated successfully"));
+    return res.send(makeSuccess("Profile updated successfully."));
   }
 };
 
@@ -64,18 +70,14 @@ exports.changePassword = async (req, res) => {
       "id = " + req.user.id
     )
       .then(result => {
-        return res.send(
-          send_response(null, true, "Password changed successfully")
-        );
+        return res.send(makeSuccess("Password changed successfully."));
       })
       .catch(err => {
-        return res.send(send_response(null, true, "Something went wrong !"));
+        return res.send(makeError("Something went wrong !"));
       });
-    return res.send(
-      send_response(null, false, "Password updated successfully")
-    );
+    return res.send(makeSuccess("Password changed successfully."));
   } else {
-    res.send(send_response(null, true, "Old password wrong."));
+    return res.send(makeError("Old password wrong !"));
   }
 };
 
@@ -89,7 +91,7 @@ exports.follows = async (req, res) => {
       if (object) {
         // Unfollow
         My.delete("followers", "id = " + object.id).then(() => {
-          return res.send(send_response(null, false, "Unfollowed !"));
+          return res.send(makeSuccess("Unfollowed !"));
         });
       } else {
         // Follow
@@ -97,12 +99,12 @@ exports.follows = async (req, res) => {
           user_id: req.user.id,
           follow_user_id: req.body.user_id
         }).then(result => {
-          return res.send(send_response(null, false, "Followed !"));
+          return res.send(makeSuccess("Followed !"));
         });
       }
     })
     .catch(err => {
-      return res.send(send_response(null, true, "Something went wrong !"));
+      return res.send(makeError("Something went wrong !"));
     });
 };
 
@@ -111,9 +113,9 @@ exports.search = async (req, res) => {
     `%${req.body.slug}%`
   ])
     .then(results => {
-      return res.send(send_response(results, false, ""));
+      return res.send(makeSuccess(""));
     })
     .catch(err => {
-      return res.send(send_response(null, true, "Something went wrong !"));
+      return res.send(makeError("Something went wrong !"));
     });
 };

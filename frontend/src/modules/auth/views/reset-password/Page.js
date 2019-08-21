@@ -22,7 +22,7 @@ class Page extends React.Component {
 
     this.validator = new Validator({
       password: "required|min:6",
-      password_confirmation: "required|confirmed:password"
+      password_confirmation: "required"
     });
 
     // set the state of the app
