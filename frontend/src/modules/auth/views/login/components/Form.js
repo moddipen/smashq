@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { NavLink } from "redux-first-router-link";
 
 const displayName = "LoginForm";
 const propTypes = {
@@ -80,10 +81,16 @@ const Form = ({
             value="Login"
             className="btn btn-success btn-custom"
           />
+          <div className="form-group">
+            <NavLink to={`/forgot-password`}>Forgot password?</NavLink>
+          </div>
           <div className="form-group form-group-custom">
-            By login in you agree to our
-            <a href="#">Terms & condition</a> and
-            <a href="#">privacy policies</a>
+            <p>
+              {" "}
+              By login in you agree to our
+              <a href="#">Terms & condition</a> and
+              <a href="#">privacy policies</a>
+            </p>
           </div>
         </form>
       </div>

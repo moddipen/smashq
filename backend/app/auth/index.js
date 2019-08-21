@@ -7,12 +7,12 @@ var router = express.Router();
 router.post("/login", auth.validate("login"), auth.login);
 router.post("/register", auth.validate("register"), auth.register);
 router.post(
-  "/forgotpassword",
+  "/forgot-password",
   auth.validate("forgotPassword"),
-  auth.forgotpassword
+  auth.forgotPassword
 );
 router.get("/verify-email/:token", auth.verifyEmail);
-// router.post('/updatepassword', auth.updatePassword);
+router.post("/reset-password", auth.resetPassword);
 // router.post('/changePassword', auth.changePassword);
 // router.get('/users/:Id', auth.findOne);
 // router.put('/auth/:Id', auth.update);

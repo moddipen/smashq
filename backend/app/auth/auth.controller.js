@@ -40,45 +40,60 @@ exports.login = (req, res) => {
 
 exports.register = (req, res) => {
   try {
-    var hash = bcrypt.hashSync(req.body.password);
-    let token = uuidv1();
-    req.body.password = hash;
-    req.body.remember_token = token;
-    My.insert("users", req.body).then(result => {
-      My.insert("user_profiles", {
-        user_id: result.insertId,
-        description: ""
-      }).then(result => {
-        console.log("Profile inserted");
+    const condition = "username = ? ";
+    const values = [req.body.username];
+    My.first("users", ["id"], condition, values).then(object => {
+      if (object) {
+        return res.send(makeError("Username already registered !"));
+      }
+      const condition = "email = ? ";
+      const values = [req.body.email];
+      My.first("users", ["id"], condition, values).then(object => {
+        if (object) {
+          return res.send(makeError("Email already registered !"));
+        }
+        var hash = bcrypt.hashSync(req.body.password);
+        let token = uuidv1();
+        req.body.password = hash;
+        req.body.remember_token = token;
+        My.insert("users", req.body).then(result => {
+          My.insert("user_profiles", {
+            user_id: result.insertId,
+            description: ""
+          }).then(result => {
+            console.log("Profile inserted");
+          });
+          var replace_var = {
+            username: req.body.username,
+            link: process.env.SERVER_URL + "auth/verify-email/" + token
+          };
+          send_mail(
+            "emailverification.html",
+            replace_var,
+            req.body.email,
+            "Verify account"
+          );
+          return res.send(makeSuccess("Verification link sent to your email."));
+        });
       });
-      var replace_var = {
-        username: req.body.username,
-        link: process.env.SERVER_URL + "auth/verify-email/" + token
-      };
-      send_mail(
-        "emailverification.html",
-        replace_var,
-        req.body.email,
-        "Verify account"
-      );
-      return res.send(makeSuccess("Verification link sent to your email."));
     });
   } catch (err) {
     return res.send(makeError("Something went wrong !"));
   }
 };
 
-exports.forgotpassword = async (req, res) => {
+exports.forgotPassword = async (req, res) => {
   const condition = "email = ? ";
   const values = [req.body.email];
-  My.first("users", ["id, username, email"], condition, values)
+  My.first("users", ["id, username, email, remember_token"], condition, values)
     .then(object => {
       if (!object) {
         return res.send(makeError("Enter valid email address !"));
       } else {
         var replace_var = {
           username: object.username,
-          link: process.env.SERVER_URL + "passwordreset/" + object.id
+          link:
+            process.env.CLIENT_URL + "reset-password/" + object.remember_token
         };
         send_mail(
           "forgopassword.html",
@@ -102,7 +117,7 @@ exports.verifyEmail = async (req, res) => {
   My.first("users", ["id"], condition, values)
     .then(object => {
       if (!object) {
-        return res.send(404);
+        return res.sendStatus(404);
       } else {
         let data = {
           remember_token: uuidv1(),
@@ -113,13 +128,38 @@ exports.verifyEmail = async (req, res) => {
             res.redirect(process.env.CLIENT_URL);
           })
           .catch(err => {
-            return res.send(404);
+            return res.sendStatus(404);
           });
       }
     })
     .catch(err => {
-      console.log(err);
       return res.send(makeError("Enter valid email address !"));
+    });
+};
+
+exports.resetPassword = async (req, res) => {
+  const condition = "remember_token = ? ";
+  const values = [req.body.token];
+  My.first("users", ["id"], condition, values)
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("User not found !"));
+      } else {
+        let data = {
+          remember_token: uuidv1(),
+          password: bcrypt.hashSync(req.body.password)
+        };
+        My.update("users", data, "id = " + object.id)
+          .then(result => {
+            return res.send(makeSuccess("Password reseted successfully."));
+          })
+          .catch(err => {
+            return res.send(makeError("Something went wrong !"));
+          });
+      }
+    })
+    .catch(err => {
+      return res.send(makeError("Something went wrong !"));
     });
 };
 

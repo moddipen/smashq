@@ -12,8 +12,9 @@ import {
   AUTH_ECHO_SETUP,
   AUTH_LOGIN,
   AUTH_REGISTER,
-  AUTH_LOGOUT,
+  AUTH_FORGOT_PASSWORD,
   AUTH_RESET_PASSWORD,
+  AUTH_LOGOUT,
   AUTH_USER
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
@@ -52,6 +53,28 @@ export function authRegister(payload) {
   });
 }
 
+export function authForgotPassword(payload) {
+  return AsyncRequest.createSimpleRequestFromObject(AUTH_FORGOT_PASSWORD, {
+    path: `/auth/forgot-password`,
+    data: payload,
+    method: "post",
+    onSuccess: () => {
+      push("/login");
+    }
+  });
+}
+
+export function authResetPassword(payload) {
+  return AsyncRequest.createSimpleRequestFromObject(AUTH_RESET_PASSWORD, {
+    path: `/auth/reset-password`,
+    data: payload,
+    method: "post",
+    onSuccess: () => {
+      push("/login");
+    }
+  });
+}
+
 export function authLogout() {
   return AsyncRequest.createSimpleRequestFromObject(AUTH_LOGOUT, {
     path: `/api/users/logout`,
@@ -60,12 +83,6 @@ export function authLogout() {
       push("/login");
     }
   });
-}
-
-export function authResetPassword() {
-  return {
-    type: AUTH_RESET_PASSWORD
-  };
 }
 
 export const authUser = payload => {
