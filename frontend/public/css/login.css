@@ -1,0 +1,70 @@
+body {
+  overflow-x: hidden;
+}
+.form-group-custom {
+  font-size: 11px !important;
+}
+.custom-container {
+  margin-top: 13% !important;
+  width: 30% !important;
+  border: 1px solid black !important;
+}
+.login-register-form-section {
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.login-register-form-section i {
+  width: 10px;
+}
+
+.login-register-form-section .nav-tabs > li > a {
+  color: black;
+}
+
+.login-register-form-section .nav-tabs > li.active > a {
+  background-color: white;
+  border-bottom-style: solid;
+  border-bottom-width: thick;
+  border-bottom-color: black;
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 0px;
+  color: black;
+}
+
+.login-register-form-section .nav-tabs > li > a,
+.login-register-form-section .nav-tabs > li.active > a {
+  width: 160px;
+  text-align: center;
+  border-radius: 0;
+}
+
+.login-register-form-section .nav-tabs {
+  margin-bottom: 5px;
+}
+
+.login-register-form-section .btn-custom {
+  width: 100%;
+  background-color: black;
+  border-color: black;
+  margin-bottom: 0.5em;
+  border-radius: 25px;
+}
+
+.login-register-form-section .btn-custom:hover {
+  width: 100%;
+  background-color: #000;
+  border-color: #2abb9b;
+}
+
+.login-register-form-section .form-group {
+  padding: 0 20px;
+}
+
+.input-all {
+  border-bottom: 1px solid black;
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 0px;
+}

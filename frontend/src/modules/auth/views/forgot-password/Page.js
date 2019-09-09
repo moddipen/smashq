@@ -81,13 +81,7 @@ class Page extends React.Component {
       handleSubmit: this.handleSubmit
     };
 
-    return (
-      <div className="row">
-        <div className="container custom-container">
-          <Form {...props} />
-        </div>
-      </div>
-    );
+    return <Form {...props} />;
   }
 }
 

@@ -96,16 +96,20 @@ class Container extends React.PureComponent {
 
   render() {
     const page = pages[this.props.page.name];
-    const classes = classNames("content-container", {
-      "full-screen": page && page.fullScreen ? page.fullScreen : false,
-      "not-authenticated": !this.props.isAuthenticated,
-      "show-details": this.props.detail && this.props.detail.name,
-      "show-chat":
-        this.props.menu &&
-        this.props.menu.name &&
-        this.props.menu.name === "chat"
-    });
-    return <div className={classes}>{this.props.children}</div>;
+    // const classes = classNames("content-container", {
+    //   "full-screen": page && page.fullScreen ? page.fullScreen : false,
+    //   "not-authenticated": !this.props.isAuthenticated,
+    //   "show-details": this.props.detail && this.props.detail.name,
+    //   "show-chat":
+    //     this.props.menu &&
+    //     this.props.menu.name &&
+    //     this.props.menu.name === "chat"
+    // });
+    return (
+      <main>
+        <div className="">{this.props.children}</div>
+      </main>
+    );
   }
 }
 

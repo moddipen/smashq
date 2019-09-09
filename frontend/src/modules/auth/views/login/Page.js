@@ -28,7 +28,9 @@ class Page extends React.Component {
     this.registerValidator = new Validator({
       username: "required",
       email: "required|email",
-      password: "required|min:6"
+      password: "required|min:6",
+      terms: "required",
+      age: "required"
     });
 
     // set the state of the app
@@ -40,7 +42,9 @@ class Page extends React.Component {
       registerDetails: {
         username: "",
         email: "",
-        password: ""
+        password: "",
+        terms: "",
+        age: ""
       },
       errors: this.validator.errors,
       registerErrors: this.registerValidator.errors
@@ -106,7 +110,12 @@ class Page extends React.Component {
 
     this.registerValidator.validateAll(registerDetails).then(success => {
       if (success) {
-        this.submitRegister(registerDetails);
+        let data = {
+          username: registerDetails.username,
+          email: registerDetails.email,
+          password: registerDetails.password
+        };
+        this.submitRegister(data);
       } else {
         this.setState({ registerErrors: errors });
       }
@@ -131,6 +140,7 @@ class Page extends React.Component {
   }
 
   submitRegister(registerDetails) {
+    console.log(registerDetails);
     this.props.register(registerDetails);
   }
 
@@ -148,13 +158,7 @@ class Page extends React.Component {
       handleRegisterSubmit: this.handleRegisterSubmit
     };
 
-    return (
-      <div className="row">
-        <div className="container custom-container">
-          <Form {...props} />
-        </div>
-      </div>
-    );
+    return <Form {...props} />;
   }
 }
 

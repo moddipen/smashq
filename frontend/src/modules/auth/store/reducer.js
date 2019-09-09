@@ -6,9 +6,10 @@ import {
   AUTH_REGISTER_SUCCESS,
   AUTH_LOGOUT_SUCCESS,
   AUTH_REFRESH_TOKEN,
-  AUTH_RESET_PASSWORD
+  AUTH_RESET_PASSWORD,
+  GET_CAR_SUCCESS
 } from "./action-types";
-import { USER_LOAD_SUCCESS } from "../../users/store/action-types";
+import { USER_LOAD_SUCCESS, GET_CAR } from "../../users/store/action-types";
 
 const initialState = {
   isAuthenticated: false,
@@ -35,6 +36,8 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return resetPassword(state);
     case USER_LOAD_SUCCESS:
       return userLoad(state, payload);
+    case GET_CAR_SUCCESS:
+      return getCar(state, payload);
     default:
       return state;
   }
@@ -56,11 +59,15 @@ function userLoad(state, payload) {
   };
 }
 
+function getCar(state, payload) {
+  return window._.merge({}, state, payload.entities.cars);
+}
+
 function login(state, payload) {
   localStorage.setItem("access_token", payload.accessToken);
-  HTTP.defaults.headers.common["Authorization"] = `Bearer ${
-    payload.accessToken
-  }`;
+  HTTP.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${payload.accessToken}`;
   return {
     ...state,
     isAuthenticated: true,
@@ -89,7 +96,6 @@ function checkAuth(state) {
       "Authorization"
     ] = `Bearer ${localStorage.getItem("access_token")}`;
   }
-
   return state;
 }
 
@@ -112,5 +118,4 @@ function resetPassword(state) {
 }
 
 export const getAuth = state => state.auth.isAuthenticated;
-
 export default reducer;
