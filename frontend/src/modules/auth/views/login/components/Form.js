@@ -108,7 +108,7 @@ const Form = ({
                     <p>
                       Forgot your{" "}
                       <NavLink to={`/forgot-password`}>
-                        username or password?
+                        password?
                       </NavLink>
                     </p>
                   </div>

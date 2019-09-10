@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { authLogout } from "../../modules/auth/store/actions";
 import { getChatSettingByName } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
+import { NavLink } from "redux-first-router-link";
 
 class Header extends React.PureComponent {
   static propTypes = {
@@ -77,9 +78,9 @@ class Header extends React.PureComponent {
         <div className="header-inner">
           <div className="container d-flex align-items-center">
             <div className="logo">
-              <a href="#">
+              <NavLink to={`/`}>
                 <img src="/img/logo.png" alt="" />
-              </a>
+              </NavLink>
             </div>
             <div className="head-right d-flex align-items-center">
               <div className="head-search-section">
