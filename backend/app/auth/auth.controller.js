@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
-const privateKey = process.env.JWT_SECRET_KEY;
 const My = require("jm-ez-mysql");
 const uuidv1 = require("uuid/v1");
 const { body } = require("express-validator");
+const privateKey = process.env.JWT_SECRET_KEY;
 
 exports.login = (req, res) => {
   const condition = "username = ? ";
@@ -34,7 +34,7 @@ exports.login = (req, res) => {
       }
     })
     .catch(err => {
-      return res.send(makeError("Incorrect username or password !"));
+      return res.send(0("Incorrect username or password !"));
     });
 };
 
@@ -85,6 +85,16 @@ exports.register = (req, res) => {
 exports.forgotPassword = async (req, res) => {
   const condition = "email = ? ";
   const values = [req.body.email];
+
+  //random code generate
+  // const code = "";
+  // const characters = "0123456789";
+  // var charactersLength = characters.length;
+  // for (var i = 0; i < 6; i++) {
+  //   code += characters.charAt(Math.floor(Math.random() * charactersLength));
+  // }
+  const conf_code = "123456";
+
   My.first("users", ["id, username, email, remember_token"], condition, values)
     .then(object => {
       if (!object) {
@@ -92,22 +102,119 @@ exports.forgotPassword = async (req, res) => {
       } else {
         var replace_var = {
           username: object.username,
-          link:
-            process.env.CLIENT_URL + "reset-password/" + object.remember_token
+          link: conf_code
         };
-        send_mail(
-          "forgopassword.html",
-          replace_var,
-          object.email,
-          "Forgot Password"
-        );
-        return res.send(
-          makeSuccess("Reset password link sent to your email address.")
-        );
+        let data = {
+          code: conf_code
+        };
+        My.update("users", data, "id = " + object.id)
+          .then(result => {
+            send_mail(
+              "forgopassword.html",
+              replace_var,
+              object.email,
+              "Verify Email"
+            );
+            let data1 = {
+              email: object.email
+            };
+            return res.send(
+              makeSuccess(
+                "Confirmation code sent to your email address.",
+                data1
+              )
+            );
+          })
+          .catch(err => {
+            return res.send(makeError("Something went wrong !"));
+          });
       }
     })
     .catch(err => {
       return res.send(makeError("Enter valid email address !"));
+    });
+};
+
+exports.resendEmail = async (req, res) => {
+  const condition = "email = ? ";
+  const values = [req.body.email];
+
+  //random code generate
+  // const code = "";
+  // const characters = "0123456789";
+  // var charactersLength = characters.length;
+  // for (var i = 0; i < 6; i++) {
+  //   code += characters.charAt(Math.floor(Math.random() * charactersLength));
+  // }
+  const conf_code = "123456";
+
+  My.first("users", ["id, username, email, remember_token"], condition, values)
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("Enter valid email address !"));
+      } else {
+        var replace_var = {
+          username: object.username,
+          link: conf_code
+        };
+        let data = {
+          code: conf_code
+        };
+        My.update("users", data, "id = " + object.id)
+          .then(result => {
+            send_mail(
+              "forgopassword.html",
+              replace_var,
+              object.email,
+              "Verify Email"
+            );
+            let data1 = {
+              email: object.email
+            };
+            return res.send(
+              makeSuccess(
+                "Confirmation code sent to your email address.",
+                data1
+              )
+            );
+          })
+          .catch(err => {
+            return res.send(makeError("Something went wrong !"));
+          });
+      }
+    })
+    .catch(err => {
+      return res.send(makeError("Enter valid email address !"));
+    });
+};
+
+exports.verifyCode = async (req, res) => {
+  const condition = "code = ? ";
+  const values = [req.body.code];
+  My.first("users", ["id", "remember_token"], condition, values)
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("Enter valid confirmation code !"));
+      } else {
+        let data1 = {
+          code: ""
+        };
+
+        My.update("users", data1, "id = " + object.id)
+          .then(result => {
+            let data = {
+              id: object.id,
+              remember_token: object.remember_token
+            };
+            return res.send(makeSuccess("Code verify successfully !", data));
+          })
+          .catch(err => {
+            return res.send(makeError("Something went wrong !"));
+          });
+      }
+    })
+    .catch(err => {
+      return res.send(makeError("Enter valid confirmation code !"));
     });
 };
 

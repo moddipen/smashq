@@ -23,7 +23,7 @@ const Form = ({ email, errors, handleChange, handleSubmit }) => (
           </div>
           <div className="form-box">
             <form
-              classNameName="form-horizontal"
+              className="form-horizontal"
               onSubmit={handleSubmit}
               noValidate
             >

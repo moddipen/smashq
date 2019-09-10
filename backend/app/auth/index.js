@@ -13,6 +13,8 @@ router.post(
 );
 router.get("/verify-email/:token", auth.verifyEmail);
 router.post("/reset-password", auth.resetPassword);
+router.post("/verify-code", auth.verifyCode);
+router.post("/resend-email", auth.resendEmail);
 // router.post('/changePassword', auth.changePassword);
 // router.get('/users/:Id', auth.findOne);
 // router.put('/auth/:Id', auth.update);

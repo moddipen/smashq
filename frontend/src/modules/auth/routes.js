@@ -19,6 +19,13 @@ const pages = {
       loading: LoadingComponent
     })
   },
+  VERIFY_EMAIL: {
+    path: "/verify-code",
+    component: Loadable({
+      loader: () => import("./views/verify-code/index"),
+      loading: LoadingComponent
+    })
+  },
   RESET_PASSWORD: {
     path: "/reset-password/:token",
     component: Loadable({

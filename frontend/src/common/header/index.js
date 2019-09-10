@@ -5,7 +5,13 @@ import { connect } from "react-redux";
 import { authLogout } from "../../modules/auth/store/actions";
 import { getChatSettingByName } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
-
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle
+} from "reactstrap";
+import DropdownLink from "../dropdown-link/index";
 class Header extends React.PureComponent {
   static propTypes = {
     // text: PropTypes.string.isRequired,
@@ -24,7 +30,8 @@ class Header extends React.PureComponent {
     super(props);
 
     this.state = {
-      dropdownOpen: false
+      expanded: false,
+      dropDownOpen: false
     };
 
     this.toggle = this.toggle.bind(this);
@@ -61,14 +68,15 @@ class Header extends React.PureComponent {
     this.props.logout();
   }
 
-  toggle() {
+  toggle = () => {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen
+      dropDownOpen: !this.state.dropDownOpen
     });
-  }
+  };
 
   render() {
     const hasSubHeaderComponent = this.props.SubHeaderComponent !== null;
+    const access_token = localStorage.getItem("access_token");
     const headerClasses = classNames("header", {
       "has-sub-header": hasSubHeaderComponent
     });
@@ -91,28 +99,31 @@ class Header extends React.PureComponent {
                   />
                 </div>
               </div>
-              <div className="head-profile">
-                <div className="head-profile-box">
-                  <a href="#">
-                    <i className="fa fa-user"></i>
-                  </a>
-                  <div className="head-profile-box-dropdown">
-                    <ul>
-                      <li>
-                        <a href="edit-profile.php">Edit Profile</a>
-                      </li>
-                      <li>
-                        <a href="your-coins.php">
-                          Q <span>400</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">Logout</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+
+              {access_token !== null ? (
+                <Dropdown
+                  className="dropdown profile-dropdown"
+                  isOpen={this.state.dropDownOpen}
+                  toggle={this.toggle}
+                >
+                  {" "}
+                  <DropdownToggle>
+                    <i className="fa fa-user"></i>{" "}
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownLink to={"/my-account"}>Edit Profile</DropdownLink>
+                    <DropdownItem divider />{" "}
+                    <DropdownItem>
+                      {" "}
+                      Q <span>400</span>{" "}
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={this.props.logout}>
+                      Logout{" "}
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              ) : null}
             </div>
           </div>
         </div>

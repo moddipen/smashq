@@ -5,7 +5,9 @@ exports.getProfile = async (req, res) => {
   var id = req.user.id;
   My.query("select id, username, email from users where id = ? limit 1", [id])
     .then(result => {
-      return res.send(makeSuccess("User loaded !", { profiles: result[0] }));
+      return res.send(
+        makeSuccess("User loaded successfully.", { profiles: result[0] })
+      );
     })
     .catch(err => {
       return res.send(makeError("Something went wrong !"));
@@ -21,7 +23,7 @@ exports.updateProfile = async (req, res) => {
   if (data.username) {
     const condition = "username = ? AND id != ?";
     const values = [req.body.username, req.user.id];
-    My.first("users", ["id"], condition, values).then(object => {
+    await My.first("users", ["id"], condition, values).then(async object => {
       if (object) {
         return res.send(makeError("Username already registered !"));
       } else {
@@ -40,9 +42,9 @@ exports.updateProfile = async (req, res) => {
           });
       }
     });
-    delete data.username;
+    await delete data.username;
   }
-  if (!empty(data)) {
+  if (Object.keys(data).length !== 0) {
     My.update("user_profiles", data, "user_id = " + req.user.id)
       .then(result => {
         return res.send(makeSuccess("Profile updated successfully."));
@@ -91,7 +93,7 @@ exports.follows = async (req, res) => {
       if (object) {
         // Unfollow
         My.delete("followers", "id = " + object.id).then(() => {
-          return res.send(makeSuccess("Unfollowed !"));
+          return res.send(makeSuccess("Unfollowed successfully."));
         });
       } else {
         // Follow
@@ -99,7 +101,7 @@ exports.follows = async (req, res) => {
           user_id: req.user.id,
           follow_user_id: req.body.user_id
         }).then(result => {
-          return res.send(makeSuccess("Followed !"));
+          return res.send(makeSuccess("Followed successfully."));
         });
       }
     })

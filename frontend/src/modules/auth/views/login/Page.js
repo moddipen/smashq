@@ -59,26 +59,12 @@ class Page extends React.Component {
   }
 
   //Avoid space in username field
-  // avoidSpace(event) {
-  //   console.log(event);
-  //   if (event.keyCode == 32) {
-  //     alert("Adding....");
-  //   }
-  // }
-
   avoidSpace(name, value, event) {
-    console.log(event.key);
     if (event.key === " ") {
-      // console.log(name);
-      // console.log(value.substring(0, value.length - 1));
       event.preventDefault();
-
       return false;
     }
   }
-
-  // var k = event ? event.which : window.event.keyCode;
-  // if (k == 32) return false;
 
   // event to handle login input change
   handleChange(name, value) {
