@@ -21,12 +21,12 @@ class Page extends React.Component {
     super(props);
 
     this.validator = new Validator({
-      username: "required",
+      username: "required|min:6|max:15",
       password: "required|min:6"
     });
 
     this.registerValidator = new Validator({
-      username: "required",
+      username: "required|min:6|max:15",
       email: "required|email",
       password: "required|min:6",
       terms: "required",
@@ -51,11 +51,34 @@ class Page extends React.Component {
     };
 
     // bind component with event handlers
+    this.avoidSpace = this.avoidSpace.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRegisterChange = this.handleRegisterChange.bind(this);
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
   }
+
+  //Avoid space in username field
+  // avoidSpace(event) {
+  //   console.log(event);
+  //   if (event.keyCode == 32) {
+  //     alert("Adding....");
+  //   }
+  // }
+
+  avoidSpace(name, value, event) {
+    console.log(event.key);
+    if (event.key === " ") {
+      // console.log(name);
+      // console.log(value.substring(0, value.length - 1));
+      event.preventDefault();
+
+      return false;
+    }
+  }
+
+  // var k = event ? event.which : window.event.keyCode;
+  // if (k == 32) return false;
 
   // event to handle login input change
   handleChange(name, value) {
@@ -124,19 +147,6 @@ class Page extends React.Component {
 
   submit(credentials) {
     this.props.login(credentials);
-    // .catch(({error, statusCode}) => {
-    //     const {errors} = this.validator
-    //
-    //     if (statusCode === 422) {
-    //         _.forOwn(error, (message, field) => {
-    //             errors.add(field, message);
-    //         });
-    //     } else if (statusCode === 401) {
-    //         errors.add('password', error);
-    //     }
-    //
-    //     this.setState({errors})
-    // })
   }
 
   submitRegister(registerDetails) {
@@ -153,6 +163,7 @@ class Page extends React.Component {
       errors: this.state.errors,
       registerErrors: this.state.registerErrors,
       handleChange: this.handleChange,
+      avoidSpace: this.avoidSpace,
       handleSubmit: this.handleSubmit,
       handleRegisterChange: this.handleRegisterChange,
       handleRegisterSubmit: this.handleRegisterSubmit

@@ -10,6 +10,7 @@ const propTypes = {
   registerErrors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
+  avoidSpace: PropTypes.func.isRequired,
   handleRegisterSubmit: PropTypes.func.isRequired,
   handleRegisterChange: PropTypes.func.isRequired
 };
@@ -20,6 +21,7 @@ const Form = ({
   errors,
   registerErrors,
   handleChange,
+  avoidSpace,
   handleSubmit,
   handleRegisterChange,
   handleRegisterSubmit
@@ -70,6 +72,9 @@ const Form = ({
                         name="username"
                         value={login.username || ""}
                         placeholder="Username"
+                        onKeyPress={e =>
+                          avoidSpace(e.target.name, e.target.value, e)
+                        }
                         onChange={e =>
                           handleChange(e.target.name, e.target.value)
                         }
@@ -107,9 +112,7 @@ const Form = ({
                   <div className="extra-line">
                     <p>
                       Forgot your{" "}
-                      <NavLink to={`/forgot-password`}>
-                        password?
-                      </NavLink>
+                      <NavLink to={`/forgot-password`}>password?</NavLink>
                     </p>
                   </div>
                 </div>
@@ -133,6 +136,9 @@ const Form = ({
                         name="username"
                         value={register.username || ""}
                         placeholder="Username"
+                        onKeyPress={e =>
+                          avoidSpace(e.target.name, e.target.value, e)
+                        }
                         onChange={e =>
                           handleRegisterChange(e.target.name, e.target.value)
                         }
@@ -209,7 +215,7 @@ const Form = ({
                           handleRegisterChange(e.target.name, e.target.value)
                         }
                         className={`terms form-control ${registerErrors.has(
-                          "terms"
+                          "age"
                         ) && "is-invalid"}`}
                       />{" "}
                       Age 18 +

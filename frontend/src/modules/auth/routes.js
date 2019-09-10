@@ -12,24 +12,6 @@ const pages = {
       loading: LoadingComponent
     })
   },
-  TEST: {
-    path: "/test",
-    component: Loadable({
-      loader: () => import("./views/test/index"),
-      loading: LoadingComponent
-    }),
-    thunk: async (dispatch, getState) => {
-      dispatch(getCar());
-    }
-  },
-  TESTREGISTER: {
-    path: "/testRegister",
-    component: Loadable({
-      loader: () => import("./views/testRegister/index"),
-      loading: LoadingComponent
-    })
-  },
-
   FORGOT_PASSWORD: {
     path: "/forgot-password",
     component: Loadable({
