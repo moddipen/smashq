@@ -2,297 +2,296 @@ const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const My = require("jm-ez-mysql");
 const uuidv1 = require("uuid/v1");
-const { body } = require("express-validator");
+const {body} = require("express-validator");
 const privateKey = process.env.JWT_SECRET_KEY;
 
 exports.login = (req, res) => {
-  const condition = "username = ? ";
-  const values = [req.body.username];
-  My.first("users", ["id, password, status"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.send(makeError("Incorrect username or password !"));
-      } else {
-        if (!bcrypt.compareSync(req.body.password, object.password)) {
-          return res.send(makeError("Incorrect username or password !"));
-        } else {
-          if (!object.status) {
-            return res.send(makeError("Your account is not active !"));
-          }
-          jwt.sign(
-            { id: object.id },
-            privateKey,
-            { expiresIn: "24h" },
-            (err, token) => {
-              var obj = JSON.parse(JSON.stringify(object));
-              obj.accessToken = token;
-              delete obj.password;
-              return res.send(makeSuccess("User successfully logged in.", obj));
+    const condition = "username = ? ";
+    const values = [req.body.username];
+    My.first("users", ["id, password, status"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.send(makeError("Incorrect username or password !"));
+            } else {
+                if (!bcrypt.compareSync(req.body.password, object.password)) {
+                    return res.send(makeError("Incorrect username or password !"));
+                } else {
+                    if (!object.status) {
+                        return res.send(makeError("Your account is not active !"));
+                    }
+                    jwt.sign(
+                        {id: object.id},
+                        privateKey,
+                        {expiresIn: "24h"},
+                        (err, token) => {
+                            var obj = JSON.parse(JSON.stringify(object));
+                            obj.accessToken = token;
+                            delete obj.password;
+                            return res.send(makeSuccess("User successfully logged in.", obj));
+                        }
+                    );
+                }
             }
-          );
-        }
-      }
-    })
-    .catch(err => {
-      return res.send(0("Incorrect username or password !"));
-    });
+        })
+        .catch(err => {
+            return res.send(0("Incorrect username or password !"));
+        });
 };
 
 exports.register = (req, res) => {
-  try {
-    const condition = "username = ? ";
-    const values = [req.body.username];
-    My.first("users", ["id"], condition, values).then(object => {
-      if (object) {
-        return res.send(makeError("Username already registered !"));
-      }
-      const condition = "email = ? ";
-      const values = [req.body.email];
-      My.first("users", ["id"], condition, values).then(object => {
-        if (object) {
-          return res.send(makeError("Email already registered !"));
-        }
-        var hash = bcrypt.hashSync(req.body.password);
-        let token = uuidv1();
-        req.body.password = hash;
-        req.body.remember_token = token;
-        My.insert("users", req.body).then(result => {
-          My.insert("user_profiles", {
-            user_id: result.insertId,
-            description: ""
-          }).then(result => {
-            console.log("Profile inserted");
-          });
-          var replace_var = {
-            username: req.body.username,
-            link: process.env.SERVER_URL + "auth/verify-email/" + token
-          };
-          send_mail(
-            "emailverification.html",
-            replace_var,
-            req.body.email,
-            "Verify account"
-          );
-          return res.send(makeSuccess("Verification link sent to your email."));
+    try {
+        const condition = "username = ? ";
+        const values = [req.body.username];
+        My.first("users", ["id"], condition, values).then(object => {
+            if (object) {
+                return res.send(makeError("Username already registered !"));
+            }
+            const condition = "email = ? ";
+            const values = [req.body.email];
+            My.first("users", ["id"], condition, values).then(object => {
+                if (object) {
+                    return res.send(makeError("Email already registered !"));
+                }
+                var hash = bcrypt.hashSync(req.body.password);
+                let token = uuidv1();
+                req.body.password = hash;
+                req.body.remember_token = token;
+                My.insert("users", req.body).then(result => {
+                    My.insert("user_profiles", {
+                        user_id: result.insertId,
+                        description: ""
+                    }).then(result => {
+                        console.log("Profile inserted");
+                    });
+                    var replace_var = {
+                        username: req.body.username,
+                        link: process.env.SERVER_URL + "auth/verify-email/" + token
+                    };
+                    send_mail(
+                        "emailverification.html",
+                        replace_var,
+                        req.body.email,
+                        "Verify account"
+                    );
+                    return res.send(makeSuccess("Verification link sent to your email."));
+                });
+            });
         });
-      });
-    });
-  } catch (err) {
-    return res.send(makeError("Something went wrong !"));
-  }
+    } catch (err) {
+        return res.send(makeError("Something went wrong !"));
+    }
 };
 
+function generateOTP() {
+    // Declare a digits variable
+    // which stores all digits
+    var digits = '0123456789';
+    let OTP = '';
+    for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+    }
+    return OTP;
+}
+
 exports.forgotPassword = async (req, res) => {
-  const condition = "email = ? ";
-  const values = [req.body.email];
+    const condition = "email = ? ";
+    const values = [req.body.email];
 
-  //random code generate
-  // const code = "";
-  // const characters = "0123456789";
-  // var charactersLength = characters.length;
-  // for (var i = 0; i < 6; i++) {
-  //   code += characters.charAt(Math.floor(Math.random() * charactersLength));
-  // }
-  const conf_code = "123456";
+    const conf_code = generateOTP();
 
-  My.first("users", ["id, username, email, remember_token"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.send(makeError("Enter valid email address !"));
-      } else {
-        var replace_var = {
-          username: object.username,
-          link: conf_code
-        };
-        let data = {
-          code: conf_code
-        };
-        My.update("users", data, "id = " + object.id)
-          .then(result => {
-            send_mail(
-              "forgopassword.html",
-              replace_var,
-              object.email,
-              "Verify Email"
-            );
-            let data1 = {
-              email: object.email
-            };
-            return res.send(
-              makeSuccess(
-                "Confirmation code sent to your email address.",
-                data1
-              )
-            );
-          })
-          .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
-      }
-    })
-    .catch(err => {
-      return res.send(makeError("Enter valid email address !"));
-    });
+    My.first("users", ["id, username, email, remember_token"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.send(makeError("Enter valid email address !"));
+            } else {
+                var replace_var = {
+                    username: object.username,
+                    link: conf_code
+                };
+                let token = uuidv1();
+                let data = {
+                    code: conf_code,
+                    remember_token: token
+                };
+                My.update("users", data, "id = " + object.id)
+                    .then(result => {
+                        send_mail(
+                            "forgopassword.html",
+                            replace_var,
+                            object.email,
+                            "Verify Email"
+                        );
+                        let data1 = {
+                            email: object.email
+                        };
+                        return res.send(
+                            makeSuccess(
+                                "Confirmation code sent to your email address.",
+                                data1
+                            )
+                        );
+                    })
+                    .catch(err => {
+                        return res.send(makeError("Something went wrong !"));
+                    });
+            }
+        })
+        .catch(err => {
+            return res.send(makeError("Enter valid email address !"));
+        });
 };
 
 exports.resendEmail = async (req, res) => {
-  const condition = "email = ? ";
-  const values = [req.body.email];
+    const condition = "email = ? ";
+    const values = [req.body.email];
 
-  //random code generate
-  // const code = "";
-  // const characters = "0123456789";
-  // var charactersLength = characters.length;
-  // for (var i = 0; i < 6; i++) {
-  //   code += characters.charAt(Math.floor(Math.random() * charactersLength));
-  // }
-  const conf_code = "123456";
+    const conf_code = generateOTP();
 
-  My.first("users", ["id, username, email, remember_token"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.send(makeError("Enter valid email address !"));
-      } else {
-        var replace_var = {
-          username: object.username,
-          link: conf_code
-        };
-        let data = {
-          code: conf_code
-        };
-        My.update("users", data, "id = " + object.id)
-          .then(result => {
-            send_mail(
-              "forgopassword.html",
-              replace_var,
-              object.email,
-              "Verify Email"
-            );
-            let data1 = {
-              email: object.email
-            };
-            return res.send(
-              makeSuccess(
-                "Confirmation code sent to your email address.",
-                data1
-              )
-            );
-          })
-          .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
-      }
-    })
-    .catch(err => {
-      return res.send(makeError("Enter valid email address !"));
-    });
+    My.first("users", ["id, username, email, remember_token"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.send(makeError("Enter valid email address !"));
+            } else {
+                var replace_var = {
+                    username: object.username,
+                    link: conf_code
+                };
+                let data = {
+                    code: conf_code
+                };
+                My.update("users", data, "id = " + object.id)
+                    .then(result => {
+                        send_mail(
+                            "forgopassword.html",
+                            replace_var,
+                            object.email,
+                            "Verify Email"
+                        );
+                        let data1 = {
+                            email: object.email
+                        };
+                        return res.send(
+                            makeSuccess(
+                                "Confirmation code sent to your email address.",
+                                data1
+                            )
+                        );
+                    })
+                    .catch(err => {
+                        return res.send(makeError("Something went wrong !"));
+                    });
+            }
+        })
+        .catch(err => {
+            return res.send(makeError("Enter valid email address !"));
+        });
 };
 
 exports.verifyCode = async (req, res) => {
-  const condition = "code = ? ";
-  const values = [req.body.code];
-  My.first("users", ["id", "remember_token"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.send(makeError("Enter valid confirmation code !"));
-      } else {
-        let data1 = {
-          code: ""
-        };
+    const condition = "code = ? ";
+    const values = [req.body.code];
+    My.first("users", ["id", "remember_token"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.send(makeError("Enter valid confirmation code !"));
+            } else {
+                let data1 = {
+                    code: ""
+                };
 
-        My.update("users", data1, "id = " + object.id)
-          .then(result => {
-            let data = {
-              id: object.id,
-              remember_token: object.remember_token
-            };
-            return res.send(makeSuccess("Code verify successfully !", data));
-          })
-          .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
-      }
-    })
-    .catch(err => {
-      return res.send(makeError("Enter valid confirmation code !"));
-    });
+                My.update("users", data1, "id = " + object.id)
+                    .then(result => {
+                        let data = {
+                            id: object.id,
+                            remember_token: object.remember_token
+                        };
+                        return res.send(makeSuccess("Code verify successfully !", data));
+                    })
+                    .catch(err => {
+                        return res.send(makeError("Something went wrong !"));
+                    });
+            }
+        })
+        .catch(err => {
+            return res.send(makeError("Enter valid confirmation code !"));
+        });
 };
 
 exports.verifyEmail = async (req, res) => {
-  const condition = "remember_token = ? ";
-  const values = [req.params.token];
-  My.first("users", ["id"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.sendStatus(404);
-      } else {
-        let data = {
-          remember_token: uuidv1(),
-          status: 1
-        };
-        My.update("users", data, "id = " + object.id)
-          .then(result => {
-            res.redirect(process.env.CLIENT_URL);
-          })
-          .catch(err => {
-            return res.sendStatus(404);
-          });
-      }
-    })
-    .catch(err => {
-      return res.send(makeError("Enter valid email address !"));
-    });
+    const condition = "remember_token = ? ";
+    const values = [req.params.token];
+    My.first("users", ["id"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.sendStatus(404);
+            } else {
+                let data = {
+                    remember_token: uuidv1(),
+                    status: 1
+                };
+                My.update("users", data, "id = " + object.id)
+                    .then(result => {
+                        res.redirect(process.env.CLIENT_URL);
+                    })
+                    .catch(err => {
+                        return res.sendStatus(404);
+                    });
+            }
+        })
+        .catch(err => {
+            return res.send(makeError("Enter valid email address !"));
+        });
 };
 
 exports.resetPassword = async (req, res) => {
-  const condition = "remember_token = ? ";
-  const values = [req.body.token];
-  My.first("users", ["id"], condition, values)
-    .then(object => {
-      if (!object) {
-        return res.send(makeError("User not found !"));
-      } else {
-        let data = {
-          remember_token: uuidv1(),
-          password: bcrypt.hashSync(req.body.password)
-        };
-        My.update("users", data, "id = " + object.id)
-          .then(result => {
-            return res.send(makeSuccess("Password reseted successfully."));
-          })
-          .catch(err => {
+    const condition = "remember_token = ? ";
+    const values = [req.body.token];
+    My.first("users", ["id"], condition, values)
+        .then(object => {
+            if (!object) {
+                return res.send(makeError("User not found !"));
+            } else {
+                let data = {
+                    remember_token: uuidv1(),
+                    password: bcrypt.hashSync(req.body.password)
+                };
+                My.update("users", data, "id = " + object.id)
+                    .then(result => {
+                        return res.send(makeSuccess("Password reseted successfully."));
+                    })
+                    .catch(err => {
+                        return res.send(makeError("Something went wrong !"));
+                    });
+            }
+        })
+        .catch(err => {
             return res.send(makeError("Something went wrong !"));
-          });
-      }
-    })
-    .catch(err => {
-      return res.send(makeError("Something went wrong !"));
-    });
+        });
 };
 
 exports.validate = method => {
-  switch (method) {
-    case "register": {
-      return [
-        body("username", "Username is required").exists(),
-        body("email", "Invalid email")
-          .exists()
-          .isEmail(),
-        body("password", "Password is required").exists()
-      ];
+    switch (method) {
+        case "register": {
+            return [
+                body("username", "Username is required").exists(),
+                body("email", "Invalid email")
+                    .exists()
+                    .isEmail(),
+                body("password", "Password is required").exists()
+            ];
+        }
+        case "login": {
+            return [
+                body("username", "Username is required").exists(),
+                body("password", "Password is required").exists()
+            ];
+        }
+        case "forgotPassword": {
+            return [
+                body("email", "Invalid email")
+                    .exists()
+                    .isEmail()
+            ];
+        }
     }
-    case "login": {
-      return [
-        body("username", "Username is required").exists(),
-        body("password", "Password is required").exists()
-      ];
-    }
-    case "forgotPassword": {
-      return [
-        body("email", "Invalid email")
-          .exists()
-          .isEmail()
-      ];
-    }
-  }
 };

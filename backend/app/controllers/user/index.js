@@ -7,6 +7,7 @@ var router = express.Router();
 router.get("/users", users.getProfile);
 router.delete("/users/logout", users.logout);
 router.post("/users/update", users.updateProfile);
+router.post("/users/social/update", users.updateSocialMedia);
 router.post("/users/change-password", users.changePassword);
 router.post("/users/follows", users.follows);
 router.post("/users/search", users.search);

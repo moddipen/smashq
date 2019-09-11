@@ -13,17 +13,12 @@ import {
   AUTH_LOGIN,
   AUTH_REGISTER,
   AUTH_FORGOT_PASSWORD,
-  AUTH_VERIFY_CODE,
   AUTH_RESET_PASSWORD,
-  AUTH_RESEND_EMAIL,
   AUTH_LOGOUT,
-  AUTH_USER,
-  GET_CAR,
-  GET_CAR_SUCCESS
+  AUTH_USER
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 import { userLoad } from "../../users/store/actions";
-import { normalize, schema } from "normalizr";
 
 export function authCheck() {
   return {
@@ -63,33 +58,8 @@ export function authForgotPassword(payload) {
     path: `/auth/forgot-password`,
     data: payload,
     method: "post",
-    onSuccess: response => {
-      localStorage.setItem("email", response.email);
-      push("/verify-code");
-    }
-  });
-}
-
-export function authResendEmail(payload) {
-  console.log(payload);
-  return AsyncRequest.createSimpleRequestFromObject(AUTH_RESEND_EMAIL, {
-    path: `/auth/resend-email`,
-    data: payload,
-    method: "post",
-    onSuccess: response => {
-      push("/verify-code");
-    }
-  });
-}
-
-export function authVerifyCode(payload) {
-  return AsyncRequest.createSimpleRequestFromObject(AUTH_VERIFY_CODE, {
-    path: `/auth/verify-code`,
-    data: payload,
-    method: "post",
-    onSuccess: response => {
-      localStorage.removeItem("email");
-      push("/reset-password/" + response.rememberToken);
+    onSuccess: () => {
+      push("/login");
     }
   });
 }
@@ -111,17 +81,6 @@ export function authLogout() {
     method: "delete",
     onSuccess: () => {
       push("/login");
-    }
-  });
-}
-
-export function getCar() {
-  return AsyncRequest.createSimpleRequestFromObject(GET_CAR, {
-    path: `/auth/get-users`,
-    method: "get",
-    responseField: "data",
-    normalize: response => {
-      return normalize(response, new schema.Entity("auth"));
     }
   });
 }

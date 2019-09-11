@@ -21,16 +21,14 @@ class Page extends React.Component {
     super(props);
 
     this.validator = new Validator({
-      username: "required|min:6|max:15",
+      username: "required",
       password: "required|min:6"
     });
 
     this.registerValidator = new Validator({
-      username: "required|min:6|max:15",
+      username: "required",
       email: "required|email",
-      password: "required|min:6",
-      terms: "required",
-      age: "required"
+      password: "required|min:6"
     });
 
     // set the state of the app
@@ -42,28 +40,17 @@ class Page extends React.Component {
       registerDetails: {
         username: "",
         email: "",
-        password: "",
-        terms: "",
-        age: ""
+        password: ""
       },
       errors: this.validator.errors,
       registerErrors: this.registerValidator.errors
     };
 
     // bind component with event handlers
-    this.avoidSpace = this.avoidSpace.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRegisterChange = this.handleRegisterChange.bind(this);
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
-  }
-
-  //Avoid space in username field
-  avoidSpace(name, value, event) {
-    if (event.key === " ") {
-      event.preventDefault();
-      return false;
-    }
   }
 
   // event to handle login input change
@@ -119,12 +106,7 @@ class Page extends React.Component {
 
     this.registerValidator.validateAll(registerDetails).then(success => {
       if (success) {
-        let data = {
-          username: registerDetails.username,
-          email: registerDetails.email,
-          password: registerDetails.password
-        };
-        this.submitRegister(data);
+        this.submitRegister(registerDetails);
       } else {
         this.setState({ registerErrors: errors });
       }
@@ -133,10 +115,22 @@ class Page extends React.Component {
 
   submit(credentials) {
     this.props.login(credentials);
+    // .catch(({error, statusCode}) => {
+    //     const {errors} = this.validator
+    //
+    //     if (statusCode === 422) {
+    //         _.forOwn(error, (message, field) => {
+    //             errors.add(field, message);
+    //         });
+    //     } else if (statusCode === 401) {
+    //         errors.add('password', error);
+    //     }
+    //
+    //     this.setState({errors})
+    // })
   }
 
   submitRegister(registerDetails) {
-    console.log(registerDetails);
     this.props.register(registerDetails);
   }
 
@@ -149,13 +143,18 @@ class Page extends React.Component {
       errors: this.state.errors,
       registerErrors: this.state.registerErrors,
       handleChange: this.handleChange,
-      avoidSpace: this.avoidSpace,
       handleSubmit: this.handleSubmit,
       handleRegisterChange: this.handleRegisterChange,
       handleRegisterSubmit: this.handleRegisterSubmit
     };
 
-    return <Form {...props} />;
+    return (
+      <div className="row">
+        <div className="container custom-container">
+          <Form {...props} />
+        </div>
+      </div>
+    );
   }
 }
 

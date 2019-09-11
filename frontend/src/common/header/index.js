@@ -5,21 +5,15 @@ import { connect } from "react-redux";
 import { authLogout } from "../../modules/auth/store/actions";
 import { getChatSettingByName } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle
-} from "reactstrap";
-import DropdownLink from "../dropdown-link/index";
+
 class Header extends React.PureComponent {
   static propTypes = {
-    // text: PropTypes.string.isRequired,
-    // icon: PropTypes.element,
-    // styles: PropTypes.object,
-    // isAuthenticated: PropTypes.bool.isRequired,
-    // SubHeaderComponent: PropTypes.element,
-    // logout: PropTypes.func.isRequired
+    text: PropTypes.string.isRequired,
+    icon: PropTypes.element,
+    styles: PropTypes.object,
+    isAuthenticated: PropTypes.bool.isRequired,
+    SubHeaderComponent: PropTypes.element,
+    logout: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -30,8 +24,7 @@ class Header extends React.PureComponent {
     super(props);
 
     this.state = {
-      expanded: false,
-      dropDownOpen: false
+      dropdownOpen: false
     };
 
     this.toggle = this.toggle.bind(this);
@@ -68,66 +61,28 @@ class Header extends React.PureComponent {
     this.props.logout();
   }
 
-  toggle = () => {
+  toggle() {
     this.setState({
-      dropDownOpen: !this.state.dropDownOpen
+      dropdownOpen: !this.state.dropdownOpen
     });
-  };
+  }
 
   render() {
     const hasSubHeaderComponent = this.props.SubHeaderComponent !== null;
-    const access_token = localStorage.getItem("access_token");
     const headerClasses = classNames("header", {
       "has-sub-header": hasSubHeaderComponent
     });
     return (
-      <header>
-        <div className="header-inner">
-          <div className="container d-flex align-items-center">
-            <div className="logo">
-              <a href="#">
-                <img src="/img/logo.png" alt="" />
-              </a>
-            </div>
-            <div className="head-right d-flex align-items-center">
-              <div className="head-search-section">
-                <div className="head-search-box">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search"
-                  />
-                </div>
-              </div>
-
-              {access_token !== null ? (
-                <Dropdown
-                  className="dropdown profile-dropdown"
-                  isOpen={this.state.dropDownOpen}
-                  toggle={this.toggle}
-                >
-                  {" "}
-                  <DropdownToggle>
-                    <i className="fa fa-user"></i>{" "}
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownLink to={"/my-account"}>Edit Profile</DropdownLink>
-                    <DropdownItem divider />{" "}
-                    <DropdownItem>
-                      {" "}
-                      Q <span>400</span>{" "}
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem onClick={this.props.logout}>
-                      Logout{" "}
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              ) : null}
-            </div>
-          </div>
+      <div className={headerClasses}>
+        <div className="d-inline-block">
+          <h1 style={this.props.styles}>
+            {this.props.icon}
+            {this.props.text}
+          </h1>
+          {hasSubHeaderComponent && this.props.SubHeaderComponent}
         </div>
-      </header>
+        {this.props.children}
+      </div>
     );
   }
 }

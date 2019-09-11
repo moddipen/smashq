@@ -2,7 +2,6 @@
 import Loadable from "react-loadable";
 // import components
 import LoadingComponent from "../../common/loader/index";
-import { getCar } from "../auth/store/actions";
 
 const pages = {
   LOGIN: {
@@ -16,13 +15,6 @@ const pages = {
     path: "/forgot-password",
     component: Loadable({
       loader: () => import("./views/forgot-password/index"),
-      loading: LoadingComponent
-    })
-  },
-  VERIFY_EMAIL: {
-    path: "/verify-code",
-    component: Loadable({
-      loader: () => import("./views/verify-code/index"),
       loading: LoadingComponent
     })
   },
