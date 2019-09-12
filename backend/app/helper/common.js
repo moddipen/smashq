@@ -25,6 +25,21 @@ makeError = (message = "", data = []) => {
   return json;
 };
 
+uploadImageFromBase64 = async (base64, model) => {
+  let base64Image = base64.split(";base64,").pop();
+  let fileName = "public/uploads/" + model + "/" + Date.now() + ".png";
+  var filepath = path.join(fileName);
+  await require("fs").writeFile(
+    filepath,
+    base64Image,
+    { encoding: "base64" },
+    err => {
+      console.log("File created");
+    }
+  );
+  return fileName;
+};
+
 send_mail = (fileName, replace_var, toEmail, subject) => {
   let mailer = nodemailer.createTransport(process.env.MAIL_DETAIL);
   var templates = new EmailTemplates();

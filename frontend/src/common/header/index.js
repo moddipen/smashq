@@ -5,16 +5,21 @@ import { connect } from "react-redux";
 import { authLogout } from "../../modules/auth/store/actions";
 import { getChatSettingByName } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
+import SearchComponent from "../../modules/users/views/search/index";
 
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  Col
+} from "reactstrap";
+
+import DropdownLink from "../dropdown-link/index";
+import { initialSearch, searchUser } from "../../modules/users/store/actions";
 class Header extends React.PureComponent {
-  static propTypes = {
-    text: PropTypes.string.isRequired,
-    icon: PropTypes.element,
-    styles: PropTypes.object,
-    isAuthenticated: PropTypes.bool.isRequired,
-    SubHeaderComponent: PropTypes.element,
-    logout: PropTypes.func.isRequired
-  };
+  static propTypes = {};
 
   static defaultProps = {
     SubHeaderComponent: null
@@ -24,9 +29,14 @@ class Header extends React.PureComponent {
     super(props);
 
     this.state = {
-      dropdownOpen: false
+      search: "",
+      expanded: false,
+      dropDownOpen: false,
+      showSearch: false
     };
 
+    this.hideSearchEvent = this.hideSearchEvent.bind(this);
+    this.showSearchEvent = this.showSearchEvent.bind(this);
     this.toggle = this.toggle.bind(this);
     this.signOut = this.signOut.bind(this);
   }
@@ -61,28 +71,104 @@ class Header extends React.PureComponent {
     this.props.logout();
   }
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    });
+  hideSearchEvent() {
+    this.setState({ showSearch: false });
   }
+
+  handleChange = e => {
+    this.setState({
+      search: e.target.value
+    });
+    if (e.target.value != "") {
+      this.props.searchUser({
+        [e.target.name]: e.target.value
+      });
+      this.props.searchUser({ search: e.target.value });
+    } else {
+      this.props.initialSearch();
+    }
+  };
+
+  showSearchEvent() {
+    this.setState({ showSearch: true });
+    if (this.state.search == "") {
+      this.props.initialSearch();
+    }
+  }
+
+  toggle = () => {
+    this.setState({
+      dropDownOpen: !this.state.dropDownOpen
+    });
+  };
 
   render() {
     const hasSubHeaderComponent = this.props.SubHeaderComponent !== null;
+    const access_token = localStorage.getItem("access_token");
     const headerClasses = classNames("header", {
       "has-sub-header": hasSubHeaderComponent
     });
     return (
-      <div className={headerClasses}>
-        <div className="d-inline-block">
-          <h1 style={this.props.styles}>
-            {this.props.icon}
-            {this.props.text}
-          </h1>
-          {hasSubHeaderComponent && this.props.SubHeaderComponent}
+      <header>
+        <div className="header-inner">
+          <div className="container d-flex align-items-center">
+            <div className="logo">
+              <a href="/">
+                <img src="/img/logo.png" alt="" />
+              </a>
+            </div>
+
+            <div className="head-right d-flex align-items-center">
+              <div className="head-search-section">
+                <div
+                  className={
+                    "head-search-box " +
+                    (this.state.showSearch ? "focusactive" : "")
+                  }
+                >
+                  <input
+                    type="text"
+                    value={this.state.search}
+                    onChange={this.handleChange}
+                    className="form-control"
+                    placeholder="Search"
+                    onClick={this.showSearchEvent}
+                    onBlur={this.hideSearchEvent}
+                  />
+                  <SearchComponent />
+                </div>
+              </div>
+
+              {access_token !== null ? (
+                <Dropdown
+                  className="dropdown profile-dropdown"
+                  isOpen={this.state.dropDownOpen}
+                  toggle={this.toggle}
+                >
+                  {" "}
+                  <DropdownToggle>
+                    <i className="fa fa-user"></i>{" "}
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownLink to={"/edit-profile"}>
+                      Edit Profile
+                    </DropdownLink>
+                    <DropdownItem divider />{" "}
+                    <DropdownItem>
+                      {" "}
+                      Q <span>400</span>{" "}
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={this.props.logout}>
+                      Logout{" "}
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              ) : null}
+            </div>
+          </div>
         </div>
-        {this.props.children}
-      </div>
+      </header>
     );
   }
 }
@@ -96,6 +182,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    initialSearch: () => dispatch(initialSearch()),
+    searchUser: data => dispatch(searchUser(data)),
     logout: () => dispatch(authLogout()),
     updateSelectedModal: params => dispatch(updateSelectedModal(params))
   };

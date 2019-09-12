@@ -11,6 +11,7 @@ router.post("/users/social/update", users.updateSocialMedia);
 router.post("/users/change-password", users.changePassword);
 router.post("/users/follows", users.follows);
 router.post("/users/search", users.search);
+router.get("/users/lists", users.getAllUsers);
 // router.get('/users', users.findAll);
 // router.get('/users/:Id', users.findOne);
 // router.put('/users/:Id', users.update);

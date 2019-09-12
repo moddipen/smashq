@@ -17,63 +17,66 @@ const Form = ({
   handleChange,
   handleSubmit
 }) => (
-  <div className="login-register-form-section">
-    <ul className="nav nav-tabs" role="tablist">
-      <li className="active">
-        <a href="#forgot" data-toggle="tab">
-          Reset Password
-        </a>
-      </li>
-    </ul>
-    <div className="tab-content">
-      <div role="tabpanel" className="tab-pane fade in active" id="forgot">
-        <form className="form-horizontal" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <div className="input-all">
-              <input
-                type="password"
-                className={`form-control ${errors.has("password") &&
-                  "is-invalid"}`}
-                name="password"
-                value={password || ""}
-                placeholder="Password"
-                onChange={e => handleChange(e.target.name, e.target.value)}
-              />
-              {errors.has("password") && (
-                <div className="invalid-feedback">
-                  {errors.first("password")}
-                </div>
-              )}
+  <section className="pad-40 confirm-number-section">
+    <div className="container container500">
+      <div className="bgwhite bordergray">
+        <div className="commonsmall-box text-center">
+          <div className="top-box mb-30">
+            <div className="border-box-icon">
+              <i className="fa fa-key"></i>
             </div>
+            <h4>Reset Password</h4>
           </div>
-          <div className="form-group">
-            <div className="input-all">
-              <input
-                type="password"
-                className={`form-control ${errors.has(
-                  "password_confirmation"
-                ) && "is-invalid"}`}
-                name="password_confirmation"
-                value={password_confirmation || ""}
-                placeholder="Confirm Password"
-                onChange={e => handleChange(e.target.name, e.target.value)}
-              />
-              {errors.has("password_confirmation") && (
-                <div className="invalid-feedback">
-                  {errors.first("password_confirmation")}
-                </div>
-              )}
-            </div>
+          <div className="form-box">
+            <form
+              className="form-horizontal"
+              onSubmit={handleSubmit}
+              noValidate
+            >
+              <div className="form-group">
+                <input
+                  type="password"
+                  className={`form-control ${errors.has("password") &&
+                    "is-invalid"}`}
+                  name="password"
+                  value={password || ""}
+                  placeholder="Password"
+                  onChange={e => handleChange(e.target.name, e.target.value)}
+                />
+                {errors.has("password") && (
+                  <div className="invalid-feedback">
+                    {errors.first("password")}
+                  </div>
+                )}
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className={`form-control ${errors.has(
+                    "password_confirmation"
+                  ) && "is-invalid"}`}
+                  name="password_confirmation"
+                  value={password_confirmation || ""}
+                  placeholder="Confirm Password"
+                  onChange={e => handleChange(e.target.name, e.target.value)}
+                />
+                {errors.has("password_confirmation") && (
+                  <div className="invalid-feedback">
+                    {errors.first("password_confirmation")}
+                  </div>
+                )}
+              </div>
+              <div className="form-group">
+                <button className="btn-custom" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
-          <input
-            type="submit"
-            value="Reset password"
-            className="btn btn-success btn-custom"
-          />
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 );
 
 Form.displayName = displayName;
