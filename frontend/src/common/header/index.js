@@ -2,25 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { connect } from "react-redux";
+import { NavLink } from "redux-first-router-link";
 import { authLogout } from "../../modules/auth/store/actions";
 import { getChatSettingByName } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
+import SearchComponent from "../../modules/users/views/search/index";
+
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle
 } from "reactstrap";
+
 import DropdownLink from "../dropdown-link/index";
+import { initialSearch, searchUser } from "../../modules/users/store/actions";
+
 class Header extends React.PureComponent {
-  static propTypes = {
-    // text: PropTypes.string.isRequired,
-    // icon: PropTypes.element,
-    // styles: PropTypes.object,
-    // isAuthenticated: PropTypes.bool.isRequired,
-    // SubHeaderComponent: PropTypes.element,
-    // logout: PropTypes.func.isRequired
-  };
+  static propTypes = {};
 
   static defaultProps = {
     SubHeaderComponent: null
@@ -28,12 +27,16 @@ class Header extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
+    this.timeout = null;
     this.state = {
+      search: "",
       expanded: false,
-      dropDownOpen: false
+      dropDownOpen: false,
+      showSearch: false
     };
 
+    this.hideSearchEvent = this.hideSearchEvent.bind(this);
+    this.showSearchEvent = this.showSearchEvent.bind(this);
     this.toggle = this.toggle.bind(this);
     this.signOut = this.signOut.bind(this);
   }
@@ -68,6 +71,41 @@ class Header extends React.PureComponent {
     this.props.logout();
   }
 
+  hideSearchEvent() {
+    this.setState({ showSearch: false });
+  }
+
+  handleChange = e => {
+    this.setState({
+      search: e.target.value
+    });
+    if (this.props.isAuthenticated) {
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+      this.timeout = setTimeout(() => {
+        this.timeout = null;
+        if (this.state.search != "") {
+          this.props.searchUser({
+            search: this.state.search
+          });
+          this.props.searchUser({ search: this.state.search });
+        } else {
+          this.props.initialSearch();
+        }
+      }, 1000);
+    }
+  };
+
+  showSearchEvent() {
+    if (this.props.isAuthenticated) {
+      this.setState({ showSearch: true });
+      if (this.state.search == "") {
+        this.props.initialSearch();
+      }
+    }
+  }
+
   toggle = () => {
     this.setState({
       dropDownOpen: !this.state.dropDownOpen
@@ -85,18 +123,29 @@ class Header extends React.PureComponent {
         <div className="header-inner">
           <div className="container d-flex align-items-center">
             <div className="logo">
-              <a href="#">
+              <NavLink to={`/`}>
                 <img src="/img/logo.png" alt="" />
-              </a>
+              </NavLink>
             </div>
+
             <div className="head-right d-flex align-items-center">
               <div className="head-search-section">
-                <div className="head-search-box">
+                <div
+                  className={
+                    "head-search-box " +
+                    (this.state.showSearch ? "focusactive" : "")
+                  }
+                >
                   <input
                     type="text"
+                    value={this.state.search}
+                    onChange={this.handleChange}
                     className="form-control"
                     placeholder="Search"
+                    onClick={this.showSearchEvent}
+                    onBlur={this.hideSearchEvent}
                   />
+                  <SearchComponent />
                 </div>
               </div>
 
@@ -111,7 +160,9 @@ class Header extends React.PureComponent {
                     <i className="fa fa-user"></i>{" "}
                   </DropdownToggle>
                   <DropdownMenu right>
-                    <DropdownLink to={"/my-account"}>Edit Profile</DropdownLink>
+                    <DropdownLink to={"/edit-profile"}>
+                      Edit Profile
+                    </DropdownLink>
                     <DropdownItem divider />{" "}
                     <DropdownItem>
                       {" "}
@@ -141,6 +192,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    initialSearch: () => dispatch(initialSearch()),
+    searchUser: data => dispatch(searchUser(data)),
     logout: () => dispatch(authLogout()),
     updateSelectedModal: params => dispatch(updateSelectedModal(params))
   };

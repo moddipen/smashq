@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 var app = express();
@@ -12,6 +13,7 @@ require("./config/database.js");
 
 //Serves resources from public folder
 app.use(express.static("statics"));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Require routes
 require("./app/routes.js")(app);

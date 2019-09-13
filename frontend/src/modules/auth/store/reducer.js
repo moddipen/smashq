@@ -16,7 +16,8 @@ const initialState = {
   isEchoSetup: false,
   checked: false,
   initialLoad: false,
-  userId: 0
+  userId: 0,
+  authUser: {}
 };
 
 const reducer = (state = initialState, { type, payload = null }) => {
@@ -55,7 +56,8 @@ function userLoad(state, payload) {
     isAuthenticated: true,
     checked: true,
     userId: payload.id,
-    initialLoad: true
+    initialLoad: true,
+    authUser: payload
   };
 }
 

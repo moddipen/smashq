@@ -56,7 +56,7 @@ class Container extends React.PureComponent {
       this.props.user &&
       this.props.user.id
     ) {
-      this.setupEcho(this.props.user.id);
+      // this.setupEcho(this.props.user.id);
     }
     if (prevProps.isAuthenticated && !this.props.isAuthenticated) {
       if (window.Echo) {

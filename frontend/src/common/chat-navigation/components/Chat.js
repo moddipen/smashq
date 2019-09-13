@@ -367,7 +367,7 @@ class Chat extends React.PureComponent {
     if (this.props.starredChannels.length && List != '') {
       starredList = <ul className={'chat-listing-starred'}>
         <li className={'menu-header'}>
-          <a href="javascript:">Starred</a>
+          <a href="#">Starred</a>
         </li>
         {List}
       </ul>
@@ -455,9 +455,9 @@ class Chat extends React.PureComponent {
 
     let directMessagesArray = []
     let usersList = <ul className={'chat-listing-direct-messages'}>
-      <li className={'menu-header'}><a id={'DirectMessageBtn'} href="javascript:"
+      <li className={'menu-header'}><a id={'DirectMessageBtn'} href="#"
                                        onClick={e => this.props.updateSelectedModal('DIRECT_MESSAGE_BROWSE')}>Direct
-        Messages</a> <a id={'DirectMessageBtnPlus'} href="javascript:" className={'actions'}
+        Messages</a> <a id={'DirectMessageBtnPlus'} href="#" className={'actions'}
                         onClick={e => this.props.updateSelectedModal('DIRECT_MESSAGE_BROWSE')}><i
         className={'icons-plus'}/></a></li>
       {this.props.directMessages.map(channel => {
@@ -520,9 +520,9 @@ class Chat extends React.PureComponent {
         {starredList}
         <ul className={'chat-listing-channels'}>
           <li className={'menu-header'}>
-            <a id={'BrowseChannels'} href="javascript:"
+            <a id={'BrowseChannels'} href="#"
                onClick={e => this.props.updateSelectedModal('CHANNEL_BROWSE')}>Channels</a>
-            <a id={'ChannelCreateBtn'} href="javascript:"
+            <a id={'ChannelCreateBtn'} href="#"
                className={'actions'}
                onClick={e => this.props.updateSelectedModal('CHANNEL_ADD')}><i
               className={'icons-plus'}/></a>

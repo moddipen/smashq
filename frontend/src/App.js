@@ -6,7 +6,6 @@ import Container from "./common/container/index";
 import NavigationComponent from "./common/navigation/index";
 import PageComponent from "./common/page/index";
 import ModalComponent from "./common/modal/index";
-import QuickBarComponent from "./common/quick-bar/index";
 import AlertComponent from "./common/alert/index";
 import HeaderComponent from "./common/header/index";
 import FooterComponent from "./common/footer/index";
@@ -20,7 +19,6 @@ function App() {
         <Container>
           <NavigationComponent key={0} />
           <PageComponent key={2} />
-          <QuickBarComponent key={4} />
         </Container>
         <FooterComponent />
         <ModalComponent />

@@ -26,6 +26,7 @@ class Page extends React.Component {
     });
 
     this.registerValidator = new Validator({
+      name: "required",
       username: "required|min:6|max:15",
       email: "required|email",
       password: "required|min:6",
@@ -40,6 +41,7 @@ class Page extends React.Component {
         password: ""
       },
       registerDetails: {
+        name: "",
         username: "",
         email: "",
         password: "",
@@ -120,6 +122,7 @@ class Page extends React.Component {
     this.registerValidator.validateAll(registerDetails).then(success => {
       if (success) {
         let data = {
+          name: registerDetails.name,
           username: registerDetails.username,
           email: registerDetails.email,
           password: registerDetails.password

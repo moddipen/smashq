@@ -1,0 +1,62 @@
+li.active a {
+  display: block;
+  padding: 15px 20px;
+  text-align: center;
+  background-color: #fff;
+  color: #000;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.nav-tabs {
+  border: none !important;
+}
+.terms {
+  display: inline-flex;
+}
+
+.profile-dropdown .btn-secondary {
+  color: #000 !important;
+  background: #fff !important;
+  border: none !important;
+  font-size: 20px !important;
+}
+
+.profile-dropdown .btn-secondary.focus,
+.btn-secondary:focus {
+  box-shadow: none !important;
+}
+
+.dropdown-menu-right {
+  border-radius: 0px !important;
+  text-align: right !important;
+  min-width: 9rem !important;
+  transform: translate3d(-110px, 40px, 0px) !important;
+}
+
+.dropdown-divider {
+  margin: 0.3rem 0 !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #efefef !important;
+  color: #000 !important;
+}
+
+.edit-option-list ul li a {
+  font-size: 14px !important;
+  text-align: left !important;
+}
+
+.modal-content {
+  text-align: center !important;
+}
+
+.modal-header {
+  border-bottom: none !important;
+}
+
+.usersearchProfile {
+  border-radius: 50%;
+}

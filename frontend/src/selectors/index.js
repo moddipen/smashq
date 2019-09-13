@@ -12,6 +12,7 @@ const getStateIsAuthenticated = state => state.auth.isAuthenticated;
 const getStateIsEchoSetup = state => state.auth.isEchoSetup;
 const getStateIsInitiallyLoaded = state => state.auth.initialLoad;
 const getStateAuthUserId = state => state.auth.userId;
+const getStateAuthUser = state => state.auth.authUser;
 const getStateAuthCompanyId = state => state.auth.companyId;
 const getStateAuthAPIKeys = state => state.auth.apiKeys;
 const getStateAuthChatSearches = state => state.auth.chatSearches;
@@ -44,6 +45,13 @@ export const getIsAuthenticated = createSelector(
   [getStateIsAuthenticated],
   isAuthenticated => {
     return isAuthenticated || false;
+  }
+);
+
+export const getAuthUserDetails = createSelector(
+  [getStateAuthUser],
+  authUser => {
+    return authUser || {};
   }
 );
 
@@ -223,6 +231,17 @@ export const getChannelById = createSelector(
   [getStateChannels, getIdToFetch],
   (channels, id) => {
     return _.get(channels, id, null);
+  }
+);
+
+export const getSearchUsers = createSelector(
+  [getStateUsers],
+  users => {
+    if (Object.values(users).length) {
+      return Object.values(users);
+    } else {
+      return [];
+    }
   }
 );
 

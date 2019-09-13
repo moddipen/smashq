@@ -130,6 +130,28 @@ const Form = ({
                     <div className="form-group">
                       <input
                         type="text"
+                        className={`form-control ${registerErrors.has("name") &&
+                          "is-invalid"}`}
+                        name="name"
+                        value={register.name || ""}
+                        placeholder="Name"
+                        onKeyPress={e =>
+                          avoidSpace(e.target.name, e.target.value, e)
+                        }
+                        onChange={e =>
+                          handleRegisterChange(e.target.name, e.target.value)
+                        }
+                      />
+                      {registerErrors.has("name") && (
+                        <div className="invalid-feedback">
+                          {registerErrors.first("name")}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="text"
                         className={`form-control ${registerErrors.has(
                           "username"
                         ) && "is-invalid"}`}
