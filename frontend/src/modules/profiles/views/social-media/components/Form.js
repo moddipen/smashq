@@ -43,7 +43,7 @@ const Form = ({ errors, handleChange, handleSubmit, profile, avoidSpace }) => (
                         />
                         {errors.has("facebook") && (
                           <div className="invalid-feedback">
-                            {errors.first("namfacebooke")}
+                            {errors.first("facebook")}
                           </div>
                         )}
                       </div>

@@ -205,11 +205,12 @@ exports.follows = async (req, res) => {
 };
 
 exports.search = async (req, res) => {
-  My.query("select id, username, email from users where username like ?", [
-    `%${req.body.search}%`
-  ])
+  My.query(
+    "select users.id, users.username, users.email,user_profiles.photo from users left join user_profiles on users.id = user_profiles.user_id where users.username like ?",
+    [`%${req.body.search}%`]
+  )
     .then(results => {
-      return res.send(makeSuccess("Loaded ", { users: results }));
+      return res.send(makeSuccess("", { users: results }));
     })
     .catch(err => {
       return res.send(makeError("Something went wrong !"));
@@ -217,9 +218,11 @@ exports.search = async (req, res) => {
 };
 
 exports.getAllUsers = async (req, res) => {
-  My.query("select id, username, email from users")
+  My.query(
+    "select users.id, users.username, users.email,user_profiles.photo from users left join user_profiles on users.id = user_profiles.user_id"
+  )
     .then(results => {
-      return res.send(makeSuccess("Loaded ", { users: results }));
+      return res.send(makeSuccess("", { users: results }));
     })
     .catch(err => {
       return res.send(makeError("Something went wrong !"));

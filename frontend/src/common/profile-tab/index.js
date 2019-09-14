@@ -30,11 +30,15 @@ class ProfileTabComponent extends React.PureComponent {
             >
               <NavLink to={`/social-media`}>Social Media</NavLink>
             </li>
-            <li>
-              <a href="#">Change Password</a>
+            <li
+              className={
+                this.props.page.name == "CHANGE_PASSWORD" ? "active" : ""
+              }
+            >
+              <NavLink to={`/change-password`}>Change Password</NavLink>
             </li>
-            <li>
-              <a href="#">Email and SMS</a>
+            <li className={this.props.page.name == "EMAIL_SMS" ? "active" : ""}>
+              <NavLink to={`/email-sms`}>Email and SMS</NavLink>
             </li>
             <li>
               <a href="#">Privacy and Security</a>

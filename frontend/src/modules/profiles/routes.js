@@ -17,6 +17,20 @@ const pages = {
       loader: () => import("./views/social-media/index"),
       loading: LoadingComponent
     })
+  },
+  CHANGE_PASSWORD: {
+    path: "/change-password",
+    component: Loadable({
+      loader: () => import("./views/change-password/index"),
+      loading: LoadingComponent
+    })
+  },
+  EMAIL_SMS: {
+    path: "/email-sms",
+    component: Loadable({
+      loader: () => import("./views/email-sms/index"),
+      loading: LoadingComponent
+    })
   }
 };
 

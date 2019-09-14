@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "redux-first-router-link";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
+import { API_URL } from "../../../../../contants/config";
 import {
   Button,
   Modal,
@@ -46,11 +47,19 @@ const Form = ({
 }) => (
   <div className="head-search-result-box box-shadow">
     {users.map(user => {
+      console.log("userd", user);
       return (
         <div className="user-home-suggestion-box">
           <div className="user-home-suggestion-img">
             <a href="user-profile.php">
-              <img src="/img/noimg.png" alt="" />
+              <img
+                src={
+                  user.photo != ""
+                    ? API_URL + "/" + user.photo
+                    : "/img/noimg.png"
+                }
+                alt=""
+              />
             </a>
           </div>
           <div className="user-home-suggestion-name">

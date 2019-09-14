@@ -22,7 +22,7 @@ class Page extends React.Component {
       name: "required",
       username: "required|min:6|max:15",
       email: "required|email",
-      website: "",
+      website: "url",
       description: "",
       phone: "required",
       gender: "",
@@ -46,11 +46,11 @@ class Page extends React.Component {
       filePreview:
         this.props.authUser.photo != ""
           ? API_URL + "/" + this.props.authUser.photo
-          : null,
+          : "/img/noimg.png",
       src:
         this.props.authUser.photo != ""
           ? API_URL + "/" + this.props.authUser.photo
-          : null,
+          : "/img/noimg.png",
       modal: false,
       errors: this.validator.errors
     };
@@ -125,7 +125,6 @@ class Page extends React.Component {
   }
 
   submit(credentials) {
-    console.log(credentials);
     this.props.profile(credentials);
   }
 

@@ -13,7 +13,8 @@ import {
   USER_LOAD,
   AUTH_USER,
   UPDATE_PROFILE,
-  UPDATE_SOCIAL_MEDIA
+  UPDATE_SOCIAL_MEDIA,
+  UPDATE_PASSWORD
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 
@@ -56,6 +57,17 @@ export const updateSocialMedia = payload => {
     method: "post",
     onSuccess: () => {
       push("/social-media");
+    }
+  });
+};
+
+export const updatePassword = payload => {
+  return AsyncRequest.createSimpleRequestFromObject(UPDATE_PASSWORD, {
+    path: `/api/users/change-password`,
+    data: payload,
+    method: "post",
+    onSuccess: () => {
+      push("/change-password");
     }
   });
 };

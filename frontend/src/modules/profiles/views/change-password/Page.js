@@ -9,7 +9,7 @@ import "../../../../assets/css/login.css";
 // initialize component
 class Page extends React.Component {
   // set name of the component
-  static displayName = "SocialMediaPage";
+  static displayName = "ChangePasswordForm";
 
   // validate props
   static propTypes = {};
@@ -17,24 +17,21 @@ class Page extends React.Component {
   constructor(props) {
     super(props);
     this.validator = new Validator({
-      facebook: "url",
-      instagram: "url",
-      snapchat: "url",
-      twitter: "url",
-      youtube: "url",
-      amazon: "url"
+      old_password: "required",
+      password: "required|min:6",
+      confirm_password: "required|min:6"
     });
     // set the state of the app
     this.state = {
       credentials: {
-        facebook: this.props.authUser.facebook,
-        instagram: this.props.authUser.instagram,
-        snapchat: this.props.authUser.snapchat,
-        twitter: this.props.authUser.twitter,
-        youtube: this.props.authUser.youtube,
-        amazon: this.props.authUser.amazon
+        photo: this.props.authUser.photo,
+        name: this.props.authUser.name,
+        old_password: "",
+        password: "",
+        confirm_password: ""
       },
-      errors: this.validator.errors
+      errors: this.validator.errors,
+      confirm_error: ""
     };
 
     this.avoidSpace = this.avoidSpace.bind(this);
@@ -81,7 +78,24 @@ class Page extends React.Component {
   }
 
   submit(credentials) {
-    this.props.profile(credentials);
+    if (
+      this.state.credentials.password !==
+      this.state.credentials.confirm_password
+    ) {
+      this.setState({
+        confirm_error: "Confirmation password does not match with new password."
+      });
+    } else {
+      this.setState({
+        confirm_error: ""
+      });
+      const credentialsC = {
+        old_password: this.state.credentials.old_password,
+        password: this.state.credentials.password,
+        confirm_password: this.state.credentials.confirm_password
+      };
+      this.props.profile(credentialsC);
+    }
   }
 
   // render component
@@ -90,12 +104,12 @@ class Page extends React.Component {
     // check if user is authenticated then redirect him to home page
 
     const props = {
+      confirm_error: this.state.confirm_error,
       profile: this.state.credentials,
       authUser: this.state.authUser,
       errors: this.state.errors,
       handleChange: this.handleChange,
-      handleSubmit: this.handleSubmit,
-      avoidSpace: this.avoidSpace
+      handleSubmit: this.handleSubmit
     };
 
     return <Form {...props} />;
