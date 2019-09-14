@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
 import { API_URL } from "../../../../../contants/config";
 
@@ -130,10 +129,6 @@ const Form = ({
                           Change Password
                         </button>
                       </div>
-                    </div>
-                    <div className="form-group">
-                      <label></label>
-                      <NavLink to={`/forgot-password`}>Forgot Password</NavLink>
                     </div>
                   </form>
                 </div>

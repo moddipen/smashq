@@ -135,9 +135,6 @@ const Form = ({
                         name="name"
                         value={register.name || ""}
                         placeholder="Name"
-                        onKeyPress={e =>
-                          avoidSpace(e.target.name, e.target.value, e)
-                        }
                         onChange={e =>
                           handleRegisterChange(e.target.name, e.target.value)
                         }

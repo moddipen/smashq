@@ -93,7 +93,7 @@ class Header extends React.PureComponent {
         } else {
           this.props.initialSearch();
         }
-      }, 1000);
+      }, 500);
     }
   };
 
