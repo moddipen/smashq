@@ -60,3 +60,17 @@ li.active a {
 .usersearchProfile {
   border-radius: 50%;
 }
+
+.seeAll {
+  margin-right: 5px;
+  float: right;
+  color: #419ae8;
+}
+
+.head-search-result-box {
+  width: 100%;
+}
+.no-record {
+  padding: 10px;
+  text-align: center;
+}

@@ -20,7 +20,6 @@ import { initialSearch, searchUser } from "../../modules/users/store/actions";
 
 class Header extends React.PureComponent {
   static propTypes = {};
-
   static defaultProps = {
     SubHeaderComponent: null
   };
@@ -32,7 +31,8 @@ class Header extends React.PureComponent {
       search: "",
       expanded: false,
       dropDownOpen: false,
-      showSearch: false
+      showSearch: false,
+      clickedOutside: false
     };
 
     this.hideSearchEvent = this.hideSearchEvent.bind(this);
@@ -43,11 +43,15 @@ class Header extends React.PureComponent {
 
   componentDidMount() {
     document.addEventListener("keydown", this.keypressFunction, false);
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
     document.removeEventListener("keydown", this.keypressFunction, false);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
+
+  myRef = React.createRef();
 
   keypressFunction = event => {
     if (window.navigator.userAgent.indexOf("Mac") != -1) {
@@ -66,6 +70,14 @@ class Header extends React.PureComponent {
       }
     }
   };
+
+  handleClickOutside = e => {
+    if (!this.myRef.current.contains(e.target)) {
+      this.setState({ clickedOutside: true });
+    }
+  };
+
+  handleClickInside = () => this.setState({ clickedOutside: false });
 
   signOut() {
     this.props.logout();
@@ -129,7 +141,7 @@ class Header extends React.PureComponent {
             </div>
 
             <div className="head-right d-flex align-items-center">
-              <div className="head-search-section">
+              <div className="head-search-section" ref={this.myRef}>
                 <div
                   className={
                     "head-search-box " +
@@ -145,6 +157,7 @@ class Header extends React.PureComponent {
                     onClick={this.showSearchEvent}
                     onBlur={this.hideSearchEvent}
                   />
+                  {/* {this.state.clickedOutside ? "Bye!" : "Hello!"} */}
                   <SearchComponent />
                 </div>
               </div>

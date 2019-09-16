@@ -7,7 +7,12 @@
  */
 
 import { normalize, schema } from "normalizr";
-import { USER_LOAD, INITIAL_SEARCH_USER, SEARCH_USER } from "./action-types";
+import {
+  USER_LOAD,
+  INITIAL_SEARCH_USER,
+  SEARCH_USER,
+  FOLLOW_STATUS
+} from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 
 export const userLoad = () => {
@@ -27,6 +32,18 @@ export const initialSearch = () => {
   return AsyncRequest.createSimpleRequestFromObject(INITIAL_SEARCH_USER, {
     path: `/api/users/lists`,
     method: "get",
+    responseField: "data",
+    normalize: response => {
+      return response;
+    }
+  });
+};
+
+export const followStatus = payload => {
+  return AsyncRequest.createSimpleRequestFromObject(FOLLOW_STATUS, {
+    path: `/api/users/follows`,
+    data: payload,
+    method: "post",
     responseField: "data",
     normalize: response => {
       return response;

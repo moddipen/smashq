@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import Avatar from "react-avatar-edit";
 
-const displayName = "VerifyCodeForm";
+const displayName = "SearchForm";
 const propTypes = {
   // errors: PropTypes.object.isRequired,
   // handleSubmit: PropTypes.func.isRequired,
@@ -46,33 +46,44 @@ const Form = ({
   // filePreview
 }) => (
   <div className="head-search-result-box box-shadow">
-    {users.map(user => {
-      console.log("userd", user);
-      return (
-        <div className="user-home-suggestion-box">
-          <div className="user-home-suggestion-img">
-            <a href="user-profile.php">
-              <img
-                src={
-                  user.photo != ""
-                    ? API_URL + "/" + user.photo
-                    : "/img/noimg.png"
-                }
-                alt=""
-              />
-            </a>
+    {users.length ? (
+      users.map(user => {
+        return (
+          <div key={user.id} className="user-home-suggestion-box">
+            <div className="user-home-suggestion-img">
+              <a href="#">
+                <img
+                  src={
+                    user.photo != ""
+                      ? API_URL + "/" + user.photo
+                      : "/img/noimg.png"
+                  }
+                  alt=""
+                />
+              </a>
+            </div>
+            <div className="user-home-suggestion-name">
+              <a href="#">{user.username}</a>
+            </div>
+            <div className="user-home-suggestion-btn">
+              <a href="#" className="btn-custom">
+                Follow
+              </a>
+            </div>
           </div>
-          <div className="user-home-suggestion-name">
-            <a href="user-profile.php">{user.username}</a>
-          </div>
-          <div className="user-home-suggestion-btn">
-            <a href="#" className="btn-custom">
-              Follow
-            </a>
-          </div>
-        </div>
-      );
-    })}
+        );
+      })
+    ) : (
+      <div className="no-record">
+        <h3>No Record Found.</h3>
+      </div>
+    )}
+
+    <span>
+      <NavLink to={`/user-lists`} className="seeAll">
+        See all
+      </NavLink>
+    </span>
   </div>
 );
 

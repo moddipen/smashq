@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 // import components
 import Page from "./Page";
 import { getAuthUserDetails, getSearchUsers } from "../../../../selectors";
-
+import { followStatus } from "../../store/actions";
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
@@ -13,7 +13,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return { followStatus: credentials => dispatch(followStatus(credentials)) };
 };
 export default connect(
   mapStateToProps,

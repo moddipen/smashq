@@ -44,8 +44,10 @@ export const updateProfile = payload => {
     path: `/api/users/update`,
     data: payload,
     method: "post",
-    onSuccess: () => {
-      push("/edit-profile");
+    normalize: response => {
+      return {
+        ...response.profiles
+      };
     }
   });
 };
@@ -55,8 +57,10 @@ export const updateSocialMedia = payload => {
     path: `/api/users/social/update`,
     data: payload,
     method: "post",
-    onSuccess: () => {
-      push("/social-media");
+    normalize: response => {
+      return {
+        ...response.profiles
+      };
     }
   });
 };

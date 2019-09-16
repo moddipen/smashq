@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
-import "../../../../assets/css/login.css";
+//import "../../../../assets/css/login.css";
 
 // initialize component
 class Page extends React.Component {

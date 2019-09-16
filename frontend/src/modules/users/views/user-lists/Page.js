@@ -1,37 +1,37 @@
 // import libs
 import React from "react";
 import PropTypes from "prop-types";
-import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
-//import "../../../../assets/css/login.css";
 
 // initialize component
 class Page extends React.Component {
   // set name of the component
-  static displayName = "EmailSmsForm";
-
+  static displayName = "UserListsForm";
   // validate props
   static propTypes = {};
-
   constructor(props) {
     super(props);
+    // set the state of the app
+    this.state = {};
   }
+
+  //follow
+  followStatus = id => {
+    let status = {
+      user_id: id
+    };
+    this.props.followStatus(status);
+  };
 
   // render component
   render() {
-    //console.log("auth user", this.props.authUser);
+    console.log("users", this.props.users);
     // check if user is authenticated then redirect him to home page
-
     const props = {
-      // confirm_error: this.state.confirm_error,
-      // profile: this.state.credentials,
-      // authUser: this.state.authUser,
-      // errors: this.state.errors,
-      // handleChange: this.handleChange,
-      // handleSubmit: this.handleSubmit
+      users: this.props.users,
+      followStatus: this.followStatus
     };
-
     return <Form {...props} />;
   }
 }

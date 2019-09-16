@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { NavLink } from "redux-first-router-link";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
 
-const displayName = "VerifyCodeForm";
+const displayName = "SocialMediaForm";
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,

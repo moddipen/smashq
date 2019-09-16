@@ -7,7 +7,9 @@ import {
   AUTH_LOGOUT_SUCCESS,
   AUTH_REFRESH_TOKEN,
   AUTH_RESET_PASSWORD,
-  GET_CAR_SUCCESS
+  GET_CAR_SUCCESS,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_SOCIAL_MEDIA_SUCCESS
 } from "./action-types";
 import { USER_LOAD_SUCCESS, GET_CAR } from "../../users/store/action-types";
 
@@ -39,6 +41,10 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return userLoad(state, payload);
     case GET_CAR_SUCCESS:
       return getCar(state, payload);
+    case UPDATE_PROFILE_SUCCESS:
+      return userLoad(state, payload);
+    case UPDATE_SOCIAL_MEDIA_SUCCESS:
+      return userLoad(state, payload);
     default:
       return state;
   }
