@@ -1,0 +1,29 @@
+.modal-profile .modal-content {
+  border-radius: 10px !important;
+  border: none !important;
+  max-width: 450px;
+}
+
+.modal-story .modal-content {
+  border-radius: 10px !important;
+  border: none !important;
+}
+
+.close {
+  font-size: 30px !important;
+  font-weight: 200 !important;
+}
+
+.commonsmall-box {
+  padding: 8% 0 0 0 !important;
+}
+.modal-body {
+  padding: 0 !important;
+}
+.pad-30 {
+  padding-bottom: 30px;
+}
+button.close {
+  padding-right: 15px;
+  padding-top: 10px;
+}

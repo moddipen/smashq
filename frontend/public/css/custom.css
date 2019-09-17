@@ -74,3 +74,8 @@ li.active a {
   padding: 10px;
   text-align: center;
 }
+
+.f-a {
+  font-size: 20px !important;
+  color: #666666;
+}

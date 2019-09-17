@@ -2,7 +2,7 @@ const My = require("jm-ez-mysql");
 const bcrypt = require("bcrypt-nodejs");
 const isBase64 = require("is-base64");
 
-//for get profile
+//for get login profile
 exports.getProfile = async (req, res) => {
   var id = req.user.id;
   My.query("select * from users where id = ? limit 1", [id])
@@ -278,6 +278,64 @@ exports.getAllUsers = async (req, res) => {
       return res.send(makeSuccess("", { users: results }));
     })
     .catch(err => {
+      return res.send(makeError("Something went wrong !"));
+    });
+};
+
+//get user Profile
+exports.findOne = async (req, res) => {
+  var id = req.params.Id;
+  My.query(
+    "select users.id, users.username,users.name, users.email,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
+    [id]
+  )
+    .then(result => {
+      //following count
+      My.query(
+        "select count(id) as following from followers where user_id = ?",
+        [id]
+      )
+        .then(results => {
+          //followers count
+          My.query(
+            "select count(id) as followers from followers where follow_user_id = ?",
+            [id]
+          )
+            .then(results1 => {
+              //check follow and unfollow status
+              My.query(
+                "select count(id) as followStatus from followers where follow_user_id = ? and user_id=?",
+                [id, req.user.id]
+              )
+                .then(results2 => {
+                  if (results2[0].followStatus > 0) {
+                    results[0].followUserId = id;
+                  } else {
+                    results[0].followUserId = null;
+                  }
+
+                  var obj = Object.assign(
+                    {},
+                    result[0],
+                    results[0],
+                    results1[0]
+                  );
+                  return res.send(makeSuccess("", { users: obj }));
+                })
+                .catch(err => {
+                  return res.send(makeError("Something went wrong !"));
+                });
+            })
+            .catch(err => {
+              return res.send(makeError("Something went wrong !"));
+            });
+        })
+        .catch(err => {
+          return res.send(makeError("Something went wrong !"));
+        });
+    })
+    .catch(err => {
+      console.log(err);
       return res.send(makeError("Something went wrong !"));
     });
 };

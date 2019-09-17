@@ -1,19 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
-import ProfileTabComponent from "../../../../../common/profile-tab/index";
 import { API_URL } from "../../../../../contants/config";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Row,
-  Col
-} from "reactstrap";
-import Avatar from "react-avatar-edit";
-
+import { NavLink } from "redux-first-router-link";
 const displayName = "UserListsForm";
 const propTypes = {
   followStatus: PropTypes.func.isRequired
@@ -28,19 +16,21 @@ const Form = ({ users, followStatus }) => (
             return (
               <div key={user.id} className="user-home-suggestion-box">
                 <div className="user-home-suggestion-img">
-                  <a href="#">
+                  <NavLink to={`/user-profile/` + user.id}>
                     <img
                       src={
                         user.photo != ""
                           ? API_URL + "/" + user.photo
                           : "/img/noimg.png"
                       }
-                      alt=""
+                      alt="User Image"
                     />
-                  </a>
+                  </NavLink>
                 </div>
                 <div className="user-home-suggestion-name">
-                  <a href="#">{user.username}</a>
+                  <NavLink to={`/user-profile/` + user.id}>
+                    {user.username}
+                  </NavLink>
                 </div>
                 <div className="user-home-suggestion-btn">
                   {user.followUserId !== null ? (

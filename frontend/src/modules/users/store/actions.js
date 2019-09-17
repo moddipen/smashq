@@ -11,7 +11,8 @@ import {
   USER_LOAD,
   INITIAL_SEARCH_USER,
   SEARCH_USER,
-  FOLLOW_STATUS
+  FOLLOW_STATUS,
+  GET_USER_PROFILE
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 
@@ -56,6 +57,17 @@ export const searchUser = payload => {
     path: `/api/users/search`,
     data: payload,
     method: "post",
+    responseField: "data",
+    normalize: response => {
+      return response;
+    }
+  });
+};
+
+export const getuserProfile = id => {
+  return AsyncRequest.createSimpleRequestFromObject(GET_USER_PROFILE, {
+    path: `/api/users/user-profile/` + id,
+    method: "get",
     responseField: "data",
     normalize: response => {
       return response;

@@ -74,6 +74,7 @@ class Header extends React.PureComponent {
   handleClickOutside = e => {
     if (!this.myRef.current.contains(e.target)) {
       this.setState({ clickedOutside: true });
+      this.hideSearchEvent();
     }
   };
 
@@ -155,9 +156,8 @@ class Header extends React.PureComponent {
                     className="form-control"
                     placeholder="Search"
                     onClick={this.showSearchEvent}
-                    onBlur={this.hideSearchEvent}
                   />
-                  {/* {this.state.clickedOutside ? "Bye!" : "Hello!"} */}
+
                   <SearchComponent />
                 </div>
               </div>

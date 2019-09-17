@@ -1,20 +1,27 @@
 // import libs
 import React from "react";
-import PropTypes from "prop-types";
 // import components
 import Form from "./components/Form";
 
 // initialize component
 class Page extends React.Component {
   // set name of the component
-  static displayName = "EditProfilePage";
+  static displayName = "SearchForm";
   // validate props
-  static propTypes = {};
+
   constructor(props) {
     super(props);
     // set the state of the app
     this.state = {};
   }
+
+  //follow
+  followStatus = id => {
+    let status = {
+      user_id: id
+    };
+    this.props.followStatus(status);
+  };
 
   // render component
   render() {
@@ -23,7 +30,8 @@ class Page extends React.Component {
     });
     // check if user is authenticated then redirect him to home page
     const props = {
-      users: items
+      users: items,
+      followStatus: this.followStatus
     };
     return <Form {...props} />;
   }

@@ -1,7 +1,8 @@
 import {
   INITIAL_SEARCH_USER_SUCCESS,
   SEARCH_USER_SUCCESS,
-  FOLLOW_STATUS_SUCCESS
+  FOLLOW_STATUS_SUCCESS,
+  GET_USER_PROFILE_SUCCESS
 } from "./action-types";
 
 const initialState = {};
@@ -14,6 +15,8 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return setUsers(state, payload);
     case FOLLOW_STATUS_SUCCESS:
       return setFollowStatus(state, payload);
+    case GET_USER_PROFILE_SUCCESS:
+      return getUserProfile(state, payload);
     default:
       return state;
   }
@@ -24,7 +27,6 @@ function setUsers(state, payload) {
 }
 
 function setFollowStatus(state, payload) {
-  console.log(payload.users);
   for (var i in state) {
     if (payload.users.status === "follow") {
       if (state[i].id == payload.users.id) {
@@ -36,6 +38,16 @@ function setFollowStatus(state, payload) {
         state[i].followUserId = null;
         break;
       }
+    }
+  }
+  return Object.assign({}, state);
+}
+
+function getUserProfile(state, payload) {
+  for (var i in state) {
+    if (payload.users.id === state[i].id) {
+      state[i] = payload.users;
+      break;
     }
   }
   return Object.assign({}, state);
