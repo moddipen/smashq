@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { connect } from "react-redux";
 import { NavLink } from "redux-first-router-link";
 import { authLogout } from "../../modules/auth/store/actions";
-import { getChatSettingByName } from "../../selectors";
+import { getChatSettingByName, getAuthUserDetails } from "../../selectors";
 import { updateSelectedModal } from "../../modules/web/store/actions";
 import SearchComponent from "../../modules/users/views/search/index";
 
@@ -177,10 +177,9 @@ class Header extends React.PureComponent {
                       Edit Profile
                     </DropdownLink>
                     <DropdownItem divider />{" "}
-                    <DropdownItem>
-                      {" "}
-                      Q <span>400</span>{" "}
-                    </DropdownItem>
+                    <DropdownLink to={"/your-coin"}>
+                      Q <span>{this.props.authUser.coins}</span>{" "}
+                    </DropdownLink>
                     <DropdownItem divider />
                     <DropdownItem onClick={this.props.logout}>
                       Logout{" "}
@@ -199,6 +198,7 @@ class Header extends React.PureComponent {
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
+    authUser: getAuthUserDetails(state),
     fKeySearch: getChatSettingByName(state, "f_key_search") || "FALSE"
   };
 };

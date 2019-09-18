@@ -75,7 +75,9 @@ const Form = ({
                     noValidate
                   >
                     <div className="form-group">
-                      <label htmlFor="name">Name</label>
+                      <label htmlFor="name">
+                        Name <span className="classerr">*</span>
+                      </label>
                       <div className="form-input">
                         <input
                           value={profile.name || ""}
@@ -104,7 +106,9 @@ const Form = ({
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="username">Username</label>
+                      <label htmlFor="username">
+                        Username <span className="classerr">*</span>
+                      </label>
                       <div className="form-input">
                         <input
                           value={profile.username || ""}
@@ -149,6 +153,28 @@ const Form = ({
                       </div>
                     </div>
                     <div className="form-group">
+                      <label htmlFor="motto">Motto</label>
+                      <div className="form-input">
+                        <textarea
+                          name="motto"
+                          cols="30"
+                          rows="3"
+                          className={`form-control ${errors.has("motto") &&
+                            "is-invalid"}`}
+                          onChange={e =>
+                            handleChange(e.target.name, e.target.value)
+                          }
+                          value={profile.motto || ""}
+                        />
+                        {errors.has("motto") && (
+                          <div className="invalid-feedback">
+                            {errors.first("motto")}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="form-group">
                       <label htmlFor="description">Bio</label>
                       <div className="form-input">
                         <textarea
@@ -171,7 +197,9 @@ const Form = ({
                       </div>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="email">Email</label>
+                      <label htmlFor="email">
+                        Email <span className="classerr">*</span>
+                      </label>
                       <div className="form-input">
                         <input
                           value={profile.email || ""}
@@ -192,7 +220,9 @@ const Form = ({
                       </div>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="phone">Phone Number</label>
+                      <label htmlFor="phone">
+                        Phone Number <span className="classerr">*</span>
+                      </label>
                       <div className="form-input">
                         <input
                           value={profile.phone || ""}
@@ -320,6 +350,7 @@ const Form = ({
       <ModalBody>
         <div className="button-group">
           <Row>
+            <Col sm="2"></Col>
             <Col sm="8">
               <Avatar
                 width={290}
@@ -332,6 +363,7 @@ const Form = ({
             {/* <Col sm="4">
               <img src={preview} alt="Preview" />
             </Col> */}
+            <Col sm="2"></Col>
           </Row>
           <button
             type="button"
@@ -340,8 +372,8 @@ const Form = ({
           >
             Upload Photo
           </button>
-          <br />
-          <button className="btn-custom m-2">Remove Current Photo</button>
+          {/* <br />
+          <button className="btn-custom m-2">Remove Current Photo</button> */}
         </div>
       </ModalBody>
     </Modal>

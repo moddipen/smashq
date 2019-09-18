@@ -211,6 +211,7 @@ const Form = ({
                         type="checkbox"
                         name="terms"
                         value="terms"
+                        checked={register.terms !== ""}
                         onChange={e =>
                           handleRegisterChange(e.target.name, e.target.value)
                         }
@@ -230,6 +231,7 @@ const Form = ({
                         type="checkbox"
                         name="age"
                         value="age"
+                        checked={register.age !== ""}
                         onChange={e =>
                           handleRegisterChange(e.target.name, e.target.value)
                         }

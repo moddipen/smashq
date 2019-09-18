@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { API_URL } from "../../../../../contants/config";
 import { NavLink } from "redux-first-router-link";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Nav } from "reactstrap";
+import MetaTags from 'react-meta-tags';
 
 const displayName = "UserProfileForm";
 const propTypes = {
@@ -13,11 +14,24 @@ const propTypes = {
   toggle1: PropTypes.func.isRequired,
   modal: PropTypes.bool.isRequired,
   modal1: PropTypes.bool.isRequired,
-  handleBack : PropTypes.func.isRequired
+  handleBack : PropTypes.func.isRequired,
+  followStatus: PropTypes.func.isRequired
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users }) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus }) => (
   <section className="pad-40 user-profile-section">
+    <MetaTags>
+      <title>{users.username}
+      {
+       users.motto !== null ? ' | '+users.motto : ''
+      }
+      </title>
+      <meta id="meta-description" name="description" content={
+        users.username +' on SmashQ' }
+        { 
+          ...users.description !== null ? ' | '+users.description : ''
+        } />
+    </MetaTags>
     <div className="top-back-bar">
       <div className="container container630">
         <div className="row align-items-center">
@@ -77,9 +91,24 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users 
             </div>
           </div>
           <div className="profile-follow-btn">
-            <a href="#" className="btn-custom">
-              Follow
-            </a>
+          {users.followUserId !== null ? (
+            <NavLink
+            to="#"
+            className="btn-custom followed"
+            onClick={() => followStatus(users.id)}
+          >
+            Unfollow
+          </NavLink>
+           ) : (
+            <NavLink
+            to="#"
+            className="btn-custom"
+            onClick={() => followStatus(users.id)}
+          >
+            Follow
+          </NavLink>
+            )}
+
             <a href="#" className="btn-custom">
               Message
             </a>
@@ -91,15 +120,15 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users 
         <div className="profile-about-info clearfix pt-20">
           <div className="profile-name mb-10">{users.name}</div>
           <div className="profile-about-text">
+            { users.description !== '' ?  <p>
+            { users.description }
+            </p> : null }
+            
+            {users.website !== '' ? 
             <p>
-              Hey there, it’s <strong>Molly Bennett</strong> (@MollyX) Who wants
-              to see how naughty my everyday life is? And maybe join me in the
-              fun? Subscribe here to chat with me ? Let me blow your mind… and
-              other things!{" "}
+            my website <NavLink to="#">{ users.website }</NavLink>
             </p>
-            <p>
-              my website <a href="#">www.google.com</a>
-            </p>
+            : null}
           </div>
         </div>
         <div className="profile-social-link pt-20">

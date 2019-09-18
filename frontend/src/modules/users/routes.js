@@ -16,6 +16,7 @@ const pages = {
   USER_PROFILE: {
     path: "/user-profile/:id",
     component: { UserProfile },
+
     component: Loadable({
       loader: () => import("./views/user-profile/index"),
       loading: LoadingComponent

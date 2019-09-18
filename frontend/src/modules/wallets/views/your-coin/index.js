@@ -2,19 +2,22 @@
 import { connect } from "react-redux";
 // import components
 import Page from "./Page";
-import { getAuthUserDetails, getSearchUsers } from "../../../../selectors";
-import { followStatus } from "../../store/actions";
+import { updateCoins } from "../../store/actions";
+import { getAuthUserDetails } from "../../../../selectors";
+
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
-    authUser: getAuthUserDetails(state),
-    users: getSearchUsers(state)
+    authUser: getAuthUserDetails(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return { followStatus: credentials => dispatch(followStatus(credentials)) };
+  return {
+    profile: credentials => dispatch(updateCoins(credentials))
+  };
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

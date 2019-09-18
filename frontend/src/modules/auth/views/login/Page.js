@@ -49,7 +49,9 @@ class Page extends React.Component {
         age: ""
       },
       errors: this.validator.errors,
-      registerErrors: this.registerValidator.errors
+      registerErrors: this.registerValidator.errors,
+      terms: false,
+      age: false
     };
 
     // bind component with event handlers
@@ -140,6 +142,15 @@ class Page extends React.Component {
 
   submitRegister(registerDetails) {
     this.props.register(registerDetails);
+    let resetInput = {
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      terms: "",
+      age: ""
+    };
+    this.setState({ registerDetails: resetInput });
   }
 
   // render component

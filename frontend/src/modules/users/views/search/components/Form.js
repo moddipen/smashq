@@ -31,21 +31,21 @@ const Form = ({ users, followStatus }) => (
             </div>
             <div className="user-home-suggestion-btn">
               {user.followUserId !== null ? (
-                <a
-                  href="#"
+                <NavLink
+                  to="#"
                   className="btn-custom followed"
                   onClick={() => followStatus(user.id)}
                 >
                   Unfollow
-                </a>
+                </NavLink>
               ) : (
-                <a
-                  href="#"
+                <NavLink
+                  to="#"
                   className="btn-custom"
                   onClick={() => followStatus(user.id)}
                 >
                   Follow
-                </a>
+                </NavLink>
               )}
             </div>
           </div>

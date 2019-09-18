@@ -27,6 +27,7 @@ class Page extends React.Component {
     this.handleBack = this.handleBack.bind(this);
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
+    // this.goBack = this.goBack.bind(this);
   }
 
   // componentDidMount() {
@@ -34,7 +35,7 @@ class Page extends React.Component {
   // }
 
   handleBack = () => {
-    this.props.history.goBack();
+    // this.props.history.goBack();
   };
 
   //modal toggle
@@ -68,6 +69,14 @@ class Page extends React.Component {
     this.setState({ tabs: tab });
   };
 
+  //follow
+  followStatus = id => {
+    let status = {
+      user_id: id
+    };
+    this.props.followStatus(status);
+  };
+
   // render component
   render() {
     let profileUser = this.props.users.filter(
@@ -82,7 +91,8 @@ class Page extends React.Component {
       toggle1: this.toggle1,
       modal: this.state.modal,
       modal1: this.state.modal1,
-      handleBack: this.handleBack
+      handleBack: this.handleBack,
+      followStatus: this.followStatus
     };
     return <Form {...props} />;
   }

@@ -5,17 +5,29 @@ const isBase64 = require("is-base64");
 //for get login profile
 exports.getProfile = async (req, res) => {
   var id = req.user.id;
-  My.query("select * from users where id = ? limit 1", [id])
+
+  My.query("select * from users where id = ? limit 1", [id]) //get username and email
     .then(result => {
       My.query(
         "select id AS userprofile_id,description,website, photo,gender,phone,sas, facebook,instagram,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
         [id]
-      )
+      ) //get user profile details
         .then(result1 => {
-          var obj = Object.assign({}, result[0], result1[0]);
-          return res.send(
-            makeSuccess("User loaded successfully.", { profiles: obj })
-          );
+          My.query("select coins from user_coins where user_id = ?", [id]) //get users coins
+            .then(result2 => {
+              if (Object.keys(result2).length === 0) {
+                result1[0].coins = 0;
+              } else {
+                result1[0].coins = result2[0].coins;
+              }
+              var obj = Object.assign({}, result[0], result1[0]);
+              return res.send(
+                makeSuccess("User loaded successfully.", { profiles: obj })
+              );
+            })
+            .catch(err => {
+              return res.send(makeError("Something went wrong !"));
+            });
         })
         .catch(err => {
           return res.send(makeError("Something went wrong !"));
@@ -41,21 +53,32 @@ exports.updateProfile = async (req, res) => {
       if (object) {
         return res.send(makeError("Username already registered !"));
       } else {
-        await My.update(
-          "users",
-          {
-            username: data.username,
-            email: data.email,
-            name: data.name
-          },
-          "id = " + req.user.id
-        )
-          .then(result => {
-            console.log("username updated !!");
-          })
-          .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
+        const condition1 = "email = ? AND id != ?";
+        const values1 = [req.body.email, req.user.id];
+        await My.first("users", ["id"], condition1, values1).then(
+          async object => {
+            if (object) {
+              return res.send(makeError("Email already registered !"));
+            } else {
+              await My.update(
+                "users",
+                {
+                  username: data.username,
+                  email: data.email,
+                  name: data.name
+                },
+                "id = " + req.user.id
+              )
+                .then(result => {
+                  console.log("username updated !!");
+                })
+                .catch(err => {
+                  console.log(err);
+                  return res.send(makeError("Something went wrong !"));
+                });
+            }
+          }
+        );
       }
     });
     await delete data.username;
@@ -286,7 +309,7 @@ exports.getAllUsers = async (req, res) => {
 exports.findOne = async (req, res) => {
   var id = req.params.Id;
   My.query(
-    "select users.id, users.username,users.name, users.email,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
+    "select users.id, users.username,users.name, users.email,user_profiles.description,user_profiles.website,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
     [id]
   )
     .then(result => {
