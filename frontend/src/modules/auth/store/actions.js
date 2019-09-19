@@ -17,9 +17,7 @@ import {
   AUTH_RESET_PASSWORD,
   AUTH_RESEND_EMAIL,
   AUTH_LOGOUT,
-  AUTH_USER,
-  GET_CAR,
-  GET_CAR_SUCCESS
+  AUTH_USER
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 import { userLoad } from "../../users/store/actions";
@@ -111,17 +109,6 @@ export function authLogout() {
     method: "delete",
     onSuccess: () => {
       push("/login");
-    }
-  });
-}
-
-export function getCar() {
-  return AsyncRequest.createSimpleRequestFromObject(GET_CAR, {
-    path: `/auth/get-users`,
-    method: "get",
-    responseField: "data",
-    normalize: response => {
-      return normalize(response, new schema.Entity("auth"));
     }
   });
 }

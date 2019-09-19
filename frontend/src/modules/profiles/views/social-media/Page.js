@@ -85,7 +85,7 @@ class Page extends React.Component {
 
   // render component
   render() {
-    //console.log("auth user", this.props.authUser);
+    console.log("auth user", this.props.initialLoad);
     // check if user is authenticated then redirect him to home page
 
     const props = {
@@ -94,7 +94,8 @@ class Page extends React.Component {
       errors: this.state.errors,
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit,
-      avoidSpace: this.avoidSpace
+      avoidSpace: this.avoidSpace,
+      initialLoad: this.props.initialLoad
     };
 
     return <Form {...props} />;

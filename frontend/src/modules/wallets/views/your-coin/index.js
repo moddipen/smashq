@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 // import components
 import Page from "./Page";
 import { updateCoins } from "../../store/actions";
-import { getAuthUserCoins } from "../../../../selectors";
+import { getAuthUserDetails } from "../../../../selectors";
 
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
-    coins: getAuthUserCoins(state)
+    authUser: getAuthUserDetails(state)
   };
 };
 

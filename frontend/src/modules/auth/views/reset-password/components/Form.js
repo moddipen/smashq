@@ -7,7 +7,8 @@ const propTypes = {
   password_confirmation: PropTypes.string.isRequired,
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired
+  handleChange: PropTypes.func.isRequired,
+  confirm_error: PropTypes.string.isRequired
 };
 
 const Form = ({
@@ -15,7 +16,8 @@ const Form = ({
   password_confirmation,
   errors,
   handleChange,
-  handleSubmit
+  handleSubmit,
+  confirm_error
 }) => (
   <section className="pad-40 confirm-number-section">
     <div className="container container500">
@@ -65,6 +67,14 @@ const Form = ({
                     {errors.first("password_confirmation")}
                   </div>
                 )}
+                {confirm_error != "" ? (
+                  <div
+                    className="invalid-feedback"
+                    style={{ display: "block" }}
+                  >
+                    {confirm_error}
+                  </div>
+                ) : null}
               </div>
               <div className="form-group">
                 <button className="btn-custom" type="submit">

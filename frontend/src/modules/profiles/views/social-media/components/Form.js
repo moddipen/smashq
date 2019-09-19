@@ -1,19 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
-
+import LoadingOverlay from "react-loading-overlay";
+import BounceLoader from "react-spinners/BounceLoader";
 const displayName = "SocialMediaForm";
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  avoidSpace: PropTypes.func.isRequired
+  avoidSpace: PropTypes.func.isRequired,
+  initialLoad: PropTypes.bool.isRequired
 };
 
-const Form = ({ errors, handleChange, handleSubmit, profile, avoidSpace }) => (
+const Form = ({
+  errors,
+  handleChange,
+  handleSubmit,
+  profile,
+  avoidSpace,
+  initialLoad
+}) => (
   <section className="pad-40 user-profile-edit-section">
-    <div className="container container1030">
+    <LoadingOverlay
+      active={!initialLoad}
+      spinner={<BounceLoader />}
+    ></LoadingOverlay>
+
+    <div
+      className="container container1030"
+      style={{ display: initialLoad ? "block" : "none" }}
+    >
       <div className="user-profile-edit-box bordergray bgwhite">
         <div className="row">
           <ProfileTabComponent />

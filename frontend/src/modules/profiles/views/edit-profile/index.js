@@ -8,6 +8,7 @@ import { getAuthUserDetails } from "../../../../selectors";
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
+    initialLoad: state.auth.initialLoad,
     authUser: getAuthUserDetails(state)
   };
 };

@@ -1,15 +1,13 @@
 // import libs
 import React from "react";
-import PropTypes from "prop-types";
 import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
 
 // initialize component
-class Page extends React.Component {
+class Page extends React.PureComponent {
   // set name of the component
   static displayName = "YourCoinPage";
-  static propTypes = {};
 
   constructor(props) {
     super(props);
@@ -68,10 +66,10 @@ class Page extends React.Component {
 
   // render component
   render() {
-    // console.log("auth user render", this.props.authUser);
+    console.log("auth user render", this.props.authUser);
     // check if user is authenticated then redirect him to home page
     const props = {
-      coins: this.props.coins,
+      authUser: this.props.authUser,
       errors: this.state.errors,
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit,

@@ -31,27 +31,13 @@ class Page extends React.Component {
     // set the state of the app
 
     this.state = {
-      credentials: {
-        name: this.props.authUser.name,
-        username: this.props.authUser.username,
-        email: this.props.authUser.email,
-        website: this.props.authUser.website,
-        description: this.props.authUser.description,
-        motto: this.props.authUser.motto,
-        phone: this.props.authUser.phone,
-        gender: this.props.authUser.gender || "male",
-        sas: this.props.authUser.sas,
-        photo: this.props.authUser.photo
-      },
+      credentials: {},
       preview: null,
       filePreview:
         this.props.authUser.photo != ""
           ? API_URL + "/" + this.props.authUser.photo
           : "/img/noimg.png",
       src: "",
-      // this.props.authUser.photo != ""
-      //   ? API_URL + "/" + this.props.authUser.photo
-      //   : "/img/noimg.png",
       modal: false,
       errors: this.validator.errors
     };
@@ -63,6 +49,24 @@ class Page extends React.Component {
     this.avoidSpace = this.avoidSpace.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    if (Object.keys(this.props.authUser).length !== 0) {
+      let credentials = {
+        name: this.props.authUser.name,
+        username: this.props.authUser.username,
+        email: this.props.authUser.email,
+        website: this.props.authUser.website,
+        description: this.props.authUser.description,
+        motto: this.props.authUser.motto,
+        phone: this.props.authUser.phone,
+        gender: this.props.authUser.gender || "male",
+        sas: this.props.authUser.sas,
+        photo: this.props.authUser.photo
+      };
+      this.setState({ credentials: credentials });
+    }
   }
 
   //Avoid space in username field
@@ -93,7 +97,6 @@ class Page extends React.Component {
   }
 
   previewShow() {
-    console.log("previewShow", this.state.preview);
     let preview;
     if (this.state.preview === null) {
       preview =
@@ -117,7 +120,6 @@ class Page extends React.Component {
   }
 
   onCrop(preview) {
-    console.log("preview", preview);
     this.setState({ preview });
   }
 
@@ -142,10 +144,16 @@ class Page extends React.Component {
 
   // render component
   render() {
-    //console.log("auth user", this.props.authUser);
     // check if user is authenticated then redirect him to home page
+    let profiledata = {};
+    if (Object.keys(this.state.credentials).length !== 0) {
+      profiledata = this.state.credentials;
+    } else {
+      profiledata = {};
+    }
+
     const props = {
-      profile: this.state.credentials,
+      profile: profiledata,
       authUser: this.state.authUser,
       errors: this.state.errors,
       handleChange: this.handleChange,
@@ -158,7 +166,8 @@ class Page extends React.Component {
       src: this.state.src,
       preview: this.state.preview,
       filePreview: this.state.filePreview,
-      previewShow: this.previewShow
+      previewShow: this.previewShow,
+      initialLoad: this.props.initialLoad
     };
 
     return <Form {...props} />;

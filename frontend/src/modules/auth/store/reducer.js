@@ -7,12 +7,11 @@ import {
   AUTH_LOGOUT_SUCCESS,
   AUTH_REFRESH_TOKEN,
   AUTH_RESET_PASSWORD,
-  GET_CAR_SUCCESS,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_SOCIAL_MEDIA_SUCCESS,
   UPDATE_COINS_SUCCESS
 } from "./action-types";
-import { USER_LOAD_SUCCESS, GET_CAR } from "../../users/store/action-types";
+import { USER_LOAD_SUCCESS } from "../../users/store/action-types";
 
 const initialState = {
   isAuthenticated: false,
@@ -40,8 +39,6 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return resetPassword(state);
     case USER_LOAD_SUCCESS:
       return userLoad(state, payload);
-    case GET_CAR_SUCCESS:
-      return getCar(state, payload);
     case UPDATE_PROFILE_SUCCESS:
       return userLoad(state, payload);
     case UPDATE_SOCIAL_MEDIA_SUCCESS:
@@ -68,10 +65,6 @@ function userLoad(state, payload) {
     initialLoad: true,
     authUser: payload
   };
-}
-
-function getCar(state, payload) {
-  return window._.merge({}, state, payload.entities.cars);
 }
 
 function login(state, payload) {

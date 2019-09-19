@@ -32,7 +32,8 @@ class Page extends React.Component {
         password: "",
         password_confirmation: ""
       },
-      errors: this.validator.errors
+      errors: this.validator.errors,
+      confirm_error: ""
     };
 
     // bind component with event handlers
@@ -71,13 +72,26 @@ class Page extends React.Component {
   }
 
   submit(credentials) {
-    this.props.resetPassword(credentials);
+    if (
+      this.state.credentials.password !==
+      this.state.credentials.password_confirmation
+    ) {
+      this.setState({
+        confirm_error: "Confirmation password does not match with new password."
+      });
+    } else {
+      this.setState({
+        confirm_error: ""
+      });
+      this.props.resetPassword(credentials);
+    }
   }
 
   // render component
   render() {
     // check if user is authenticated then redirect him to home page
     const props = {
+      confirm_error: this.state.confirm_error,
       password: this.state.credentials.password,
       password_confirmation: this.state.credentials.password_confirmation,
       errors: this.state.errors,

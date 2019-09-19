@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
+import LoadingOverlay from "react-loading-overlay";
+import BounceLoader from "react-spinners/BounceLoader";
+
 import {
   Button,
   Modal,
@@ -11,6 +14,7 @@ import {
   Col
 } from "reactstrap";
 import Avatar from "react-avatar-edit";
+import { statement } from "@babel/template";
 
 const displayName = "EditProfilePage";
 const propTypes = {
@@ -23,7 +27,8 @@ const propTypes = {
   toggle: PropTypes.func.isRequired,
   previewShow: PropTypes.func.isRequired,
   onCrop: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  initialLoad: PropTypes.bool.isRequired
 };
 
 const Form = ({
@@ -40,10 +45,19 @@ const Form = ({
   previewShow,
   onCrop,
   onClose,
-  filePreview
+  filePreview,
+  initialLoad
 }) => (
   <section className="pad-40 user-profile-edit-section">
-    <div className="container container1030">
+    <LoadingOverlay
+      active={!initialLoad}
+      spinner={<BounceLoader />}
+    ></LoadingOverlay>
+
+    <div
+      className="container container1030"
+      style={{ display: initialLoad ? "block" : "none" }}
+    >
       <div className="user-profile-edit-box bordergray bgwhite">
         <div className="row">
           <ProfileTabComponent />

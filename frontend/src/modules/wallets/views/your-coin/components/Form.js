@@ -7,10 +7,10 @@ const propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  coins: PropTypes.number.isRequired
+  authUser: PropTypes.object.isRequired
 };
 
-const Form = ({ errors, coins, handleChange, handleSubmit, profile }) => (
+const Form = ({ errors, authUser, handleChange, handleSubmit, profile }) => (
   <section className="pad-40 confirm-number-section">
     <div className="container container500">
       <div className="bgwhite bordergray">
@@ -19,7 +19,7 @@ const Form = ({ errors, coins, handleChange, handleSubmit, profile }) => (
             <div className="border-box-icon">Q</div>
           </div>
           <h3 className="mb-20">
-            Your total coin is Q <span>{coins}</span>
+            Your total coin is Q <span>{authUser.coins}</span>
           </h3>
           <div className="form-box">
             <p>
