@@ -7,11 +7,9 @@ import Form from "./components/Form";
 class Page extends React.Component {
   // set name of the component
   static displayName = "SearchForm";
-  // validate props
 
   constructor(props) {
     super(props);
-    // set the state of the app
     this.state = {};
   }
 

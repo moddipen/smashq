@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
 
 const displayName = "YourCoinForm";
 const propTypes = {
@@ -8,10 +7,10 @@ const propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  authUser: PropTypes.object.isRequired
+  coins: PropTypes.number.isRequired
 };
 
-const Form = ({ errors, authUser, handleChange, handleSubmit, profile }) => (
+const Form = ({ errors, coins, handleChange, handleSubmit, profile }) => (
   <section className="pad-40 confirm-number-section">
     <div className="container container500">
       <div className="bgwhite bordergray">
@@ -20,11 +19,11 @@ const Form = ({ errors, authUser, handleChange, handleSubmit, profile }) => (
             <div className="border-box-icon">Q</div>
           </div>
           <h3 className="mb-20">
-            Your total coin is Q <span>{authUser.coins}</span>
+            Your total coin is Q <span>{coins}</span>
           </h3>
           <div className="form-box">
             <p>
-              Lorem Ipsum is simply dummy text ofindustry's standard dummy text
+              Lorem Ipsum is simply dummy text of industry's standard dummy text
               ever since the 1500s, when an unknown printer took a galley of
               type and scrambled{" "}
             </p>

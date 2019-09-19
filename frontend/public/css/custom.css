@@ -79,3 +79,7 @@ li.active a {
   font-size: 20px !important;
   color: #666666;
 }
+
+.classerr {
+  color: red;
+}

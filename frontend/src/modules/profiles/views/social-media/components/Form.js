@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
 
 const displayName = "SocialMediaForm";

@@ -9,7 +9,8 @@ import {
   AUTH_RESET_PASSWORD,
   GET_CAR_SUCCESS,
   UPDATE_PROFILE_SUCCESS,
-  UPDATE_SOCIAL_MEDIA_SUCCESS
+  UPDATE_SOCIAL_MEDIA_SUCCESS,
+  UPDATE_COINS_SUCCESS
 } from "./action-types";
 import { USER_LOAD_SUCCESS, GET_CAR } from "../../users/store/action-types";
 
@@ -45,6 +46,8 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return userLoad(state, payload);
     case UPDATE_SOCIAL_MEDIA_SUCCESS:
       return userLoad(state, payload);
+    case UPDATE_COINS_SUCCESS:
+      return updateCoins(state, payload);
     default:
       return state;
   }
@@ -114,6 +117,15 @@ function logout(state) {
     isAuthenticated: false,
     checked: false,
     isEchoSetup: false
+  };
+}
+
+function updateCoins(state, payload) {
+  let obj = state.authUser;
+  obj.coins = payload.coins;
+  return {
+    ...state,
+    authUser: obj
   };
 }
 

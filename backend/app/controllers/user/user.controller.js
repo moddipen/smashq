@@ -21,9 +21,7 @@ exports.getProfile = async (req, res) => {
                 result1[0].coins = result2[0].coins;
               }
               var obj = Object.assign({}, result[0], result1[0]);
-              return res.send(
-                makeSuccess("User loaded successfully.", { profiles: obj })
-              );
+              return res.send(makeSuccess("", { profiles: obj }));
             })
             .catch(err => {
               return res.send(makeError("Something went wrong !"));
@@ -294,7 +292,7 @@ exports.search = async (req, res) => {
 //for get all users
 exports.getAllUsers = async (req, res) => {
   My.query(
-    "select users.id, users.username, users.email,user_profiles.photo,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id left join followers on users.id = followers.follow_user_id where users.id!=?",
+    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id left join followers on users.id = followers.follow_user_id where users.id!=?",
     [req.user.id]
   )
     .then(results => {
@@ -309,7 +307,7 @@ exports.getAllUsers = async (req, res) => {
 exports.findOne = async (req, res) => {
   var id = req.params.Id;
   My.query(
-    "select users.id, users.username,users.name, users.email,user_profiles.description,user_profiles.website,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
+    "select users.id, users.username,users.name, users.email,user_profiles.description,user_profiles.motto,user_profiles.website,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
     [id]
   )
     .then(result => {

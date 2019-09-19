@@ -14,7 +14,6 @@ import { AUTH_LOGIN, AUTH_LOGOUT } from "./store/action-types";
 export function* fetchUser() {
   try {
     const user = yield call(getUser);
-
     yield put(authActions.authUser(user));
   } catch (error) {
     console.log(error);

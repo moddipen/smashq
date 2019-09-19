@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
 
 const displayName = "ForgotPasswordForm";
 const propTypes = {

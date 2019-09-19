@@ -4,11 +4,14 @@ import { connect } from "react-redux";
 import Page from "./Page";
 import { getAuthUserDetails, getSearchUsers } from "../../../../selectors";
 import { followStatus } from "../../store/actions";
+
 const mapStateToProps = state => {
+  let id = state.location.payload.id;
+
   return {
     isAuthenticated: state.auth.isAuthenticated,
     authUser: getAuthUserDetails(state),
-    users: getSearchUsers(state)
+    user: getSearchUsers(state, id)
   };
 };
 

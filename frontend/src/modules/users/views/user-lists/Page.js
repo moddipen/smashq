@@ -1,6 +1,5 @@
 // import libs
 import React from "react";
-
 // import components
 import Form from "./components/Form";
 
@@ -8,7 +7,6 @@ import Form from "./components/Form";
 class Page extends React.Component {
   // set name of the component
   static displayName = "UserListsForm";
-  // validate props
 
   constructor(props) {
     super(props);

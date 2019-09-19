@@ -1,17 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
 import ProfileTabComponent from "../../../../../common/profile-tab/index";
-import { API_URL } from "../../../../../contants/config";
 
 const displayName = "EmailSmsForm";
-const propTypes = {
-  // errors: PropTypes.object.isRequired,
-  // handleSubmit: PropTypes.func.isRequired,
-  // handleChange: PropTypes.func.isRequired,
-  // profile: PropTypes.object.isRequired,
-  // confirm_error: PropTypes.string.isRequired
-};
+const propTypes = {};
 
 const Form = ({}) => (
   <section className="pad-40 user-profile-edit-section">

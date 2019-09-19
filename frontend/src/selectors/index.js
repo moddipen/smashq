@@ -55,6 +55,13 @@ export const getAuthUserDetails = createSelector(
   }
 );
 
+export const getAuthUserCoins = createSelector(
+  [getStateAuthUser],
+  authUser => {
+    return authUser.coins || 0;
+  }
+);
+
 export const getIsInitiallyLoaded = createSelector(
   [getStateIsInitiallyLoaded],
   initialLoad => {
@@ -241,6 +248,20 @@ export const getSearchUsers = createSelector(
       return Object.values(users);
     } else {
       return [];
+    }
+  }
+);
+
+export const getUserProfileById = createSelector(
+  [getStateUsers, getIdToFetch],
+  (users, id) => {
+    let user = _.filter(users, user => {
+      return user.id === id;
+    });
+    if (user.length) {
+      return user[0];
+    } else {
+      return {};
     }
   }
 );

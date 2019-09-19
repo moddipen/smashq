@@ -4,14 +4,11 @@ import PropTypes from "prop-types";
 import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
-//import "../../../../assets/css/login.css";
 
 // initialize component
 class Page extends React.Component {
   // set name of the component
   static displayName = "YourCoinPage";
-
-  // validate props
   static propTypes = {};
 
   constructor(props) {
@@ -63,15 +60,18 @@ class Page extends React.Component {
 
   submit(credentials) {
     this.props.profile(credentials);
+    let obj = {
+      coins: ""
+    };
+    this.setState({ credentials: obj });
   }
 
   // render component
   render() {
-    console.log("auth user", this.props.authUser);
+    // console.log("auth user render", this.props.authUser);
     // check if user is authenticated then redirect him to home page
-
     const props = {
-      authUser: this.props.authUser,
+      coins: this.props.coins,
       errors: this.state.errors,
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit,

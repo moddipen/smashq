@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { Validator } from "ree-validate";
 // import components
 import Form from "./components/Form";
-//import "../../../../assets/css/login.css";
 import { API_URL } from "../../../../contants/config";
 
 // initialize component

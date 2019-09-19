@@ -3,17 +3,16 @@ import React from "react";
 // import components
 import Form from "./components/Form";
 import "../../../../assets/css/profileModal.css";
-import { withRouter } from "react-router-dom";
-
+import { back } from "redux-first-router";
 // initialize component
 class Page extends React.Component {
   // set name of the component
   static displayName = "UserProfileForm";
-
-  // validate props
-
   constructor(props) {
     super(props);
+
+    //    console.log("stet users", this.props.user);
+
     // set the state of the app
     this.state = {
       tabs: {
@@ -22,20 +21,41 @@ class Page extends React.Component {
       },
       modal: false,
       modal1: false
+      // profileUser: this.props.user,
+      // metatitle: this.getmetatitle(this.props.user),
+      // metadesc: this.getmetadesc(this.props.user)
     };
 
     this.handleBack = this.handleBack.bind(this);
     this.toggle1 = this.toggle1.bind(this);
     this.toggle = this.toggle.bind(this);
-    // this.goBack = this.goBack.bind(this);
   }
 
-  // componentDidMount() {
-  //   console.log("id", this.props.params.id);
-  // }
+  //get meta title
+  getmetatitle(users) {
+    let metatitle = "";
+    if (users.motto) {
+      metatitle = users.username + " | " + users.motto;
+    } else {
+      metatitle = users.username;
+    }
+    return metatitle;
+  }
 
+  //get meta desc
+  getmetadesc(users) {
+    let metadesc = "";
+    if (users.description) {
+      metadesc = users.username + " on SmashQ | " + users.description;
+    } else {
+      metadesc = users.username + " on SmashQ";
+    }
+    return metadesc;
+  }
+
+  //redirect back
   handleBack = () => {
-    // this.props.history.goBack();
+    back();
   };
 
   //modal toggle
@@ -79,10 +99,10 @@ class Page extends React.Component {
 
   // render component
   render() {
-    let profileUser = this.props.users.filter(
+    let profileUser = this.props.user.filter(
       word => word.id === this.props.params.id
     );
-    console.log("profile", profileUser[0]);
+
     const props = {
       users: profileUser[0],
       tabs: this.state.tabs,
@@ -92,7 +112,9 @@ class Page extends React.Component {
       modal: this.state.modal,
       modal1: this.state.modal1,
       handleBack: this.handleBack,
-      followStatus: this.followStatus
+      followStatus: this.followStatus,
+      metatitle: this.getmetatitle(profileUser[0]),
+      metadesc: this.getmetadesc(profileUser[0])
     };
     return <Form {...props} />;
   }

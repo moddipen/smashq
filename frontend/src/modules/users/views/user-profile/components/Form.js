@@ -7,6 +7,7 @@ import MetaTags from 'react-meta-tags';
 
 const displayName = "UserProfileForm";
 const propTypes = {
+  
   users:PropTypes.object.isRequired,
   tabs: PropTypes.object.isRequired,
   tabShow: PropTypes.func.isRequired,
@@ -15,22 +16,17 @@ const propTypes = {
   modal: PropTypes.bool.isRequired,
   modal1: PropTypes.bool.isRequired,
   handleBack : PropTypes.func.isRequired,
-  followStatus: PropTypes.func.isRequired
+  followStatus: PropTypes.func.isRequired,
+  metatitle : PropTypes.string.isRequired,
+  metadesc: PropTypes.string.isRequired,
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus }) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle }) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>
-      <title>{users.username}
-      {
-       users.motto !== null ? ' | '+users.motto : ''
-      }
+      <title>{metatitle}
       </title>
-      <meta id="meta-description" name="description" content={
-        users.username +' on SmashQ' }
-        { 
-          ...users.description !== null ? ' | '+users.description : ''
-        } />
+      <meta id="meta-description" name="description" content={metadesc} />
     </MetaTags>
     <div className="top-back-bar">
       <div className="container container630">
