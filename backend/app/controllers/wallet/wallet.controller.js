@@ -44,7 +44,7 @@ exports.updateCoin = async (req, res) => {
 
           var replace_var = {
             name: req.user.name,
-            link: data.coins
+            coins: data.coins
           };
           send_mail(
             "coinspurchase.html",
