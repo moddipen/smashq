@@ -1,0 +1,29 @@
+.form-boxq .form-group {
+  display: inline-flex;
+  width: 100% !important;
+  margin-bottom: 5px !important;
+}
+.modal-content {
+  text-align: unset !important;
+  max-width: 600px !important;
+}
+.mb-20 {
+  text-align: center;
+}
+.form-boxq .form-input {
+  width: 100% !important;
+}
+.form-boxq .form-control {
+  height: 40px !important;
+}
+.pad-30 {
+  margin-top: 30px;
+  text-align: center;
+}
+.form-boxq label {
+  font-weight: 500;
+  margin-top: 8px;
+}
+.box1 {
+  max-width: 450px !important;
+}

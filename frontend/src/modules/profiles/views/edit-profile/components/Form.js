@@ -67,9 +67,7 @@ const Form = ({
                 <div className="top-bar d-flex align-items-center mb-20">
                   <div className="edit-profile-avtar-box w-180 px-4">
                     <div className="edit-profile-avtar">
-                      <a href="#">
-                        <img src={filePreview} alt="" />
-                      </a>
+                      <img src={filePreview} alt="" />
                     </div>
                   </div>
                   <div className="edit-profile-avtar-text">

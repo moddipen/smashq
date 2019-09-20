@@ -12,7 +12,8 @@ import {
   AUTH_ECHO_SETUP,
   USER_LOAD,
   AUTH_USER,
-  UPDATE_COINS
+  UPDATE_COINS,
+  TRANSACTION_LOAD
 } from "./action-types";
 import AsyncRequest from "../../../utils/AsyncRequest";
 
@@ -23,6 +24,19 @@ export function authCheck() {
     type: AUTH_CHECK
   };
 }
+
+export const getTransactions = () => {
+  return AsyncRequest.createSimpleRequestFromObject(TRANSACTION_LOAD, {
+    path: `/api/wallet/transactions`,
+    method: "get",
+    responseField: "data",
+    normalize: response => {
+      return {
+        ...response.transactions
+      };
+    }
+  });
+};
 
 export const userLoad = () => {
   return AsyncRequest.createSimpleRequestFromObject(USER_LOAD, {
@@ -43,6 +57,7 @@ export const updateCoins = payload => {
     data: payload,
     method: "post",
     normalize: response => {
+      push("/transactions");
       return {
         ...response.profiles
       };

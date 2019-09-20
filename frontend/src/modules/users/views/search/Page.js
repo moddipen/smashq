@@ -23,9 +23,12 @@ class Page extends React.Component {
 
   // render component
   render() {
+    console.log("users", this.props.users);
     const items = this.props.users.slice(0, 7).map(i => {
       return i;
     });
+
+    console.log("items", items);
     // check if user is authenticated then redirect him to home page
     const props = {
       users: items,

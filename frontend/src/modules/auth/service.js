@@ -35,7 +35,6 @@ function getUser() {
         return reject(res.data);
       })
       .catch(err => {
-        console.log(err);
         return reject(err);
       });
   });

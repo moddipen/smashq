@@ -23,10 +23,10 @@ const propTypes = {
 
 const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle }) => (
   <section className="pad-40 user-profile-section">
-    <MetaTags>
-      <title>{metatitle}
-      </title>
+    <MetaTags>    
+      <meta id="meta-title" name="title" content={metatitle} />
       <meta id="meta-description" name="description" content={metadesc} />
+      <meta property="og:title" content={metatitle}  />
     </MetaTags>
     <div className="top-back-bar">
       <div className="container container630">
