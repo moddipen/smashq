@@ -41,6 +41,18 @@ exports.updateCoin = async (req, res) => {
           }).then(result => {
             console.log("Transaction successfully");
           });
+
+          var replace_var = {
+            name: req.user.name,
+            link: data.coins
+          };
+          send_mail(
+            "coinspurchase.html",
+            replace_var,
+            req.user.email,
+            "Coins purchase"
+          );
+
           let coin = 0;
           if (Object.keys(result).length !== 0) {
             coin = parseInt(result[0].coins) + parseInt(data.coins);
