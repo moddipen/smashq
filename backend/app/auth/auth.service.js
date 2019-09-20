@@ -17,7 +17,7 @@ function isAuthenticated(req, res, next) {
         req.decoded = decoded;
         const { id } = decoded;
         const model = "users";
-        const params = ["id, username, email, password"];
+        const params = ["id, name, username, email, password"];
         const condition = "id = ?";
         const values = [id];
         try {

@@ -1,6 +1,11 @@
 const My = require("jm-ez-mysql");
-const bcrypt = require("bcrypt-nodejs");
-const isBase64 = require("is-base64");
+const RocketGate = require("rocketgate");
+
+const paymentClient = new RocketGate.gateway({
+  MERCHANT_ID: process.env.MERCHANT_ID,
+  MERCHANT_PASSWORD: process.env.MERCHANT_PASSWORD,
+  testMode: true
+});
 
 //for update coin
 exports.updateCoin = async (req, res) => {
@@ -9,29 +14,70 @@ exports.updateCoin = async (req, res) => {
 
   My.query("select coins from user_coins where user_id = ? limit 1", [id]) //get coins
     .then(result => {
-      console.log("result", result);
-      let coin = 0;
-      if (Object.keys(result).length !== 0) {
-        coin = parseInt(result[0].coins) + parseInt(data.coins);
-      } else {
-        coin = coin + parseInt(data.coins);
-      }
-      let data1 = {
-        coins: coin
+      let order = {
+        amount: data.amount
       };
-      //update coins
-      My.update("user_coins", data1, "user_id = " + id)
-        .then(result1 => {
-          return res.send(
-            makeSuccess("Coins added successfully.", {
-              profiles: data1
+
+      let creditCard = {
+        creditCardNumber: data.card,
+        expirationMonth: data.month,
+        expirationYear: data.year,
+        cvv: data.cvv
+      };
+
+      let prospect = {
+        customerFirstName: req.user.name,
+        customerEmail: req.user.email
+      };
+
+      paymentClient
+        .submitTransaction(order, creditCard, prospect, {})
+        .then(success => {
+          My.insert("transactions", {
+            user_id: id,
+            transaction_id: success.transactionId,
+            coins: data.coins,
+            amount: data.amount
+          }).then(result => {
+            console.log("Transaction successfully");
+          });
+          let coin = 0;
+          if (Object.keys(result).length !== 0) {
+            coin = parseInt(result[0].coins) + parseInt(data.coins);
+          } else {
+            coin = coin + parseInt(data.coins);
+          }
+          let data1 = {
+            coins: coin
+          };
+          //update coins
+          My.update("user_coins", data1, "user_id = " + id)
+            .then(result1 => {
+              return res.send(
+                makeSuccess("Coins added successfully.", {
+                  profiles: data1
+                })
+              );
             })
-          );
+            .catch(err => {
+              console.log(err);
+              return res.send(makeError("Something went wrong !"));
+            });
         })
-        .catch(err => {
-          console.log(err);
+        .catch(e => {
           return res.send(makeError("Something went wrong !"));
         });
+    })
+    .catch(err => {
+      return res.send(makeError("Something went wrong !"));
+    });
+};
+
+//for get all transactions
+exports.getTransactions = (req, res) => {
+  My.query("select * from transactions where user_id=?", [req.user.id])
+    .then(results => {
+      return res.send(makeSuccess("", { transactions: results }));
     })
     .catch(err => {
       return res.send(makeError("Something went wrong !"));

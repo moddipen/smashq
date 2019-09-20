@@ -5,5 +5,6 @@ var wallet = require("./wallet.controller");
 var router = express.Router();
 
 router.post("/wallet/coin/update", wallet.updateCoin);
+router.get("/wallet/transactions", wallet.getTransactions);
 
 module.exports = router;
