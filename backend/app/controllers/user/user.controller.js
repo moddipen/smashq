@@ -278,8 +278,8 @@ exports.follows = async (req, res) => {
 //for search of user
 exports.search = async (req, res) => {
   My.query(
-    "select users.id, users.username, users.email,user_profiles.photo from users left join user_profiles on users.id = user_profiles.user_id where users.username like ? and users.id != ?",
-    [`%${req.body.search}%`, req.user.id]
+    "select users.id, users.username, users.email,user_profiles.photo from users left join user_profiles on users.id = user_profiles.user_id where users.username like ? and users.id != ? users.status=?",
+    [`%${req.body.search}%`, req.user.id, 1]
   )
     .then(results => {
       return res.send(makeSuccess("", { users: results }));
@@ -289,16 +289,35 @@ exports.search = async (req, res) => {
     });
 };
 
+// "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id inner join followers on users.id = followers.user_id where users.id!=? and users.status=? and followers.user_id=?",
 //for get all users
 exports.getAllUsers = async (req, res) => {
   My.query(
-    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id left join followers on users.id = followers.follow_user_id where users.id!=?",
-    [req.user.id]
+    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id left join followers on users.id = followers.follow_user_id where users.id!=? and users.status=?",
+    [req.user.id, 1]
   )
     .then(results => {
+      console.log("users", results);
+      // console.log(req.user.id);
       return res.send(makeSuccess("", { users: results }));
+      // My.query(
+      //   "select * from users left join followers on users.id = followers.user_id where followers.user_id!=?",
+      //   [req.user.id]
+      // )
+      //   .then(results1 => {
+      //     console.log("follow", results1);
+      //     // var obj = Object.assign({}, results, results1);
+      //     // console.log("obj", obj);
+
+      //     // return res.send(makeSuccess("", { users: obj }));
+      //   })
+      //   .catch(err => {
+      //     console.log("err2", err);
+      //     return res.send(makeError("Something went wrong !"));
+      //   });
     })
     .catch(err => {
+      console.log("err1", err);
       return res.send(makeError("Something went wrong !"));
     });
 };

@@ -83,3 +83,12 @@ li.active a {
 .classerr {
   color: red;
 }
+
+.trans-log {
+  color: #419ae8 !important;
+  font-weight: 500;
+}
+
+._loading_overlay_overlay {
+  margin-top: 15%;
+}

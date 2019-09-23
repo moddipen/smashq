@@ -27,3 +27,9 @@ button.close {
   padding-right: 15px;
   padding-top: 10px;
 }
+
+.terms {
+  display: inline-flex !important;
+  width: 15px !important;
+  height: 15px !important;
+}

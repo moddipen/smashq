@@ -1,5 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
+import PaymentFormComponent from "../../paymentForm/index";
+
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Nav,
+  NavLink
+} from "reactstrap";
 
 const displayName = "YourCoinForm";
 const propTypes = {
@@ -7,10 +18,22 @@ const propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  authUser: PropTypes.object.isRequired
+  authUser: PropTypes.object.isRequired,
+  toggle: PropTypes.func.isRequired,
+  modal: PropTypes.bool.isRequired,
+  coins: PropTypes.number.isRequired
 };
 
-const Form = ({ errors, authUser, handleChange, handleSubmit, profile }) => (
+const Form = ({
+  errors,
+  authUser,
+  handleChange,
+  handleSubmit,
+  profile,
+  modal,
+  toggle,
+  coins
+}) => (
   <section className="pad-40 confirm-number-section">
     <div className="container container500">
       <div className="bgwhite bordergray">
@@ -58,10 +81,34 @@ const Form = ({ errors, authUser, handleChange, handleSubmit, profile }) => (
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been
             </p>
+            <NavLink to={`/transactions`} className="trans-log">
+              password?
+            </NavLink>
           </div>
         </div>
       </div>
     </div>
+
+    <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      isOpen={modal}
+      toggle={toggle}
+      className="modal-profile"
+    >
+      <ModalBody className="profilem">
+        <button
+          type="button"
+          className="close"
+          onClick={toggle}
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <PaymentFormComponent coins={coins} />
+      </ModalBody>
+    </Modal>
   </section>
 );
 

@@ -23,6 +23,7 @@ const getStateChannels = state => state.data.channels;
 const getStateCompanies = state => state.data.companies;
 const getStateProfiles = state => state.data.profiles;
 const getStateUsers = state => state.data.users;
+const getStateTransactions = state => state.data.wallets.transactions;
 const getStateChannelMessages = state => state.data.channelMessages;
 const getStateUnreadChannelMessages = state => state.data.unreadMessages;
 const getStateThreadChannelMessages = state => state.data.threadMessages;
@@ -238,6 +239,17 @@ export const getChannelById = createSelector(
   [getStateChannels, getIdToFetch],
   (channels, id) => {
     return _.get(channels, id, null);
+  }
+);
+
+export const getTransactions = createSelector(
+  [getStateTransactions],
+  transactions => {
+    if (Object.values(transactions).length) {
+      return Object.values(transactions);
+    } else {
+      return [];
+    }
   }
 );
 

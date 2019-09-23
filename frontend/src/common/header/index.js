@@ -125,7 +125,6 @@ class Header extends React.PureComponent {
   };
 
   render() {
-    console.log("header", this.props.authUser);
     const hasSubHeaderComponent = this.props.SubHeaderComponent !== null;
     const access_token = localStorage.getItem("access_token");
     const headerClasses = classNames("header", {
@@ -143,23 +142,25 @@ class Header extends React.PureComponent {
 
             <div className="head-right d-flex align-items-center">
               <div className="head-search-section" ref={this.myRef}>
-                <div
-                  className={
-                    "head-search-box " +
-                    (this.state.showSearch ? "focusactive" : "")
-                  }
-                >
-                  <input
-                    type="text"
-                    value={this.state.search}
-                    onChange={this.handleChange}
-                    className="form-control"
-                    placeholder="Search"
-                    onClick={this.showSearchEvent}
-                  />
+                {access_token !== null ? (
+                  <div
+                    className={
+                      "head-search-box " +
+                      (this.state.showSearch ? "focusactive" : "")
+                    }
+                  >
+                    <input
+                      type="text"
+                      value={this.state.search}
+                      onChange={this.handleChange}
+                      className="form-control"
+                      placeholder="Search"
+                      onClick={this.showSearchEvent}
+                    />
 
-                  <SearchComponent />
-                </div>
+                    <SearchComponent />
+                  </div>
+                ) : null}
               </div>
 
               {access_token !== null ? (
@@ -181,6 +182,10 @@ class Header extends React.PureComponent {
                       Q <span>{this.props.authUser.coins}</span>{" "}
                     </DropdownLink>
                     <DropdownItem divider />
+                    <DropdownLink to={"/transactions"}>
+                      <span>Transactions</span>{" "}
+                    </DropdownLink>
+                    <DropdownItem divider />{" "}
                     <DropdownItem onClick={this.props.logout}>
                       Logout{" "}
                     </DropdownItem>

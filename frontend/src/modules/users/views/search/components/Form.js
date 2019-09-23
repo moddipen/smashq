@@ -5,7 +5,8 @@ import { API_URL } from "../../../../../contants/config";
 
 const displayName = "SearchForm";
 const propTypes = {
-  followStatus: PropTypes.func.isRequired
+  followStatus: PropTypes.func.isRequired,
+  users: PropTypes.object.isRequired
 };
 
 const Form = ({ users, followStatus }) => (

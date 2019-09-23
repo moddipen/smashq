@@ -10,12 +10,14 @@ import detail from "../modules/web/store/reducers/detail";
 
 import profiles from "../modules/profiles/store/reducer";
 import users from "../modules/users/store/reducer";
+import wallets from "../modules/wallets/store/reducer";
 
 export default {
   auth,
   data: combineReducers({
     profiles,
-    users
+    users,
+    wallets
   }),
   ui: combineReducers({
     modal,
