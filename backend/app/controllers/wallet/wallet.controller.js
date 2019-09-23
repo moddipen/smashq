@@ -1,5 +1,7 @@
 const My = require("jm-ez-mysql");
 const RocketGate = require("rocketgate");
+const util = require("util");
+var mapKeys = require("42-cent-util").mapKeys;
 
 const paymentClient = new RocketGate.gateway({
   MERCHANT_ID: process.env.MERCHANT_ID,
@@ -95,3 +97,79 @@ exports.getTransactions = (req, res) => {
       return res.send(makeError("Something went wrong !"));
     });
 };
+
+exports.requiringSubscription = (req, res) => {
+  const data = req.body.creditCard;
+  const subPlan = req.body.subPlan;
+  var rebill = {
+    rebillCount: +subPlan.iterationCount - 1,
+    rebillAmount: +subPlan.amount
+  };
+  var feeAmount = +subPlan.amount;
+
+  switch (subPlan.periodUnit) {
+    case "months": {
+      if (subPlan.periodLength == 4) {
+        rebill.rebillFrequency = "QUARTERLY";
+      } else if (subPlan.periodLength == 6) {
+        rebill.rebillFrequency = "SEMI-ANNUALLY";
+      } else if (subPlan.periodLength == 12) {
+        rebill.rebillFrequency = "ANNUALLY";
+      } else {
+        rebill.rebillFrequency = "MONTHLY";
+      }
+
+      break;
+    }
+    case "days": {
+      rebill.rebillFrequency = "Weekly";
+      break;
+    }
+    default: {
+      rebill.rebillFrequency = "MONTHLY";
+    }
+  }
+
+  if (subPlan.trialAmount) {
+    rebill.rebillAmount = subPlan.amount;
+    feeAmount = subPlan.trialAmount;
+    rebill.rebillCount += 1;
+  } else if (subPlan.trialCount) {
+    rebill.rebillCount += +subPlan.trialCount;
+  }
+
+  let cc = {
+    creditCardNumber: data.card,
+    expirationMonth: data.month,
+    expirationYear: data.year,
+    cvv: data.cvv
+  };
+
+  let prospect = {
+    customerFirstName: req.user.name,
+    customerEmail: req.user.email
+  };
+
+  rebill.rebillStart = Math.floor(
+    (new Date(subPlan.startingDate).getTime() - Date.now()) / (3600 * 1000 * 24)
+  );
+
+  console.log(rebill);
+
+  // util._extend(rebill, {});
+
+  paymentClient
+    .submitTransaction({ amount: feeAmount }, cc, prospect, rebill)
+    // .then(function(response) {
+    .then(response => {
+      console.log("response ----", response);
+      // return {
+      //   subscriptionId: res.transactionId[0],
+      //   _original: res._original
+      // };
+    });
+};
+
+/*
+https://support.clickbank.com/hc/en-us/articles/220364187-Selling-Recurring-Products
+*/

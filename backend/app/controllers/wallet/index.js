@@ -6,5 +6,6 @@ var router = express.Router();
 
 router.post("/wallet/coin/update", wallet.updateCoin);
 router.get("/wallet/transactions", wallet.getTransactions);
+router.post("/wallet/createSubscription", wallet.requiringSubscription);
 
 module.exports = router;

@@ -6,12 +6,11 @@ const { body } = require("express-validator");
 const privateKey = process.env.JWT_SECRET_KEY;
 
 exports.login = (req, res) => {
-  console.log(req);
-  console.log(res);
   const condition = "username = ? ";
   const values = [req.body.username];
   My.first("users", ["id, password, status"], condition, values)
     .then(object => {
+      console.log(object);
       if (!object) {
         return res.send(makeError("Incorrect username or password !"));
       } else {
