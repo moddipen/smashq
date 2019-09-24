@@ -1,8 +1,8 @@
 // import lib
-import Loadable from "react-loadable";
+import Loadable from "react-loadable"
 // import components
-import LoadingComponent from "../../common/loader/index";
-import { getTransactions } from "./store/actions";
+import LoadingComponent from "../../common/loader/index"
+import { getTransactions } from "./store/actions"
 
 const pages = {
   YOUR_COIN: {
@@ -19,9 +19,9 @@ const pages = {
       loading: LoadingComponent
     }),
     thunk: async (dispatch, getState) => {
-      dispatch(getTransactions());
+      dispatch(getTransactions(5))
     }
   }
-};
+}
 
-export default pages;
+export default pages

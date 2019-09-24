@@ -92,3 +92,61 @@ li.active a {
 ._loading_overlay_overlay {
   margin-top: 15%;
 }
+
+footer {
+  position: fixed !important;
+}
+
+.viewalltrans {
+  float: right;
+}
+
+.carousel-item {
+  text-align: center;
+}
+
+.carousel-control-prev {
+  border: 0;
+    width: 30px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+    background-color: #999999;
+    top: 50%;
+    margin-top: -15px;
+    outline: none !important;
+    cursor: pointer;
+    border-radius: 100%;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.carousel-control-next {
+    border: 0;
+    width: 30px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+    background-color: #999999;
+    top: 50%;
+    margin-top: -15px;
+    outline: none !important;
+    cursor: pointer;
+    border-radius: 100%;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon{
+  padding-top: 28px;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+width:10px !important;
+}

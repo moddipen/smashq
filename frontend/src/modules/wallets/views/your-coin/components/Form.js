@@ -1,18 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
-import PaymentFormComponent from "../../paymentForm/index";
-
+import React from "react"
+import PropTypes from "prop-types"
+import PaymentFormComponent from "../../paymentForm/index"
+import { NavLink } from "redux-first-router-link"
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Nav,
-  NavLink
-} from "reactstrap";
+  Nav
+} from "reactstrap"
 
-const displayName = "YourCoinForm";
+const displayName = "YourCoinForm"
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -21,8 +20,8 @@ const propTypes = {
   authUser: PropTypes.object.isRequired,
   toggle: PropTypes.func.isRequired,
   modal: PropTypes.bool.isRequired,
-  coins: PropTypes.number.isRequired
-};
+  coins: PropTypes.string.isRequired
+}
 
 const Form = ({
   errors,
@@ -81,10 +80,10 @@ const Form = ({
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been
             </p>
-            <NavLink to={`/transactions`} className="trans-log">
-              password?
-            </NavLink>
           </div>
+          <NavLink to={`/transactions`} className="trans-log">
+            Transaction Logs
+          </NavLink>
         </div>
       </div>
     </div>
@@ -110,9 +109,9 @@ const Form = ({
       </ModalBody>
     </Modal>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

@@ -1,19 +1,19 @@
 // import libs
-import React from "react";
-import { Validator } from "ree-validate";
+import React from "react"
+import { Validator } from "ree-validate"
 // import components
-import Form from "./components/Form";
+import Form from "./components/Form"
 
 // initialize component
 class Page extends React.PureComponent {
   // set name of the component
-  static displayName = "YourCoinPage";
+  static displayName = "YourCoinPage"
 
   constructor(props) {
-    super(props);
+    super(props)
     this.validator = new Validator({
       coins: "required|numeric"
-    });
+    })
     // set the state of the app
     this.state = {
       credentials: {
@@ -21,62 +21,54 @@ class Page extends React.PureComponent {
       },
       modal: false,
       errors: this.validator.errors
-    };
+    }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.toggle = this.toggle.bind(this)
   }
 
   // event to handle login input change
   handleChange(name, value) {
-    const { errors } = this.validator;
-
+    const { errors } = this.validator
     this.setState({
       credentials: { ...this.state.credentials, [name]: value }
-    });
-
-    errors.remove(name);
-
+    })
+    errors.remove(name)
     this.validator.validate(name, value).then(() => {
-      this.setState({ errors });
-    });
+      this.setState({ errors })
+    })
   }
 
   //modal toggle
   toggle() {
     this.setState(prevState => ({
       modal: !prevState.modal
-    }));
+    }))
   }
 
   // event to handle profile form submit
   handleSubmit(e) {
-    e.preventDefault();
-    const { credentials } = this.state;
-    const { errors } = this.validator;
+    e.preventDefault()
+    const { credentials } = this.state
+    const { errors } = this.validator
 
     this.validator.validateAll(credentials).then(success => {
       if (success) {
-        this.submit(credentials);
+        this.submit(credentials)
       } else {
-        this.setState({ errors });
+        console.log(errors)
+        this.setState({ errors })
       }
-    });
+    })
   }
 
   submit(credentials) {
-    this.toggle();
-    //this.props.profile(credentials);
-    // let obj = {
-    //   coins: ""
-    // };
-    // this.setState({ credentials: obj });
+    this.toggle()
   }
 
   // render component
   render() {
-    console.log("auth user render", this.props.authUser);
     // check if user is authenticated then redirect him to home page
     const props = {
       authUser: this.props.authUser,
@@ -87,10 +79,10 @@ class Page extends React.PureComponent {
       modal: this.state.modal,
       toggle: this.toggle,
       coins: this.state.credentials.coins
-    };
+    }
 
-    return <Form {...props} />;
+    return <Form {...props} />
   }
 }
 
-export default Page;
+export default Page

@@ -1,13 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { NavLink } from "redux-first-router-link";
-import { API_URL } from "../../../../../contants/config";
+import React from "react"
+import PropTypes from "prop-types"
+import { NavLink } from "redux-first-router-link"
+import { API_URL } from "../../../../../contants/config"
 
-const displayName = "SearchForm";
+const displayName = "SearchForm"
 const propTypes = {
   followStatus: PropTypes.func.isRequired,
-  users: PropTypes.object.isRequired
-};
+  users: PropTypes.array.isRequired
+}
 
 const Form = ({ users, followStatus }) => (
   <div className="head-search-result-box box-shadow">
@@ -50,7 +50,7 @@ const Form = ({ users, followStatus }) => (
               )}
             </div>
           </div>
-        );
+        )
       })
     ) : (
       <div className="no-record">
@@ -64,9 +64,9 @@ const Form = ({ users, followStatus }) => (
       </NavLink>
     </span>
   </div>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

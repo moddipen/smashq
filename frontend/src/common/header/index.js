@@ -1,119 +1,119 @@
-import React from "react";
-import classNames from "classnames";
-import { connect } from "react-redux";
-import { NavLink } from "redux-first-router-link";
-import { authLogout } from "../../modules/auth/store/actions";
-import { getChatSettingByName, getAuthUserDetails } from "../../selectors";
-import { updateSelectedModal } from "../../modules/web/store/actions";
-import SearchComponent from "../../modules/users/views/search/index";
+import React from "react"
+import classNames from "classnames"
+import { connect } from "react-redux"
+import { NavLink } from "redux-first-router-link"
+import { authLogout } from "../../modules/auth/store/actions"
+import { getChatSettingByName, getAuthUserDetails } from "../../selectors"
+import { updateSelectedModal } from "../../modules/web/store/actions"
+import SearchComponent from "../../modules/users/views/search/index"
 
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle
-} from "reactstrap";
+} from "reactstrap"
 
-import DropdownLink from "../dropdown-link/index";
-import { initialSearch, searchUser } from "../../modules/users/store/actions";
+import DropdownLink from "../dropdown-link/index"
+import { initialSearch, searchUser } from "../../modules/users/store/actions"
 
 class Header extends React.PureComponent {
-  static propTypes = {};
+  static propTypes = {}
   static defaultProps = {
     SubHeaderComponent: null
-  };
+  }
 
   constructor(props) {
-    super(props);
-    this.timeout = null;
+    super(props)
+    this.timeout = null
     this.state = {
       search: "",
       expanded: false,
       dropDownOpen: false,
       showSearch: false,
       clickedOutside: false
-    };
+    }
 
-    this.hideSearchEvent = this.hideSearchEvent.bind(this);
-    this.showSearchEvent = this.showSearchEvent.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.signOut = this.signOut.bind(this);
+    this.hideSearchEvent = this.hideSearchEvent.bind(this)
+    this.showSearchEvent = this.showSearchEvent.bind(this)
+    this.toggle = this.toggle.bind(this)
+    this.signOut = this.signOut.bind(this)
   }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.keypressFunction, false);
-    document.addEventListener("mousedown", this.handleClickOutside);
+    document.addEventListener("keydown", this.keypressFunction, false)
+    document.addEventListener("mousedown", this.handleClickOutside)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.keypressFunction, false);
-    document.removeEventListener("mousedown", this.handleClickOutside);
+    document.removeEventListener("keydown", this.keypressFunction, false)
+    document.removeEventListener("mousedown", this.handleClickOutside)
   }
 
-  myRef = React.createRef();
+  myRef = React.createRef()
 
   keypressFunction = event => {
     if (window.navigator.userAgent.indexOf("Mac") != -1) {
       if (event.metaKey && event.keyCode === 70) {
         if (this.props.fKeySearch == "TRUE") {
-          this.props.updateSelectedModal("CHAT_SEARCH");
-          event.preventDefault();
+          this.props.updateSelectedModal("CHAT_SEARCH")
+          event.preventDefault()
         }
       }
     } else {
       if (event.ctrlKey && event.keyCode === 70) {
         if (this.props.fKeySearch == "TRUE") {
-          this.props.updateSelectedModal("CHAT_SEARCH");
-          event.preventDefault();
+          this.props.updateSelectedModal("CHAT_SEARCH")
+          event.preventDefault()
         }
       }
     }
-  };
+  }
 
   handleClickOutside = e => {
     if (!this.myRef.current.contains(e.target)) {
-      this.setState({ clickedOutside: true });
-      this.hideSearchEvent();
+      this.setState({ clickedOutside: true })
+      this.hideSearchEvent()
     }
-  };
+  }
 
-  handleClickInside = () => this.setState({ clickedOutside: false });
+  handleClickInside = () => this.setState({ clickedOutside: false })
 
   signOut() {
-    this.props.logout();
+    this.props.logout()
   }
 
   hideSearchEvent() {
-    this.setState({ showSearch: false });
+    this.setState({ showSearch: false })
   }
 
   handleChange = e => {
     this.setState({
       search: e.target.value
-    });
+    })
     if (this.props.isAuthenticated) {
       if (this.timeout) {
-        clearTimeout(this.timeout);
+        clearTimeout(this.timeout)
       }
       this.timeout = setTimeout(() => {
-        this.timeout = null;
+        this.timeout = null
         if (this.state.search != "") {
           this.props.searchUser({
             search: this.state.search
-          });
-          this.props.searchUser({ search: this.state.search });
+          })
+          this.props.searchUser({ search: this.state.search })
         } else {
-          this.props.initialSearch();
+          this.props.initialSearch()
         }
-      }, 500);
+      }, 500)
     }
-  };
+  }
 
   showSearchEvent() {
     if (this.props.isAuthenticated) {
-      this.setState({ showSearch: true });
+      this.setState({ showSearch: true })
       if (this.state.search == "") {
-        this.props.initialSearch();
+        this.props.initialSearch()
       }
     }
   }
@@ -121,15 +121,15 @@ class Header extends React.PureComponent {
   toggle = () => {
     this.setState({
       dropDownOpen: !this.state.dropDownOpen
-    });
-  };
+    })
+  }
 
   render() {
-    const hasSubHeaderComponent = this.props.SubHeaderComponent !== null;
-    const access_token = localStorage.getItem("access_token");
+    const hasSubHeaderComponent = this.props.SubHeaderComponent !== null
+    const access_token = localStorage.getItem("access_token")
     const headerClasses = classNames("header", {
       "has-sub-header": hasSubHeaderComponent
-    });
+    })
     return (
       <header>
         <div className="header-inner">
@@ -181,10 +181,6 @@ class Header extends React.PureComponent {
                     <DropdownLink to={"/your-coin"}>
                       Q <span>{this.props.authUser.coins}</span>{" "}
                     </DropdownLink>
-                    <DropdownItem divider />
-                    <DropdownLink to={"/transactions"}>
-                      <span>Transactions</span>{" "}
-                    </DropdownLink>
                     <DropdownItem divider />{" "}
                     <DropdownItem onClick={this.props.logout}>
                       Logout{" "}
@@ -196,7 +192,7 @@ class Header extends React.PureComponent {
           </div>
         </div>
       </header>
-    );
+    )
   }
 }
 
@@ -205,8 +201,8 @@ const mapStateToProps = state => {
     isAuthenticated: state.auth.isAuthenticated,
     authUser: getAuthUserDetails(state),
     fKeySearch: getChatSettingByName(state, "f_key_search") || "FALSE"
-  };
-};
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -214,10 +210,10 @@ const mapDispatchToProps = dispatch => {
     searchUser: data => dispatch(searchUser(data)),
     logout: () => dispatch(authLogout()),
     updateSelectedModal: params => dispatch(updateSelectedModal(params))
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Header);
+)(Header)
