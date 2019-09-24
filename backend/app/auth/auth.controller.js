@@ -4,6 +4,13 @@ const My = require("jm-ez-mysql");
 const uuidv1 = require("uuid/v1");
 const { body } = require("express-validator");
 const privateKey = process.env.JWT_SECRET_KEY;
+const RocketGate = require("rocketgate");
+
+const paymentClient = new RocketGate.gateway({
+  MERCHANT_ID: process.env.MERCHANT_ID,
+  MERCHANT_PASSWORD: process.env.MERCHANT_PASSWORD,
+  testMode: true
+});
 
 exports.login = (req, res) => {
   const condition = "username = ? ";
@@ -295,4 +302,38 @@ exports.validate = method => {
       ];
     }
   }
+};
+
+exports.subscriptions = (req, res) => {
+  let creditCard = {
+    creditCardNumber: "4111111111111111",
+    expirationMonth: "12",
+    expirationYear: "2020",
+    cvv: "123"
+  };
+
+  let prospect = {
+    customerFirstName: "johnd",
+    customerEmail: "johnd@yopmail.com"
+  };
+
+  let plan = {
+    amount: "10",
+    iterationCount: "5",
+    periodLength: 6,
+    periodUnit: "months",
+    startingDate: new Date(Date.now() + 24 * 3600 * 7 * 1000)
+  };
+
+  var other = {
+    merchantCustomerID: Date.now() + ".JSTest",
+    merchantInvoiceID: Date.now() + ".Test"
+  };
+
+  paymentClient
+    .createSubscription(creditCard, prospect, plan, other)
+    .then(success => {
+      console.log("success", success);
+    })
+    .catch(e => console.log("error", e));
 };

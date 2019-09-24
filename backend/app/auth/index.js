@@ -19,5 +19,6 @@ router.post("/resend-email", auth.resendEmail);
 // router.get('/users/:Id', auth.findOne);
 // router.put('/auth/:Id', auth.update);
 // router.delete('/auth/:Id', auth.delete);
+router.get("/subscriptions", auth.subscriptions);
 
 module.exports = router;

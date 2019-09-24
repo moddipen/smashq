@@ -1,7 +1,6 @@
 const My = require("jm-ez-mysql");
 const RocketGate = require("rocketgate");
 const util = require("util");
-var mapKeys = require("42-cent-util").mapKeys;
 
 const paymentClient = new RocketGate.gateway({
   MERCHANT_ID: process.env.MERCHANT_ID,
@@ -160,13 +159,8 @@ exports.requiringSubscription = (req, res) => {
 
   paymentClient
     .submitTransaction({ amount: feeAmount }, cc, prospect, rebill)
-    // .then(function(response) {
     .then(response => {
       console.log("response ----", response);
-      // return {
-      //   subscriptionId: res.transactionId[0],
-      //   _original: res._original
-      // };
     });
 };
 
