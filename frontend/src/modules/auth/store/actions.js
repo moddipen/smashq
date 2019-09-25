@@ -6,7 +6,7 @@
  * auth module.
  */
 
-import { push } from "redux-first-router";
+import { push } from "redux-first-router"
 import {
   AUTH_CHECK,
   AUTH_ECHO_SETUP,
@@ -17,16 +17,17 @@ import {
   AUTH_RESET_PASSWORD,
   AUTH_RESEND_EMAIL,
   AUTH_LOGOUT,
-  AUTH_USER
-} from "./action-types";
-import AsyncRequest from "../../../utils/AsyncRequest";
-import { userLoad } from "../../users/store/actions";
-import { normalize, schema } from "normalizr";
+  AUTH_USER,
+  AUTH_RESEND_LINK
+} from "./action-types"
+import AsyncRequest from "../../../utils/AsyncRequest"
+import { userLoad } from "../../users/store/actions"
+import { normalize, schema } from "normalizr"
 
 export function authCheck() {
   return {
     type: AUTH_CHECK
-  };
+  }
 }
 
 export function authLogin(payload) {
@@ -34,15 +35,15 @@ export function authLogin(payload) {
     path: `/auth/login`,
     data: payload,
     method: "post",
-    additionalSuccessActions: [
-      {
-        function: userLoad
+    onSuccess: response => {
+      if (!response.status) {
+        localStorage.setItem("username", payload.username)
+        push("/verify-account")
+      } else {
+        push("/")
       }
-    ],
-    onSuccess: () => {
-      push("/");
     }
-  });
+  })
 }
 
 export function authRegister(payload) {
@@ -51,9 +52,9 @@ export function authRegister(payload) {
     data: payload,
     method: "post",
     onSuccess: () => {
-      push("/login");
+      push("/login")
     }
-  });
+  })
 }
 
 export function authForgotPassword(payload) {
@@ -62,22 +63,21 @@ export function authForgotPassword(payload) {
     data: payload,
     method: "post",
     onSuccess: response => {
-      localStorage.setItem("email", response.email);
-      push("/verify-code");
+      localStorage.setItem("email", response.email)
+      push("/verify-code")
     }
-  });
+  })
 }
 
 export function authResendEmail(payload) {
-  console.log(payload);
   return AsyncRequest.createSimpleRequestFromObject(AUTH_RESEND_EMAIL, {
     path: `/auth/resend-email`,
     data: payload,
     method: "post",
     onSuccess: response => {
-      push("/verify-code");
+      push("/verify-code")
     }
-  });
+  })
 }
 
 export function authVerifyCode(payload) {
@@ -86,10 +86,22 @@ export function authVerifyCode(payload) {
     data: payload,
     method: "post",
     onSuccess: response => {
-      localStorage.removeItem("email");
-      push("/reset-password/" + response.rememberToken);
+      localStorage.removeItem("email")
+      push("/reset-password/" + response.rememberToken)
     }
-  });
+  })
+}
+
+export function authresendLink(payload) {
+  return AsyncRequest.createSimpleRequestFromObject(AUTH_RESEND_LINK, {
+    path: `/auth/resend-link`,
+    data: payload,
+    method: "post",
+    onSuccess: response => {
+      localStorage.removeItem("username")
+      push("/login")
+    }
+  })
 }
 
 export function authResetPassword(payload) {
@@ -98,9 +110,9 @@ export function authResetPassword(payload) {
     data: payload,
     method: "post",
     onSuccess: () => {
-      push("/login");
+      push("/login")
     }
-  });
+  })
 }
 
 export function authLogout() {
@@ -108,21 +120,21 @@ export function authLogout() {
     path: `/api/users/logout`,
     method: "delete",
     onSuccess: () => {
-      push("/login");
+      push("/login")
     }
-  });
+  })
 }
 
 export const authUser = payload => {
   return {
     type: AUTH_USER,
     payload
-  };
-};
+  }
+}
 
 export const authEchoSetup = payload => {
   return {
     type: AUTH_ECHO_SETUP,
     payload
-  };
-};
+  }
+}

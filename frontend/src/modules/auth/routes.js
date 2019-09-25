@@ -1,8 +1,8 @@
 // import lib
-import Loadable from "react-loadable";
+import Loadable from "react-loadable"
 // import components
-import LoadingComponent from "../../common/loader/index";
-import { getCar } from "../auth/store/actions";
+import LoadingComponent from "../../common/loader/index"
+import { getCar } from "../auth/store/actions"
 
 const pages = {
   LOGIN: {
@@ -32,7 +32,14 @@ const pages = {
       loader: () => import("./views/reset-password/index"),
       loading: LoadingComponent
     })
+  },
+  VERIFY_ACCOUNT: {
+    path: "/verify-account",
+    component: Loadable({
+      loader: () => import("./views/verify-account/index"),
+      loading: LoadingComponent
+    })
   }
-};
+}
 
-export default pages;
+export default pages

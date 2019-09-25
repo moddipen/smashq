@@ -1,10 +1,10 @@
-const My = require("jm-ez-mysql");
-const bcrypt = require("bcrypt-nodejs");
-const isBase64 = require("is-base64");
+const My = require("jm-ez-mysql")
+const bcrypt = require("bcrypt-nodejs")
+const isBase64 = require("is-base64")
 
 //for get login profile
 exports.getProfile = async (req, res) => {
-  var id = req.user.id;
+  var id = req.user.id
 
   My.query("select * from users where id = ? limit 1", [id]) //get username and email
     .then(result => {
@@ -16,47 +16,47 @@ exports.getProfile = async (req, res) => {
           My.query("select coins from user_coins where user_id = ?", [id]) //get users coins
             .then(result2 => {
               if (Object.keys(result2).length === 0) {
-                result1[0].coins = 0;
+                result1[0].coins = 0
               } else {
-                result1[0].coins = result2[0].coins;
+                result1[0].coins = result2[0].coins
               }
-              var obj = Object.assign({}, result[0], result1[0]);
-              return res.send(makeSuccess("", { profiles: obj }));
+              var obj = Object.assign({}, result[0], result1[0])
+              return res.send(makeSuccess("", { profiles: obj }))
             })
             .catch(err => {
-              return res.send(makeError("Something went wrong !"));
-            });
+              return res.send(makeError("Something went wrong !"))
+            })
         })
         .catch(err => {
-          return res.send(makeError("Something went wrong !"));
-        });
+          return res.send(makeError("Something went wrong !"))
+        })
     })
     .catch(err => {
-      return res.send(makeError("Something went wrong !"));
-    });
-};
+      return res.send(makeError("Something went wrong !"))
+    })
+}
 
 //for logout
 exports.logout = async (req, res) => {
-  return res.send(makeSuccess("Logout successfully."));
-};
+  return res.send(makeSuccess("Logout successfully."))
+}
 
 //for update profile
 exports.updateProfile = async (req, res) => {
-  let data = req.body;
+  let data = req.body
   if (data.username) {
-    const condition = "username = ? AND id != ?";
-    const values = [req.body.username, req.user.id];
+    const condition = "username = ? AND id != ?"
+    const values = [req.body.username, req.user.id]
     await My.first("users", ["id"], condition, values).then(async object => {
       if (object) {
-        return res.send(makeError("Username already registered !"));
+        return res.send(makeError("Username already registered !"))
       } else {
-        const condition1 = "email = ? AND id != ?";
-        const values1 = [req.body.email, req.user.id];
+        const condition1 = "email = ? AND id != ?"
+        const values1 = [req.body.email, req.user.id]
         await My.first("users", ["id"], condition1, values1).then(
           async object => {
             if (object) {
-              return res.send(makeError("Email already registered !"));
+              return res.send(makeError("Email already registered !"))
             } else {
               await My.update(
                 "users",
@@ -68,27 +68,27 @@ exports.updateProfile = async (req, res) => {
                 "id = " + req.user.id
               )
                 .then(result => {
-                  console.log("username updated !!");
+                  console.log("username updated !!")
                 })
                 .catch(err => {
-                  console.log(err);
-                  return res.send(makeError("Something went wrong !"));
-                });
+                  console.log(err)
+                  return res.send(makeError("Something went wrong !"))
+                })
             }
           }
-        );
+        )
       }
-    });
-    await delete data.username;
-    await delete data.email;
-    await delete data.name;
+    })
+    await delete data.username
+    await delete data.email
+    await delete data.name
   }
   if (Object.keys(data).length !== 0) {
     if (data.photo && isBase64(data.photo, { mimeRequired: true })) {
       try {
-        data.photo = await uploadImageFromBase64(data.photo, "profile");
+        data.photo = await uploadImageFromBase64(data.photo, "profile")
       } catch (e) {
-        await delete data.photo;
+        await delete data.photo
       }
     }
 
@@ -101,24 +101,24 @@ exports.updateProfile = async (req, res) => {
               [req.user.id]
             )
               .then(result1 => {
-                var obj = Object.assign({}, result[0], result1[0]);
+                var obj = Object.assign({}, result[0], result1[0])
                 return res.send(
                   makeSuccess("Profile updated successfully.", {
                     profiles: obj
                   })
-                );
+                )
               })
               .catch(err => {
-                return res.send(makeError("Something went wrong !"));
-              });
+                return res.send(makeError("Something went wrong !"))
+              })
           })
           .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
+            return res.send(makeError("Something went wrong !"))
+          })
       })
       .catch(err => {
-        return res.send(makeError("Something went wrong !"));
-      });
+        return res.send(makeError("Something went wrong !"))
+      })
   } else {
     My.query("select * from users where id = ? limit 1", [id])
       .then(result => {
@@ -127,24 +127,24 @@ exports.updateProfile = async (req, res) => {
           [req.user.id]
         )
           .then(result1 => {
-            var obj = Object.assign({}, result[0], result1[0]);
+            var obj = Object.assign({}, result[0], result1[0])
             return res.send(
               makeSuccess("Profile updated successfully.", { profiles: obj })
-            );
+            )
           })
           .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
+            return res.send(makeError("Something went wrong !"))
+          })
       })
       .catch(err => {
-        return res.send(makeError("Something went wrong !"));
-      });
+        return res.send(makeError("Something went wrong !"))
+      })
   }
-};
+}
 
 //for update social media
 exports.updateSocialMedia = async (req, res) => {
-  let data = req.body;
+  let data = req.body
   if (Object.keys(data).length !== 0) {
     My.update("user_profiles", data, "user_id = " + req.user.id)
       .then(result => {
@@ -160,29 +160,29 @@ exports.updateSocialMedia = async (req, res) => {
                   [req.user.id]
                 )
                   .then(result1 => {
-                    var obj = Object.assign({}, result[0], result1[0]);
+                    var obj = Object.assign({}, result[0], result1[0])
                     return res.send(
                       makeSuccess("Social media updated successfully.", {
                         profiles: obj
                       })
-                    );
+                    )
                   })
                   .catch(err => {
-                    return res.send(makeError("Something went wrong !"));
-                  });
+                    return res.send(makeError("Something went wrong !"))
+                  })
               })
               .catch(err => {
-                return res.send(makeError("Something went wrong !"));
-              });
+                return res.send(makeError("Something went wrong !"))
+              })
           })
           .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
+            return res.send(makeError("Something went wrong !"))
+          })
       })
       .catch(err => {
-        console.log(err);
-        return res.send(makeError("Something went wrong !"));
-      });
+        console.log(err)
+        return res.send(makeError("Something went wrong !"))
+      })
   } else {
     My.query("select * from users where id = ? limit 1", [req.user.id])
       .then(result => {
@@ -191,31 +191,31 @@ exports.updateSocialMedia = async (req, res) => {
           [req.user.id]
         )
           .then(result1 => {
-            var obj = Object.assign({}, result[0], result1[0]);
+            var obj = Object.assign({}, result[0], result1[0])
             return res.send(
               makeSuccess("Social media updated successfully.", {
                 profiles: obj
               })
-            );
+            )
           })
           .catch(err => {
-            return res.send(makeError("Something went wrong !"));
-          });
+            return res.send(makeError("Something went wrong !"))
+          })
       })
       .catch(err => {
-        return res.send(makeError("Something went wrong !"));
-      });
+        return res.send(makeError("Something went wrong !"))
+      })
   }
-};
+}
 
 //for change password
 exports.changePassword = async (req, res) => {
   const checkPassword = bcrypt.compareSync(
     req.body.old_password,
     req.user.password
-  );
+  )
   if (checkPassword) {
-    const password = bcrypt.hashSync(req.body.password);
+    const password = bcrypt.hashSync(req.body.password)
     My.update(
       "users",
       {
@@ -224,16 +224,16 @@ exports.changePassword = async (req, res) => {
       "id = " + req.user.id
     )
       .then(result => {
-        return res.send(makeSuccess("Password changed successfully."));
+        return res.send(makeSuccess("Password changed successfully."))
       })
       .catch(err => {
-        return res.send(makeError("Something went wrong !"));
-      });
-    return res.send(makeSuccess("Password changed successfully."));
+        return res.send(makeError("Something went wrong !"))
+      })
+    return res.send(makeSuccess("Password changed successfully."))
   } else {
-    return res.send(makeError("Old password wrong !"));
+    return res.send(makeError("Old password wrong !"))
   }
-};
+}
 
 //for follow / unfollow
 exports.follows = async (req, res) => {
@@ -247,13 +247,13 @@ exports.follows = async (req, res) => {
         let cred = {
           id: req.body.user_id,
           status: "unfollow"
-        };
+        }
         // Unfollow
         My.delete("followers", "id = " + object.id).then(() => {
           return res.send(
             makeSuccess("Unfollowed successfully.", { users: cred })
-          );
-        });
+          )
+        })
       } else {
         // Follow
         My.insert("followers", {
@@ -263,68 +263,97 @@ exports.follows = async (req, res) => {
           let cred = {
             id: req.body.user_id,
             status: "follow"
-          };
+          }
           return res.send(
             makeSuccess("Followed successfully.", { users: cred })
-          );
-        });
+          )
+        })
       }
     })
     .catch(err => {
-      return res.send(makeError("Something went wrong !"));
-    });
-};
+      return res.send(makeError("Something went wrong !"))
+    })
+}
 
 //for search of user
 exports.search = async (req, res) => {
   My.query(
-    "select users.id, users.username, users.email,user_profiles.photo from users left join user_profiles on users.id = user_profiles.user_id where users.username like ? and users.id != ? users.status=?",
+    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description from users left join user_profiles on users.id = user_profiles.user_id where users.username like ? and users.id != ? and users.status=?",
     [`%${req.body.search}%`, req.user.id, 1]
   )
     .then(results => {
-      return res.send(makeSuccess("", { users: results }));
+      My.query(
+        "select followers.follow_user_id from followers left join users on users.id = followers.follow_user_id where followers.user_id=? and users.status=?",
+        [req.user.id, 1]
+      )
+        .then(results1 => {
+          if (results.length > 0) {
+            for (var j = 0; j < results.length; j++) {
+              var exists = existCheck(results[j].id, results1)
+              if (exists) {
+                results[j].follow_user_id = results[j].id
+              } else {
+                results[j].follow_user_id = null
+              }
+            }
+          }
+          return res.send(makeSuccess("", { users: results }))
+        })
+        .catch(err => {
+          console.log("err2", err)
+          return res.send(makeError("Something went wrong !"))
+        })
     })
     .catch(err => {
-      return res.send(makeError("Something went wrong !"));
-    });
-};
+      console.log("error", err)
+      return res.send(makeError("Something went wrong !"))
+    })
+}
 
-// "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id inner join followers on users.id = followers.user_id where users.id!=? and users.status=? and followers.user_id=?",
+function existCheck(id, arr) {
+  return arr.some(function(el) {
+    return el.follow_user_id === id
+  })
+}
+
 //for get all users
 exports.getAllUsers = async (req, res) => {
   My.query(
-    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description,followers.follow_user_id from users left join user_profiles on users.id = user_profiles.user_id left join followers on users.id = followers.follow_user_id where users.id!=? and users.status=?",
+    "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description from users left join user_profiles on users.id = user_profiles.user_id where users.id!=? and users.status=?",
     [req.user.id, 1]
   )
     .then(results => {
-      console.log("users", results);
-      // console.log(req.user.id);
-      return res.send(makeSuccess("", { users: results }));
-      // My.query(
-      //   "select * from users left join followers on users.id = followers.user_id where followers.user_id!=?",
-      //   [req.user.id]
-      // )
-      //   .then(results1 => {
-      //     console.log("follow", results1);
-      //     // var obj = Object.assign({}, results, results1);
-      //     // console.log("obj", obj);
-
-      //     // return res.send(makeSuccess("", { users: obj }));
-      //   })
-      //   .catch(err => {
-      //     console.log("err2", err);
-      //     return res.send(makeError("Something went wrong !"));
-      //   });
+      My.query(
+        "select followers.follow_user_id from followers left join users on users.id = followers.follow_user_id where followers.user_id=? and users.status=?",
+        [req.user.id, 1]
+      )
+        .then(results1 => {
+          if (results.length > 0) {
+            for (var j = 0; j < results.length; j++) {
+              var exists = existCheck(results[j].id, results1)
+              if (exists) {
+                results[j].follow_user_id = results[j].id
+              } else {
+                results[j].follow_user_id = null
+              }
+            }
+          }
+          return res.send(makeSuccess("", { users: results }))
+        })
+        .catch(err => {
+          console.log("err2", err)
+          return res.send(makeError("Something went wrong !"))
+        })
     })
     .catch(err => {
-      console.log("err1", err);
-      return res.send(makeError("Something went wrong !"));
-    });
-};
+      console.log("err1", err)
+      return res.send(makeError("Something went wrong !"))
+    })
+}
 
 //get user Profile
 exports.findOne = async (req, res) => {
-  var id = req.params.Id;
+  var id = req.params.Id
   My.query(
     "select users.id, users.username,users.name, users.email,user_profiles.description,user_profiles.motto,user_profiles.website,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
     [id]
@@ -349,9 +378,9 @@ exports.findOne = async (req, res) => {
               )
                 .then(results2 => {
                   if (results2[0].followStatus > 0) {
-                    results[0].followUserId = id;
+                    results[0].followUserId = id
                   } else {
-                    results[0].followUserId = null;
+                    results[0].followUserId = null
                   }
 
                   var obj = Object.assign(
@@ -359,23 +388,23 @@ exports.findOne = async (req, res) => {
                     result[0],
                     results[0],
                     results1[0]
-                  );
-                  return res.send(makeSuccess("", { users: obj }));
+                  )
+                  return res.send(makeSuccess("", { users: obj }))
                 })
                 .catch(err => {
-                  return res.send(makeError("Something went wrong !"));
-                });
+                  return res.send(makeError("Something went wrong !"))
+                })
             })
             .catch(err => {
-              return res.send(makeError("Something went wrong !"));
-            });
+              return res.send(makeError("Something went wrong !"))
+            })
         })
         .catch(err => {
-          return res.send(makeError("Something went wrong !"));
-        });
+          return res.send(makeError("Something went wrong !"))
+        })
     })
     .catch(err => {
-      console.log(err);
-      return res.send(makeError("Something went wrong !"));
-    });
-};
+      console.log(err)
+      return res.send(makeError("Something went wrong !"))
+    })
+}

@@ -1,25 +1,25 @@
 // import libs
-import React from "react";
-import PropTypes from "prop-types";
-import { Validator } from "ree-validate";
+import React from "react"
+import PropTypes from "prop-types"
+import { Validator } from "ree-validate"
 // import components
-import Form from "./components/Form";
+import Form from "./components/Form"
 
 // initialize component
 class Page extends React.Component {
   // set name of the component
-  static displayName = "ChangePasswordForm";
+  static displayName = "ChangePasswordForm"
 
   // validate props
-  static propTypes = {};
+  static propTypes = {}
 
   constructor(props) {
-    super(props);
+    super(props)
     this.validator = new Validator({
       old_password: "required",
-      password: "required|min:6",
-      confirm_password: "required|min:6"
-    });
+      password: "required|min:6|max:15",
+      confirm_password: "required|min:6|max:15"
+    })
     // set the state of the app
     this.state = {
       credentials: {
@@ -31,49 +31,53 @@ class Page extends React.Component {
       },
       errors: this.validator.errors,
       confirm_error: ""
-    };
+    }
 
-    this.avoidSpace = this.avoidSpace.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.avoidSpace = this.avoidSpace.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   //Avoid space in username field
   avoidSpace(name, value, event) {
     if (event.key === " ") {
-      event.preventDefault();
-      return false;
+      event.preventDefault()
+      return false
     }
   }
 
   // event to handle login input change
   handleChange(name, value) {
-    const { errors } = this.validator;
+    const { errors } = this.validator
 
     this.setState({
       credentials: { ...this.state.credentials, [name]: value }
-    });
+    })
 
-    errors.remove(name);
+    errors.remove(name)
+
+    if (name === "confirm_password") {
+      this.setState({ confirm_error: "" })
+    }
 
     this.validator.validate(name, value).then(() => {
-      this.setState({ errors });
-    });
+      this.setState({ errors })
+    })
   }
 
   // event to handle profile form submit
   handleSubmit(e) {
-    e.preventDefault();
-    const { credentials } = this.state;
-    const { errors } = this.validator;
+    e.preventDefault()
+    const { credentials } = this.state
+    const { errors } = this.validator
 
     this.validator.validateAll(credentials).then(success => {
       if (success) {
-        this.submit(credentials);
+        this.submit(credentials)
       } else {
-        this.setState({ errors });
+        this.setState({ errors })
       }
-    });
+    })
   }
 
   submit(credentials) {
@@ -83,25 +87,23 @@ class Page extends React.Component {
     ) {
       this.setState({
         confirm_error: "Confirmation password does not match with new password."
-      });
+      })
     } else {
       this.setState({
         confirm_error: ""
-      });
+      })
       const credentialsC = {
         old_password: this.state.credentials.old_password,
         password: this.state.credentials.password,
         confirm_password: this.state.credentials.confirm_password
-      };
-      this.props.profile(credentialsC);
+      }
+      this.props.profile(credentialsC)
     }
   }
 
   // render component
   render() {
-    //console.log("auth user", this.props.authUser);
     // check if user is authenticated then redirect him to home page
-
     const props = {
       confirm_error: this.state.confirm_error,
       profile: this.state.credentials,
@@ -109,10 +111,10 @@ class Page extends React.Component {
       errors: this.state.errors,
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit
-    };
+    }
 
-    return <Form {...props} />;
+    return <Form {...props} />
   }
 }
 
-export default Page;
+export default Page

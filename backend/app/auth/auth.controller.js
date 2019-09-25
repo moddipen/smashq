@@ -15,9 +15,8 @@ const paymentClient = new RocketGate.gateway({
 exports.login = (req, res) => {
   const condition = "username = ? "
   const values = [req.body.username]
-  My.first("users", ["id, password, status"], condition, values)
+  My.first("users", ["id, password, status,remember_token"], condition, values)
     .then(object => {
-      console.log(object)
       if (!object) {
         return res.send(makeError("Incorrect username or password !"))
       } else {
@@ -25,7 +24,9 @@ exports.login = (req, res) => {
           return res.send(makeError("Incorrect username or password !"))
         } else {
           if (!object.status) {
-            return res.send(makeError("Your account is not active !"))
+            var obj = JSON.parse(JSON.stringify(object))
+            return res.send(makeSuccess("Your account is not active !", obj))
+            return res.send(makeError("Your account is not active !", obj))
           }
           jwt.sign(
             { id: object.id },
@@ -222,6 +223,45 @@ exports.verifyCode = async (req, res) => {
     })
     .catch(err => {
       return res.send(makeError("Enter valid confirmation code !"))
+    })
+}
+
+exports.resendLink = async (req, res) => {
+  const condition = "username = ? "
+  const values = [req.body.username]
+  console.log("val", values)
+  My.first(
+    "users",
+    ["id", "remember_token", "username", "email"],
+    condition,
+    values
+  )
+    .then(object => {
+      if (!object) {
+        return res.send(makeError("Something went wrong. Please try again !"))
+      } else {
+        console.log(object)
+        console.log(object.username)
+
+        var replace_var = {
+          username: object.username,
+          link:
+            process.env.SERVER_URL +
+            "auth/verify-email/" +
+            object.remember_token
+        }
+        send_mail(
+          "emailverification.html",
+          replace_var,
+          object.email,
+          "Verify account"
+        )
+        return res.send(makeSuccess("Verification link sent to your email."))
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      return res.send(makeError("Something went wrong. Please try again !"))
     })
 }
 

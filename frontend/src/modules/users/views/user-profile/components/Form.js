@@ -116,13 +116,12 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
         <div className="profile-about-info clearfix pt-20">
           <div className="profile-name mb-10">{users.name}</div>
           <div className="profile-about-text">
-            { users.description !== '' ?  <p>
+            { users.description !== '' ?  <p className="profileDesc">
             { users.description }
             </p> : null }
-            
-            {users.website !== '' ? 
+            { users.website !== '' ? 
             <p>
-            my website <NavLink to="#">{ users.website }</NavLink>
+            my website <NavLink href={ users.website } target="_blank">{ users.website }</NavLink>
             </p>
             : null}
           </div>

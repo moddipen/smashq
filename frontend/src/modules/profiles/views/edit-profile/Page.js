@@ -1,22 +1,22 @@
 // import libs
-import React from "react";
-import PropTypes from "prop-types";
-import { Validator } from "ree-validate";
+import React from "react"
+import PropTypes from "prop-types"
+import { Validator } from "ree-validate"
 // import components
-import Form from "./components/Form";
-import { API_URL } from "../../../../contants/config";
+import Form from "./components/Form"
+import { API_URL } from "../../../../contants/config"
 
 // initialize component
 class Page extends React.Component {
   // set name of the component
-  static displayName = "EditProfilePage";
+  static displayName = "EditProfilePage"
 
   // validate props
-  static propTypes = {};
+  static propTypes = {}
 
   constructor(props) {
-    super(props);
-    const src = "/img/e1.png";
+    super(props)
+    const src = "/img/e1.png"
     this.validator = new Validator({
       name: "required",
       username: "required|min:6|max:15",
@@ -27,7 +27,7 @@ class Page extends React.Component {
       phone: "required|min:8|max:15",
       gender: "",
       sas: ""
-    });
+    })
     // set the state of the app
 
     this.state = {
@@ -40,18 +40,19 @@ class Page extends React.Component {
       src: "",
       modal: false,
       errors: this.validator.errors
-    };
+    }
 
-    this.previewShow = this.previewShow.bind(this);
-    this.onCrop = this.onCrop.bind(this);
-    this.onClose = this.onClose.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.avoidSpace = this.avoidSpace.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.previewShow = this.previewShow.bind(this)
+    this.onCrop = this.onCrop.bind(this)
+    this.onClose = this.onClose.bind(this)
+    this.toggle = this.toggle.bind(this)
+    this.avoidSpace = this.avoidSpace.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
+    console.log("authuser", this.props.authUser)
     if (Object.keys(this.props.authUser).length !== 0) {
       let credentials = {
         name: this.props.authUser.name,
@@ -64,92 +65,92 @@ class Page extends React.Component {
         gender: this.props.authUser.gender || "male",
         sas: this.props.authUser.sas,
         photo: this.props.authUser.photo
-      };
-      this.setState({ credentials: credentials });
+      }
+      this.setState({ credentials: credentials })
     }
   }
 
   //Avoid space in username field
   avoidSpace(name, value, event) {
     if (event.key === " ") {
-      event.preventDefault();
-      return false;
+      event.preventDefault()
+      return false
     }
   }
 
   // event to handle login input change
   handleChange(name, value) {
-    const { errors } = this.validator;
+    const { errors } = this.validator
     this.setState({
       credentials: { ...this.state.credentials, [name]: value }
-    });
-    errors.remove(name);
+    })
+    errors.remove(name)
     this.validator.validate(name, value).then(() => {
-      this.setState({ errors });
-    });
+      this.setState({ errors })
+    })
   }
 
   //modal toggle
   toggle() {
     this.setState(prevState => ({
       modal: !prevState.modal
-    }));
+    }))
   }
 
   previewShow() {
-    let preview;
+    let preview
     if (this.state.preview === null) {
       preview =
         this.props.authUser.photo != ""
           ? API_URL + "/" + this.props.authUser.photo
-          : "/img/noimg.png";
+          : "/img/noimg.png"
     } else {
-      preview = this.state.preview;
+      preview = this.state.preview
     }
     this.setState({
       modal: false,
       filePreview: preview
-    });
+    })
     this.setState({
       credentials: { ...this.state.credentials, photo: this.state.preview }
-    });
+    })
   }
 
   onClose() {
-    this.setState({ preview: null });
+    this.setState({ preview: null })
   }
 
   onCrop(preview) {
-    this.setState({ preview });
+    this.setState({ preview })
   }
 
   // event to handle profile form submit
   handleSubmit(e) {
-    e.preventDefault();
-    const { credentials } = this.state;
-    const { errors } = this.validator;
+    e.preventDefault()
+    const { credentials } = this.state
+    const { errors } = this.validator
 
     this.validator.validateAll(credentials).then(success => {
       if (success) {
-        this.submit(credentials);
+        this.submit(credentials)
       } else {
-        this.setState({ errors });
+        this.setState({ errors })
       }
-    });
+    })
   }
 
   submit(credentials) {
-    this.props.profile(credentials);
+    this.props.profile(credentials)
   }
 
   // render component
   render() {
     // check if user is authenticated then redirect him to home page
-    let profiledata = {};
+    let profiledata = {}
     if (Object.keys(this.state.credentials).length !== 0) {
-      profiledata = this.state.credentials;
+      profiledata = this.state.credentials
     } else {
-      profiledata = {};
+      profiledata = {}
     }
 
     const props = {
@@ -168,10 +169,10 @@ class Page extends React.Component {
       filePreview: this.state.filePreview,
       previewShow: this.previewShow,
       initialLoad: this.props.initialLoad
-    };
+    }
 
-    return <Form {...props} />;
+    return <Form {...props} />
   }
 }
 
-export default Page;
+export default Page
