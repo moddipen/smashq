@@ -1,13 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
-
-const displayName = "ForgotPasswordForm";
+import React from "react"
+import PropTypes from "prop-types"
+import { NavLink } from "redux-first-router-link"
+const displayName = "ForgotPasswordForm"
 const propTypes = {
   email: PropTypes.string.isRequired,
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired
-};
+}
 
 const Form = ({ email, errors, handleChange, handleSubmit }) => (
   <section className="pad-40 confirm-number-section">
@@ -47,15 +47,20 @@ const Form = ({ email, errors, handleChange, handleSubmit }) => (
                   Submit
                 </button>
               </div>
+              <p className="m-t-10">
+                <NavLink to="/">
+                  <i className="fa fa-arrow-left"></i> Back to Login Page
+                </NavLink>
+              </p>
             </form>
           </div>
         </div>
       </div>
     </div>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

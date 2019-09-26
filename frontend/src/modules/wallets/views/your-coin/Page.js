@@ -69,7 +69,6 @@ class Page extends React.PureComponent {
 
   // render component
   render() {
-    // check if user is authenticated then redirect him to home page
     const props = {
       authUser: this.props.authUser,
       errors: this.state.errors,

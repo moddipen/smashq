@@ -1,6 +1,18 @@
 const My = require("jm-ez-mysql")
 const bcrypt = require("bcrypt-nodejs")
 const isBase64 = require("is-base64")
+const RocketGate = require("rocketgate")
+const util = require("util")
+const jwt = require("jsonwebtoken")
+const uuidv1 = require("uuid/v1")
+const { body } = require("express-validator")
+const privateKey = process.env.JWT_SECRET_KEY
+
+const paymentClient = new RocketGate.gateway({
+  MERCHANT_ID: process.env.MERCHANT_ID,
+  MERCHANT_PASSWORD: process.env.MERCHANT_PASSWORD,
+  testMode: true
+})
 
 //for get login profile
 exports.getProfile = async (req, res) => {
@@ -237,6 +249,8 @@ exports.changePassword = async (req, res) => {
 
 //for follow / unfollow
 exports.follows = async (req, res) => {
+  let data = req.body
+  let id = req.user.id
   My.first(
     "followers",
     ["id"],
@@ -256,18 +270,58 @@ exports.follows = async (req, res) => {
         })
       } else {
         // Follow
-        My.insert("followers", {
-          user_id: req.user.id,
-          follow_user_id: req.body.user_id
-        }).then(result => {
-          let cred = {
-            id: req.body.user_id,
-            status: "follow"
-          }
-          return res.send(
-            makeSuccess("Followed successfully.", { users: cred })
-          )
-        })
+        let creditCard = {
+          creditCardNumber: data.card,
+          expirationMonth: data.month,
+          expirationYear: data.year,
+          cvv: data.cvv
+        }
+        let prospect = {
+          customerFirstName: req.user.name,
+          customerEmail: req.user.email
+        }
+
+        let plan = {
+          amount: "10",
+          iterationCount: "5",
+          periodLength: 6,
+          periodUnit: "months",
+          startingDate: new Date(Date.now() + 24 * 3600 * 7 * 1000)
+        }
+
+        var other = {
+          merchantCustomerID: Date.now() + ".JSTest",
+          merchantInvoiceID: Date.now() + ".Test"
+        }
+
+        paymentClient
+          .createSubscription(creditCard, prospect, plan, other)
+          .then(success => {
+            My.insert("transactions", {
+              user_id: req.user.id,
+              transaction_id: success.subscriptionId,
+              coins: "",
+              amount: data.amount,
+              description: "Follow success"
+            }).then(result => {
+              My.insert("followers", {
+                user_id: req.user.id,
+                follow_user_id: req.body.user_id
+              }).then(result => {
+                let cred = {
+                  id: req.body.user_id,
+                  status: "follow"
+                }
+                return res.send(
+                  makeSuccess("Followed successfully.", { users: cred })
+                )
+              })
+            })
+          })
+          .catch(e => {
+            console.log("error", e)
+            return res.send(makeError(e))
+          })
       }
     })
     .catch(err => {

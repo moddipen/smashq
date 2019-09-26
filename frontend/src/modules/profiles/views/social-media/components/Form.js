@@ -1,17 +1,23 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ProfileTabComponent from "../../../../../common/profile-tab/index";
-import LoadingOverlay from "react-loading-overlay";
-import BounceLoader from "react-spinners/BounceLoader";
-const displayName = "SocialMediaForm";
+import React from "react"
+import PropTypes from "prop-types"
+import ProfileTabComponent from "../../../../../common/profile-tab/index"
+import LoadingOverlay from "react-loading-overlay"
+import BounceLoader from "react-spinners/BounceLoader"
+const displayName = "SocialMediaForm"
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   avoidSpace: PropTypes.func.isRequired,
-  initialLoad: PropTypes.bool.isRequired
-};
+  initialLoad: PropTypes.bool.isRequired,
+  facebook_error: PropTypes.string.isRequired,
+  instagram_error: PropTypes.string.isRequired,
+  snapchat_error: PropTypes.string.isRequired,
+  twitter_error: PropTypes.string.isRequired,
+  youtube_error: PropTypes.string.isRequired,
+  amazon_error: PropTypes.string.isRequired
+}
 
 const Form = ({
   errors,
@@ -19,7 +25,13 @@ const Form = ({
   handleSubmit,
   profile,
   avoidSpace,
-  initialLoad
+  initialLoad,
+  facebook_error,
+  instagram_error,
+  snapchat_error,
+  twitter_error,
+  youtube_error,
+  amazon_error
 }) => (
   <section className="pad-40 user-profile-edit-section">
     <LoadingOverlay
@@ -62,6 +74,14 @@ const Form = ({
                             {errors.first("facebook")}
                           </div>
                         )}
+                        {facebook_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {facebook_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -84,6 +104,14 @@ const Form = ({
                             {errors.first("instagram")}
                           </div>
                         )}
+                        {instagram_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {instagram_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -106,6 +134,14 @@ const Form = ({
                             {errors.first("snapchat")}
                           </div>
                         )}
+                        {snapchat_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {snapchat_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -128,6 +164,14 @@ const Form = ({
                             {errors.first("twitter")}
                           </div>
                         )}
+                        {twitter_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {twitter_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -150,6 +194,14 @@ const Form = ({
                             {errors.first("youtube")}
                           </div>
                         )}
+                        {youtube_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {youtube_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -172,6 +224,14 @@ const Form = ({
                             {errors.first("amazon")}
                           </div>
                         )}
+                        {amazon_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {amazon_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -206,9 +266,9 @@ const Form = ({
       </div>
     </div>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

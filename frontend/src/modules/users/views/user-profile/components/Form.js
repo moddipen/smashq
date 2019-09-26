@@ -66,31 +66,28 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
           </div>
         </div>
         <div className="profile-follow-detail">
-          <div className="profile-follow-top-row mb-20">
-            <div className="row">
-              <div className="col-4 text-center">
-                <div className="icons">0</div>
-                <div className="text">Posts</div>
-              </div>
-              <div className="col-4 text-center">
-                <div className="icons">
-                  <a href="#">{users.followers}</a>
-                </div>
-                <div className="text">Followers</div>
-              </div>
-              <div className="col-4 text-center">
-                <div className="icons">
-                  <a href="#">{users.following}</a>
-                </div>
-                <div className="text">Following</div>
-              </div>
-            </div>
-          </div>
+          
+            <div className="profile-follow-top-row mb-20">
+							<div className="row">
+								<div className="col-4 text-center">
+									<div className="icons"><a href="#"><i class="fa fa-comments"></i></a></div>
+									<div className="text">Message</div>
+								</div>
+								<div className="col-4 text-center">
+									<div className="icons"><a href="#">{users.followers}</a></div>
+									<div className="text">Followers</div>
+								</div>
+								<div className="col-4 text-center">
+									<div className="icons"><a href="#">{users.following}</a></div>
+									<div className="text">Following</div>
+								</div>
+							</div>
+						</div> 
           <div className="profile-follow-btn">
           {users.followUserId !== null ? (
             <NavLink
             to="#"
-            className="btn-custom followed"
+            className="btn-custom unfollow"
             onClick={() => followStatus(users.id)}
           >
             Unfollow
@@ -105,12 +102,6 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
           </NavLink>
             )}
 
-            <a href="#" className="btn-custom">
-              Message
-            </a>
-            <a href="#" className="btn-custom live-btn">
-              live
-            </a>
           </div>
         </div>
         <div className="profile-about-info clearfix pt-20">
@@ -121,7 +112,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             </p> : null }
             { users.website !== '' ? 
             <p>
-            my website <NavLink href={ users.website } target="_blank">{ users.website }</NavLink>
+            my website <a href={ users.website } target="_blank">{ users.website }</a>
             </p>
             : null}
           </div>

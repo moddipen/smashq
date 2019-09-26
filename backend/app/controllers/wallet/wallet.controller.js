@@ -73,15 +73,17 @@ exports.updateCoin = async (req, res) => {
               )
             })
             .catch(err => {
-              console.log(err)
+              console.log("e1", err)
               return res.send(makeError("Something went wrong !"))
             })
         })
         .catch(e => {
-          return res.send(makeError("Something went wrong !"))
+          console.log("e2", e)
+          return res.send(makeError(e.message))
         })
     })
     .catch(err => {
+      console.log("e3", err)
       return res.send(makeError("Something went wrong !"))
     })
 }

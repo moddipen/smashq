@@ -1,22 +1,22 @@
 // import libs
-import React from "react";
-import { Validator } from "ree-validate";
+import React from "react"
+import { Validator } from "ree-validate"
 // import components
-import Form from "./components/Form";
+import Form from "./components/Form"
 
 // initialize component
 class Page extends React.PureComponent {
   // set name of the component
-  static displayName = "PaymentFormPage";
+  static displayName = "PaymentFormPage"
 
   constructor(props) {
-    super(props);
+    super(props)
     this.validator = new Validator({
       cvv: "required|numeric|min:3|max:4",
       cardnumber: "required|numeric|min:16|max:16",
       expiremonth: "required",
       expireyear: "required"
-    });
+    })
     // set the state of the app
     this.state = {
       credentials: {
@@ -41,52 +41,52 @@ class Page extends React.PureComponent {
       ],
       years: [],
       errors: this.validator.errors
-    };
+    }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount() {
-    let date = new Date();
-    let year = date.getFullYear();
-    let endyear = parseFloat(year) + 20;
-    let result = this.range(year, endyear);
-    this.setState({ years: result });
+    let date = new Date()
+    let year = date.getFullYear()
+    let endyear = parseFloat(year) + 20
+    let result = this.range(year, endyear)
+    this.setState({ years: result })
   }
 
   //for get all integers bet two numbers
   range(start, end) {
     return Array(end - start + 1)
       .fill()
-      .map((_, idx) => start + idx);
+      .map((_, idx) => start + idx)
   }
 
   // event to handle login input change
   handleChange(name, value) {
-    const { errors } = this.validator;
+    const { errors } = this.validator
     this.setState({
       credentials: { ...this.state.credentials, [name]: value }
-    });
-    errors.remove(name);
+    })
+    errors.remove(name)
     this.validator.validate(name, value).then(() => {
-      this.setState({ errors });
-    });
+      this.setState({ errors })
+    })
   }
 
   // event to handle profile form submit
   handleSubmit(e) {
-    e.preventDefault();
-
-    const { credentials } = this.state;
-    const { errors } = this.validator;
-    this.validator.validateAll(credentials).then(success => {
-      if (success) {
-        this.submit(credentials);
-      } else {
-        this.setState({ errors });
-      }
-    });
+    e.preventDefault()
+    console.log("rdfdfdf")
+    // const { credentials } = this.state
+    // const { errors } = this.validator
+    // this.validator.validateAll(credentials).then(success => {
+    //   if (success) {
+    //     this.submit(credentials)
+    //   } else {
+    //     this.setState({ errors })
+    //   }
+    // })
   }
 
   submit(credentials) {
@@ -97,13 +97,16 @@ class Page extends React.PureComponent {
       month: this.state.credentials.expiremonth,
       year: this.state.credentials.expireyear,
       cvv: this.state.credentials.cvv
-    };
+    }
 
-    this.props.updateCoins(obj);
+    this.props.updateCoins(obj)
     let obj1 = {
-      coins: ""
-    };
-    this.setState({ credentials: obj1 });
+      cvv: "",
+      cardnumber: "",
+      expiremonth: "01",
+      expireyear: "2019"
+    }
+    this.setState({ credentials: obj1 })
   }
 
   // render component
@@ -117,10 +120,10 @@ class Page extends React.PureComponent {
       profile: this.state.credentials,
       months: this.state.months,
       years: this.state.years
-    };
+    }
 
-    return <Form {...props} />;
+    return <Form {...props} />
   }
 }
 
-export default Page;
+export default Page

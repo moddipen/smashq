@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ProfileTabComponent from "../../../../../common/profile-tab/index";
-import LoadingOverlay from "react-loading-overlay";
-import BounceLoader from "react-spinners/BounceLoader";
+import React from "react"
+import PropTypes from "prop-types"
+import ProfileTabComponent from "../../../../../common/profile-tab/index"
+import LoadingOverlay from "react-loading-overlay"
+import BounceLoader from "react-spinners/BounceLoader"
 
 import {
   Button,
@@ -12,11 +12,11 @@ import {
   ModalFooter,
   Row,
   Col
-} from "reactstrap";
-import Avatar from "react-avatar-edit";
-import { statement } from "@babel/template";
+} from "reactstrap"
+import Avatar from "react-avatar-edit"
+import { statement } from "@babel/template"
 
-const displayName = "EditProfilePage";
+const displayName = "EditProfilePage"
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -28,8 +28,9 @@ const propTypes = {
   previewShow: PropTypes.func.isRequired,
   onCrop: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  initialLoad: PropTypes.bool.isRequired
-};
+  initialLoad: PropTypes.bool.isRequired,
+  website_error: PropTypes.string.isRequired
+}
 
 const Form = ({
   errors,
@@ -46,7 +47,8 @@ const Form = ({
   onCrop,
   onClose,
   filePreview,
-  initialLoad
+  initialLoad,
+  website_error
 }) => (
   <section className="pad-40 user-profile-edit-section">
     <LoadingOverlay
@@ -161,6 +163,14 @@ const Form = ({
                             {errors.first("website")}
                           </div>
                         )}
+                        {website_error != "" ? (
+                          <div
+                            className="invalid-feedback"
+                            style={{ display: "block" }}
+                          >
+                            {website_error}
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                     <div className="form-group">
@@ -389,9 +399,9 @@ const Form = ({
       </ModalBody>
     </Modal>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

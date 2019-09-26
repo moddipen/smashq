@@ -39,7 +39,8 @@ class Page extends React.Component {
           : "/img/noimg.png",
       src: "",
       modal: false,
-      errors: this.validator.errors
+      errors: this.validator.errors,
+      website_error: ""
     }
 
     this.previewShow = this.previewShow.bind(this)
@@ -85,6 +86,10 @@ class Page extends React.Component {
       credentials: { ...this.state.credentials, [name]: value }
     })
     errors.remove(name)
+    if (name === "website") {
+      this.setState({ website_error: "" })
+    }
+
     this.validator.validate(name, value).then(() => {
       this.setState({ errors })
     })
@@ -140,7 +145,32 @@ class Page extends React.Component {
   }
 
   submit(credentials) {
-    this.props.profile(credentials)
+    //url regex check
+    if (this.state.credentials.website) {
+      var userInput = this.state.credentials.website
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          website_error: "The website field contains http or https."
+        })
+      } else {
+        var res1 = userInput.match(
+          /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+        )
+
+        if (res1 === null) {
+          this.setState({
+            website_error: "he website field is not a valid URL."
+          })
+        } else {
+          this.props.profile(credentials)
+        }
+      }
+    } else {
+      this.props.profile(credentials)
+    }
   }
 
   // render component
@@ -168,7 +198,8 @@ class Page extends React.Component {
       preview: this.state.preview,
       filePreview: this.state.filePreview,
       previewShow: this.previewShow,
-      initialLoad: this.props.initialLoad
+      initialLoad: this.props.initialLoad,
+      website_error: this.state.website_error
     }
 
     return <Form {...props} />

@@ -33,7 +33,13 @@ class Page extends React.Component {
         youtube: this.props.authUser.youtube,
         amazon: this.props.authUser.amazon
       },
-      errors: this.validator.errors
+      errors: this.validator.errors,
+      facebook_error: "",
+      instagram_error: "",
+      snapchat_error: "",
+      twitter_error: "",
+      youtube_error: "",
+      amazon_error: ""
     }
 
     this.avoidSpace = this.avoidSpace.bind(this)
@@ -56,9 +62,26 @@ class Page extends React.Component {
     this.setState({
       credentials: { ...this.state.credentials, [name]: value }
     })
-
     errors.remove(name)
 
+    if (name === "facebook") {
+      this.setState({ facebook_error: "" })
+    }
+    if (name === "instagram") {
+      this.setState({ instagram_error: "" })
+    }
+    if (name === "snapchat") {
+      this.setState({ snapchat_error: "" })
+    }
+    if (name === "twitter") {
+      this.setState({ twitter_error: "" })
+    }
+    if (name === "youtube") {
+      this.setState({ youtube_error: "" })
+    }
+    if (name === "amazon") {
+      this.setState({ amazon_error: "" })
+    }
     this.validator.validate(name, value).then(() => {
       this.setState({ errors })
     })
@@ -80,7 +103,83 @@ class Page extends React.Component {
   }
 
   submit(credentials) {
-    this.props.profile(credentials)
+    if (this.state.credentials.facebook) {
+      var userInput = this.state.credentials.facebook
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          facebook_error: "The facebook field contains http or https."
+        })
+      } else {
+        if (this.state.credentials.instagram) {
+          var userInput = this.state.credentials.instagram
+          var res = userInput.match(
+            "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+          )
+          if (res === null) {
+            this.setState({
+              instagram_error: "The instagram field contains http or https."
+            })
+          } else {
+            if (this.state.credentials.snapchat) {
+              var userInput = this.state.credentials.snapchat
+              var res = userInput.match(
+                "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+              )
+              if (res === null) {
+                this.setState({
+                  snapchat_error: "The snapchat field contains http or https."
+                })
+              } else {
+                if (this.state.credentials.twitter) {
+                  var userInput = this.state.credentials.twitter
+                  var res = userInput.match(
+                    "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+                  )
+                  if (res === null) {
+                    this.setState({
+                      twitter_error: "The twitter field contains http or https."
+                    })
+                  } else {
+                    if (this.state.credentials.youtube) {
+                      var userInput = this.state.credentials.youtube
+                      var res = userInput.match(
+                        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+                      )
+                      if (res === null) {
+                        this.setState({
+                          youtube_error:
+                            "The youtube field contains http or https."
+                        })
+                      } else {
+                        if (this.state.credentials.amazon) {
+                          var userInput = this.state.credentials.amazon
+                          var res = userInput.match(
+                            "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+                          )
+                          if (res === null) {
+                            this.setState({
+                              amazon_error:
+                                "The amazon field contains http or https."
+                            })
+                          } else {
+                            this.props.profile(credentials)
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      this.props.profile(credentials)
+    }
   }
 
   // render component
@@ -93,7 +192,13 @@ class Page extends React.Component {
       handleChange: this.handleChange,
       handleSubmit: this.handleSubmit,
       avoidSpace: this.avoidSpace,
-      initialLoad: this.props.initialLoad
+      initialLoad: this.props.initialLoad,
+      facebook_error: this.state.facebook_error,
+      instagram_error: this.state.instagram_error,
+      snapchat_error: this.state.snapchat_error,
+      twitter_error: this.state.twitter_error,
+      youtube_error: this.state.youtube_error,
+      amazon_error: this.state.amazon_error
     }
 
     return <Form {...props} />

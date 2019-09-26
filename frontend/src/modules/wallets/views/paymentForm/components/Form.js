@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "../../../../../assets/css/paymentFormModal.css";
-import { Row, Col } from "reactstrap";
+import React from "react"
+import PropTypes from "prop-types"
+import "../../../../../assets/css/paymentFormModal.css"
+import { Row, Col } from "reactstrap"
 
-const displayName = "PaymentForm";
+const displayName = "PaymentForm"
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -12,7 +12,7 @@ const propTypes = {
   authUser: PropTypes.object.isRequired,
   months: PropTypes.array.isRequired,
   years: PropTypes.array.isRequired
-};
+}
 
 const Form = ({
   errors,
@@ -72,21 +72,6 @@ const Form = ({
               )}
             </div>
           </Col>
-          {/* <Col sm="5">
-            <input
-              type="checkbox"
-              name="remember"
-              value="remember"
-              checked={profile.remember !== ""}
-              onChange={e => handleChange(e.target.name, e.target.value)}
-              className={`terms form-control ${errors.has("remember") &&
-                "is-invalid"}`}
-            />
-            <span>Remember Me</span>
-            {errors.has("remember") && (
-              <div className="invalid-feedback">{errors.first("remember")}</div>
-            )}
-          </Col> */}
         </div>
 
         <div className="form-group Row">
@@ -105,7 +90,7 @@ const Form = ({
                     <option key={month.id} value={month.id}>
                       {month.name}
                     </option>
-                  );
+                  )
                 })}
               </select>
             </div>
@@ -118,7 +103,7 @@ const Form = ({
                 className="form-control"
               >
                 {years.map(year => {
-                  return <option key={year}>{year}</option>;
+                  return <option key={year}>{year}</option>
                 })}
               </select>
             </div>
@@ -133,9 +118,9 @@ const Form = ({
       </form>
     </div>
   </div>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form
