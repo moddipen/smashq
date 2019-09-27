@@ -38,7 +38,8 @@ exports.updateCoin = async (req, res) => {
             user_id: id,
             transaction_id: success.transactionId,
             coins: data.coins,
-            amount: data.amount
+            amount: data.amount,
+            description: "Coin purchase"
           }).then(result => {
             console.log("Transaction successfully")
           })
@@ -177,7 +178,3 @@ exports.requiringSubscription = (req, res) => {
       console.log("response ----", response)
     })
 }
-
-/*
-https://support.clickbank.com/hc/en-us/articles/220364187-Selling-Recurring-Products
-*/

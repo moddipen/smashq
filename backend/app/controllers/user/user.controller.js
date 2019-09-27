@@ -32,8 +32,39 @@ exports.getProfile = async (req, res) => {
               } else {
                 result1[0].coins = result2[0].coins
               }
-              var obj = Object.assign({}, result[0], result1[0])
-              return res.send(makeSuccess("", { profiles: obj }))
+
+              My.query(
+                "select value from user_settings where user_id = ? and name=?",
+                [id, "sub_on_follow"]
+              ) //get users coins
+                .then(result3 => {
+                  if (Object.keys(result3).length === 0) {
+                    result1[0].subOnFollow = 0
+                  } else {
+                    result1[0].subOnFollow = result3[0].value
+                  }
+
+                  My.query(
+                    "select value from user_settings where user_id = ? and name=?",
+                    [id, "amount"]
+                  ) //get users coins
+                    .then(result4 => {
+                      if (Object.keys(result4).length === 0) {
+                        result1[0].subamount = 0
+                      } else {
+                        result1[0].subamount = result4[0].value
+                      }
+
+                      var obj = Object.assign({}, result[0], result1[0])
+                      return res.send(makeSuccess("", { profiles: obj }))
+                    })
+                    .catch(err => {
+                      return res.send(makeError("Something went wrong !"))
+                    })
+                })
+                .catch(err => {
+                  return res.send(makeError("Something went wrong !"))
+                })
             })
             .catch(err => {
               return res.send(makeError("Something went wrong !"))
@@ -220,6 +251,101 @@ exports.updateSocialMedia = async (req, res) => {
   }
 }
 
+//for user settings
+exports.updateSettings = async (req, res) => {
+  let data = req.body
+  let id = req.user.id
+  console.log("data", data)
+  if (Object.keys(data).length !== 0) {
+    My.first(
+      "user_settings",
+      ["id"],
+      "user_id=" + req.user.id + " AND name='sub_on_follow'"
+    )
+      .then(object => {
+        if (object) {
+          //update sub_on_follow
+          My.update(
+            "user_settings",
+            {
+              value: data.sub_on_follow
+            },
+            "id = " + object.id
+          )
+            .then(result2 => {
+              //update amount
+              My.first(
+                "user_settings",
+                ["id"],
+                "user_id=" + req.user.id + " AND name='amount'"
+              )
+                .then(object2 => {
+                  My.update(
+                    "user_settings",
+                    {
+                      value: data.amount
+                    },
+                    "id = " + object2.id
+                  )
+                    .then(result2 => {
+                      return res.send(
+                        makeSuccess("Settings updated successfully.", {
+                          profiles: data
+                        })
+                      )
+                    })
+                    .catch(err => {
+                      console.log(err)
+                      return res.send(makeError("Something went wrong !"))
+                    })
+                })
+                .catch(err => {
+                  console.log(err)
+                  return res.send(makeError("Something went wrong !"))
+                })
+            })
+            .catch(err => {
+              console.log(err)
+              return res.send(makeError("Something went wrong !"))
+            })
+        } else {
+          //insert
+          My.insert("user_settings", {
+            user_id: req.user.id,
+            name: "sub_on_follow",
+            value: data.sub_on_follow
+          })
+            .then(result => {
+              My.insert("user_settings", {
+                user_id: req.user.id,
+                name: "amount",
+                value: data.amount
+              })
+                .then(result1 => {
+                  return res.send(
+                    makeSuccess("Settings updated successfully.", {
+                      profiles: data
+                    })
+                  )
+                })
+                .catch(e => {
+                  console.log("error441", e)
+                  return res.send(makeError(e))
+                })
+            })
+            .catch(e => {
+              console.log("error44", e)
+              return res.send(makeError(e))
+            })
+        }
+      })
+      .catch(err => {
+        console.log("e1", err)
+        return res.send(makeError("Something went wrong !"))
+      })
+  }
+}
+
 //for change password
 exports.changePassword = async (req, res) => {
   const checkPassword = bcrypt.compareSync(
@@ -251,6 +377,7 @@ exports.changePassword = async (req, res) => {
 exports.follows = async (req, res) => {
   let data = req.body
   let id = req.user.id
+  let amount = 0
   My.first(
     "followers",
     ["id"],
@@ -269,62 +396,153 @@ exports.follows = async (req, res) => {
           )
         })
       } else {
-        // Follow
-        let creditCard = {
-          creditCardNumber: data.card,
-          expirationMonth: data.month,
-          expirationYear: data.year,
-          cvv: data.cvv
-        }
-        let prospect = {
-          customerFirstName: req.user.name,
-          customerEmail: req.user.email
-        }
+        // Follow // subscription
+        My.first(
+          "user_settings",
+          ["value"],
+          "name='sub_on_follow' AND user_id=" + req.body.user_id
+        )
+          .then(object4 => {
+            let subNeeded = 0
+            if (object4) {
+              if (object4.value === "1") {
+                subNeeded = 1
+                My.first(
+                  "user_settings",
+                  ["value"],
+                  "name='amount' AND user_id=" + req.body.user_id
+                )
+                  .then(object5 => {
+                    //subscription needed
+                    console.log(object5.value)
+                    let creditCard = {
+                      creditCardNumber: data.card,
+                      expirationMonth: data.month,
+                      expirationYear: data.year,
+                      cvv: data.cvv
+                    }
+                    let prospect = {
+                      customerFirstName: req.user.name,
+                      customerEmail: req.user.email
+                    }
 
-        let plan = {
-          amount: "10",
-          iterationCount: "5",
-          periodLength: 6,
-          periodUnit: "months",
-          startingDate: new Date(Date.now() + 24 * 3600 * 7 * 1000)
-        }
+                    let plan = {
+                      amount: object5.value,
+                      iterationCount: "5",
+                      periodLength: 6,
+                      periodUnit: "months",
+                      startingDate: new Date(Date.now() + 24 * 3600 * 7 * 1000)
+                    }
 
-        var other = {
-          merchantCustomerID: Date.now() + ".JSTest",
-          merchantInvoiceID: Date.now() + ".Test"
-        }
+                    var other = {
+                      merchantCustomerID: Date.now() + ".JSTest",
+                      merchantInvoiceID: Date.now() + ".Test"
+                    }
 
-        paymentClient
-          .createSubscription(creditCard, prospect, plan, other)
-          .then(success => {
-            My.insert("transactions", {
-              user_id: req.user.id,
-              transaction_id: success.subscriptionId,
-              coins: "",
-              amount: data.amount,
-              description: "Follow success"
-            }).then(result => {
+                    paymentClient
+                      .createSubscription(creditCard, prospect, plan, other)
+                      .then(success => {
+                        My.first(
+                          "users",
+                          ["username"],
+                          "id=" + req.body.user_id
+                        )
+                          .then(object => {
+                            console.log(object.username)
+                            My.insert("transactions", {
+                              user_id: req.user.id,
+                              transaction_id: success.subscriptionId,
+                              coins: plan.amount,
+                              amount: plan.amount,
+                              description: "Follow to " + object.username
+                            })
+                              .then(result => {
+                                My.insert("followers", {
+                                  user_id: req.user.id,
+                                  follow_user_id: req.body.user_id
+                                }).then(result => {
+                                  let cred = {
+                                    id: req.body.user_id,
+                                    status: "follow",
+                                    subOnFollow: 1
+                                  }
+                                  return res.send(
+                                    makeSuccess("Followed successfully.", {
+                                      users: cred
+                                    })
+                                  )
+                                })
+                              })
+                              .catch(e => {
+                                console.log("error44", e)
+                                return res.send(makeError(e))
+                              })
+                          })
+                          .catch(e => {
+                            console.log("error55", e)
+                            return res.send(makeError(e))
+                          })
+                      })
+                      .catch(e => {
+                        console.log("error", e)
+                        return res.send(makeError(e))
+                      })
+                  })
+                  .catch(err => {
+                    console.log("e1", err)
+                    return res.send(makeError("Something went wrong !"))
+                  })
+              } else {
+                //no subscription needed
+                My.insert("followers", {
+                  user_id: req.user.id,
+                  follow_user_id: req.body.user_id
+                })
+                  .then(result => {
+                    let cred = {
+                      id: req.body.user_id,
+                      status: "follow",
+                      subOnFollow: 0
+                    }
+                    return res.send(
+                      makeSuccess("Followed successfully.", { users: cred })
+                    )
+                  })
+                  .catch(e => {
+                    console.log("error44", e)
+                    return res.send(makeError(e))
+                  })
+              }
+            } else {
+              //no subscription needed
               My.insert("followers", {
                 user_id: req.user.id,
                 follow_user_id: req.body.user_id
-              }).then(result => {
-                let cred = {
-                  id: req.body.user_id,
-                  status: "follow"
-                }
-                return res.send(
-                  makeSuccess("Followed successfully.", { users: cred })
-                )
               })
-            })
+                .then(result => {
+                  let cred = {
+                    id: req.body.user_id,
+                    status: "follow",
+                    subOnFollow: 0
+                  }
+                  return res.send(
+                    makeSuccess("Followed successfully.", { users: cred })
+                  )
+                })
+                .catch(e => {
+                  console.log("error44", e)
+                  return res.send(makeError(e))
+                })
+            }
           })
-          .catch(e => {
-            console.log("error", e)
-            return res.send(makeError(e))
+          .catch(err => {
+            console.log("e1", err)
+            return res.send(makeError("Something went wrong !"))
           })
       }
     })
     .catch(err => {
+      console.log("e1", err)
       return res.send(makeError("Something went wrong !"))
     })
 }
@@ -340,7 +558,7 @@ exports.search = async (req, res) => {
         "select followers.follow_user_id from followers left join users on users.id = followers.follow_user_id where followers.user_id=? and users.status=?",
         [req.user.id, 1]
       )
-        .then(results1 => {
+        .then(async results1 => {
           if (results.length > 0) {
             for (var j = 0; j < results.length; j++) {
               var exists = existCheck(results[j].id, results1)
@@ -349,6 +567,22 @@ exports.search = async (req, res) => {
               } else {
                 results[j].follow_user_id = null
               }
+
+              await My.first(
+                "user_settings",
+                ["value"],
+                "user_id=" + results[j].id + " AND name='sub_on_follow'"
+              ).then(results3 => {
+                if (results3) {
+                  if (results3.value === "1") {
+                    results[j].subOnFollow = results3.value
+                  } else {
+                    results[j].subOnFollow = "0"
+                  }
+                } else {
+                  results[j].subOnFollow = "0"
+                }
+              })
             }
           }
           return res.send(makeSuccess("", { users: results }))
@@ -381,7 +615,7 @@ exports.getAllUsers = async (req, res) => {
         "select followers.follow_user_id from followers left join users on users.id = followers.follow_user_id where followers.user_id=? and users.status=?",
         [req.user.id, 1]
       )
-        .then(results1 => {
+        .then(async results1 => {
           if (results.length > 0) {
             for (var j = 0; j < results.length; j++) {
               var exists = existCheck(results[j].id, results1)
@@ -390,8 +624,40 @@ exports.getAllUsers = async (req, res) => {
               } else {
                 results[j].follow_user_id = null
               }
+
+              //following count
+              await My.query(
+                "select count(id) as following from followers where user_id = ?",
+                [results[j].id]
+              ).then(async results11 => {
+                results[j].following = results11[0].following
+
+                //followers count
+                await My.query(
+                  "select count(id) as followers from followers where follow_user_id = ?",
+                  [results[j].id]
+                ).then(async results12 => {
+                  results[j].followers = results12[0].followers
+                  await My.first(
+                    "user_settings",
+                    ["value"],
+                    "user_id=" + results[j].id + " AND name='sub_on_follow'"
+                  ).then(results3 => {
+                    if (results3) {
+                      if (results3.value === "1") {
+                        results[j].subOnFollow = results3.value
+                      } else {
+                        results[j].subOnFollow = "0"
+                      }
+                    } else {
+                      results[j].subOnFollow = "0"
+                    }
+                  })
+                })
+              })
             }
           }
+          console.log("users", results)
           return res.send(makeSuccess("", { users: results }))
         })
         .catch(err => {
@@ -412,7 +678,7 @@ exports.findOne = async (req, res) => {
     "select users.id, users.username,users.name, users.email,user_profiles.description,user_profiles.motto,user_profiles.website,user_profiles.photo,user_coins.coins from users left join user_profiles on users.id = user_profiles.user_id left join user_coins on user_coins.user_id = users.id where users.id = ?",
     [id]
   )
-    .then(result => {
+    .then(async result => {
       //following count
       My.query(
         "select count(id) as following from followers where user_id = ?",
@@ -430,12 +696,28 @@ exports.findOne = async (req, res) => {
                 "select count(id) as followStatus from followers where follow_user_id = ? and user_id=?",
                 [id, req.user.id]
               )
-                .then(results2 => {
+                .then(async results2 => {
                   if (results2[0].followStatus > 0) {
                     results[0].followUserId = id
                   } else {
                     results[0].followUserId = null
                   }
+
+                  await My.first(
+                    "user_settings",
+                    ["value"],
+                    "user_id=" + id + " AND name='sub_on_follow'"
+                  ).then(results3 => {
+                    if (results3) {
+                      if (results3.value === "1") {
+                        results[0].subOnFollow = results3.value
+                      } else {
+                        results[0].subOnFollow = "0"
+                      }
+                    } else {
+                      results[0].subOnFollow = "0"
+                    }
+                  })
 
                   var obj = Object.assign(
                     {},
@@ -443,6 +725,7 @@ exports.findOne = async (req, res) => {
                     results[0],
                     results1[0]
                   )
+                  console.log(obj)
                   return res.send(makeSuccess("", { users: obj }))
                 })
                 .catch(err => {
