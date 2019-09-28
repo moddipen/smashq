@@ -80,6 +80,9 @@ class Header extends React.PureComponent {
   handleClickInside = () => this.setState({ clickedOutside: false })
 
   signOut() {
+    this.setState({
+      search: ""
+    })
     this.props.logout()
   }
 
@@ -182,9 +185,7 @@ class Header extends React.PureComponent {
                       Q <span>{this.props.authUser.coins}</span>{" "}
                     </DropdownLink>
                     <DropdownItem divider />{" "}
-                    <DropdownItem onClick={this.props.logout}>
-                      Logout{" "}
-                    </DropdownItem>
+                    <DropdownItem onClick={this.signOut}>Logout </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               ) : null}

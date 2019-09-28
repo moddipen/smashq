@@ -1,16 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ProfileTabComponent from "../../../../../common/profile-tab/index";
-import { API_URL } from "../../../../../contants/config";
+import React from "react"
+import PropTypes from "prop-types"
+import ProfileTabComponent from "../../../../../common/profile-tab/index"
+import { API_URL } from "../../../../../contants/config"
 
-const displayName = "ChangePasswordForm";
+const displayName = "ChangePasswordForm"
 const propTypes = {
   errors: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   confirm_error: PropTypes.string.isRequired
-};
+}
 
 const Form = ({
   errors,
@@ -66,7 +66,7 @@ const Form = ({
                         />
                         {errors.has("old_password") && (
                           <div className="invalid-feedback">
-                            {errors.first("old_password")}
+                            The old password field is required.
                           </div>
                         )}
                       </div>
@@ -109,7 +109,7 @@ const Form = ({
                         />
                         {errors.has("confirm_password") && (
                           <div className="invalid-feedback">
-                            {errors.first("confirm_password")}
+                            The confirm password field is required.
                           </div>
                         )}
                         {confirm_error != "" ? (
@@ -139,9 +139,9 @@ const Form = ({
       </div>
     </div>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

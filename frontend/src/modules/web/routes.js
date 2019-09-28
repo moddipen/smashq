@@ -1,8 +1,8 @@
 // import lib
-import Loadable from "react-loadable";
+import Loadable from "react-loadable"
 // import components
-import LoadingComponent from "../../common/loader/index";
-import { updateMenu } from "./store/actions";
+import LoadingComponent from "../../common/loader/index"
+import { updateMenu } from "./store/actions"
 
 const pages = {
   HOME: {
@@ -13,9 +13,9 @@ const pages = {
       loading: LoadingComponent
     }),
     thunk: async dispatch => {
-      dispatch(updateMenu({}));
+      dispatch(updateMenu({}))
     }
   }
-};
+}
 
-export default pages;
+export default pages

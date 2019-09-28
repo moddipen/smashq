@@ -67,7 +67,7 @@ class Transactions extends React.PureComponent {
         <div className="container container630 bg-white box-shadow myorder-wrap">
           {transactions.length ? (
             transactions.map(transaction => (
-              <div className="myorder-row box-shadow">
+              <div className="myorder-row box-shadow" key={transaction.id}>
                 <div className="myorder-top">
                   <span className="no">{transaction.transactionId}</span>
                   <span className="date">
@@ -95,7 +95,9 @@ class Transactions extends React.PureComponent {
                     </div>
                     <div className="myorder-status">
                       <div>
-                        Status <span className="text-success">Successful</span>
+                        <span className="text-success">
+                          {transaction.description}
+                        </span>
                       </div>
                     </div>
                   </div>

@@ -65,13 +65,41 @@ exports.updateCoin = async (req, res) => {
             coins: coin
           }
           //update coins
-          My.update("user_coins", data1, "user_id = " + id)
-            .then(result1 => {
-              return res.send(
-                makeSuccess("Coins added successfully.", {
-                  profiles: data1
+
+          My.first("user_coins", ["id"], "user_id=" + id)
+            .then(object67 => {
+              if (object67) {
+                //update
+                My.update("user_coins", data1, "user_id = " + id)
+                  .then(result1 => {
+                    return res.send(
+                      makeSuccess("Coins added successfully.", {
+                        profiles: data1
+                      })
+                    )
+                  })
+                  .catch(err => {
+                    console.log("e1", err)
+                    return res.send(makeError("Something went wrong !"))
+                  })
+              } else {
+                //insert
+                My.insert("user_coins", {
+                  user_id: id,
+                  coins: data1.coins
                 })
-              )
+                  .then(result => {
+                    return res.send(
+                      makeSuccess("Coins added successfully.", {
+                        profiles: data1
+                      })
+                    )
+                  })
+                  .catch(err => {
+                    console.log("e1", err)
+                    return res.send(makeError("Something went wrong !"))
+                  })
+              }
             })
             .catch(err => {
               console.log("e1", err)
@@ -91,7 +119,6 @@ exports.updateCoin = async (req, res) => {
 
 //for get all transactions
 exports.getTransactions = (req, res) => {
-  console.log(req)
   var limit = req.query.limit
   var sql = ""
   if (parseInt(limit) !== 0) {
@@ -104,7 +131,6 @@ exports.getTransactions = (req, res) => {
 
   My.query(sql, [req.user.id])
     .then(results => {
-      console.log(results)
       return res.send(makeSuccess("", { transactions: results }))
     })
     .catch(err => {
@@ -167,8 +193,6 @@ exports.requiringSubscription = (req, res) => {
   rebill.rebillStart = Math.floor(
     (new Date(subPlan.startingDate).getTime() - Date.now()) / (3600 * 1000 * 24)
   )
-
-  console.log(rebill)
 
   // util._extend(rebill, {});
 

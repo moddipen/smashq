@@ -1,7 +1,7 @@
 // import lib
-import Loadable from "react-loadable";
+import Loadable from "react-loadable"
 // import components
-import LoadingComponent from "../../common/loader/index";
+import LoadingComponent from "../../common/loader/index"
 
 const pages = {
   EDIT_PROFILE: {
@@ -31,7 +31,14 @@ const pages = {
       loader: () => import("./views/email-sms/index"),
       loading: LoadingComponent
     })
+  },
+  SETTINGS: {
+    path: "/settings",
+    component: Loadable({
+      loader: () => import("./views/settings/index"),
+      loading: LoadingComponent
+    })
   }
-};
+}
 
-export default pages;
+export default pages

@@ -1,13 +1,13 @@
-import React from "react";
-import { connect } from "react-redux";
-import { NavLink } from "redux-first-router-link";
-import { getPage } from "../../selectors";
+import React from "react"
+import { connect } from "react-redux"
+import { NavLink } from "redux-first-router-link"
+import { getPage } from "../../selectors"
 
 class ProfileTabComponent extends React.PureComponent {
-  static propTypes = {};
+  static propTypes = {}
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
@@ -43,16 +43,20 @@ class ProfileTabComponent extends React.PureComponent {
             <li>
               <a href="#">Privacy and Security</a>
             </li>
+
+            <li className={this.props.page.name == "SETTINGS" ? "active" : ""}>
+              <NavLink to={`/settings`}>Settings</NavLink>
+            </li>
           </ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
   return {
     page: getPage(state)
-  };
-};
-export default connect(mapStateToProps)(ProfileTabComponent);
+  }
+}
+export default connect(mapStateToProps)(ProfileTabComponent)

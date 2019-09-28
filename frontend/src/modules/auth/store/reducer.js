@@ -10,7 +10,8 @@ import {
   UPDATE_PROFILE_SUCCESS,
   UPDATE_SOCIAL_MEDIA_SUCCESS,
   UPDATE_COINS_SUCCESS,
-  AUTH_LOGIN_ERROR
+  AUTH_LOGIN_ERROR,
+  UPDATE_SETTINGS_SUCCESS
 } from "./action-types"
 import { USER_LOAD_SUCCESS } from "../../users/store/action-types"
 
@@ -44,8 +45,12 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return userLoad(state, payload)
     case UPDATE_SOCIAL_MEDIA_SUCCESS:
       return userLoad(state, payload)
+    case UPDATE_SOCIAL_MEDIA_SUCCESS:
+      return userLoad(state, payload)
     case UPDATE_COINS_SUCCESS:
       return updateCoins(state, payload)
+    case UPDATE_SETTINGS_SUCCESS:
+      return userSettings(state, payload)
     default:
       return state
   }
@@ -126,6 +131,16 @@ function logout(state) {
 function updateCoins(state, payload) {
   let obj = state.authUser
   obj.coins = payload.coins
+  return {
+    ...state,
+    authUser: obj
+  }
+}
+
+function userSettings(state, payload) {
+  let obj = state.authUser
+  obj.subOnFollow = payload.subOnFollow
+  obj.subamount = payload.amount
   return {
     ...state,
     authUser: obj

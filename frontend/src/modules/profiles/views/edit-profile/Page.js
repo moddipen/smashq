@@ -24,7 +24,7 @@ class Page extends React.Component {
       website: "url",
       description: "",
       motto: "",
-      phone: "required|min:8|max:15",
+      phone: "required|numeric|min:8|max:15",
       gender: "",
       sas: ""
     })
@@ -53,7 +53,6 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    console.log("authuser", this.props.authUser)
     if (Object.keys(this.props.authUser).length !== 0) {
       let credentials = {
         name: this.props.authUser.name,

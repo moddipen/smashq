@@ -82,7 +82,7 @@ const Form = ({
             </p>
           </div>
           <NavLink to={`/transactions`} className="trans-log">
-            Transaction Logs
+            <i className="fa fa-history"></i> Transaction Logs
           </NavLink>
         </div>
       </div>

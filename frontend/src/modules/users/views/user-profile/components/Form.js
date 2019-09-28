@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { API_URL } from "../../../../../contants/config";
 import { NavLink } from "redux-first-router-link";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Nav } from "reactstrap";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import MetaTags from 'react-meta-tags';
+import PaymentFormComponent from "../../paymentForm/index"
 
 const displayName = "UserProfileForm";
 const propTypes = {
@@ -19,9 +20,13 @@ const propTypes = {
   followStatus: PropTypes.func.isRequired,
   metatitle : PropTypes.string.isRequired,
   metadesc: PropTypes.string.isRequired,
+  toggle2: PropTypes.func.isRequired,
+  modal2: PropTypes.bool.isRequired,
+  followId: PropTypes.number.isRequired
+
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle }) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId }) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>    
       <meta id="meta-title" name="title" content={metatitle} />
@@ -39,7 +44,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             </div>
           </div>
           <div className="col-6 text-center">
-            <div className="top-back-bar-name">{users.name}</div>
+            <div className="top-back-bar-name">{users.username}</div>
           </div>
           <div className="col-3 text-right">
             <div className="top-back-coin-need">
@@ -70,7 +75,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             <div className="profile-follow-top-row mb-20">
 							<div className="row">
 								<div className="col-4 text-center">
-									<div className="icons"><a href="#"><i class="fa fa-comments"></i></a></div>
+									<div className="icons"><a href="#"><i className="fa fa-comments"></i></a></div>
 									<div className="text">Message</div>
 								</div>
 								<div className="col-4 text-center">
@@ -88,7 +93,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             <NavLink
             to="#"
             className="btn-custom unfollow"
-            onClick={() => followStatus(users.id)}
+            onClick={() => followStatus(users.id, "unfollow", "")}
           >
             Unfollow
           </NavLink>
@@ -96,7 +101,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             <NavLink
             to="#"
             className="btn-custom"
-            onClick={() => followStatus(users.id)}
+            onClick={() =>  followStatus(users.id, "follow", users.subOnFollow)}
           >
             Follow
           </NavLink>
@@ -105,7 +110,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
           </div>
         </div>
         <div className="profile-about-info clearfix pt-20">
-          <div className="profile-name mb-10">{users.name}</div>
+          <div className="profile-name mb-10">{users.username}</div>
           <div className="profile-about-text">
             { users.description !== '' ?  <p className="profileDesc">
             { users.description }
@@ -657,6 +662,29 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
 			</div>
        </ModalBody>
     </Modal>
+
+
+    <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      isOpen={modal2}
+      toggle={toggle2}
+      className="modal-profile"
+    >
+      <ModalBody className="profilem">
+        <button
+          type="button"
+          className="close"
+          onClick={toggle2}
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <PaymentFormComponent followId={followId} />
+      </ModalBody>
+    </Modal>   
+
   </section>
 );
 

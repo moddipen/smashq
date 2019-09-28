@@ -77,6 +77,7 @@ class Page extends React.PureComponent {
   // event to handle profile form submit
   handleSubmit(e) {
     e.preventDefault()
+
     const { credentials } = this.state
     const { errors } = this.validator
     this.validator.validateAll(credentials).then(success => {
@@ -90,22 +91,23 @@ class Page extends React.PureComponent {
 
   submit(credentials) {
     let obj = {
-      amount: this.props.coins,
-      coins: this.props.coins,
       card: this.state.credentials.cardnumber,
       month: this.state.credentials.expiremonth,
       year: this.state.credentials.expireyear,
-      cvv: this.state.credentials.cvv
+      cvv: this.state.credentials.cvv,
+      user_id: this.props.followId
     }
 
-    this.props.updateCoins(obj)
+    this.props.followStatus(obj)
     let obj1 = {
       cvv: "",
       cardnumber: "",
       expiremonth: "01",
-      expireyear: "2019"
+      expireyear: "2019",
+      user_id: ""
     }
     this.setState({ credentials: obj1 })
+    this.props.searchtoggle()
   }
 
   // render component

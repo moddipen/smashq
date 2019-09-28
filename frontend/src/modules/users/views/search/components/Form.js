@@ -2,14 +2,20 @@ import React from "react"
 import PropTypes from "prop-types"
 import { NavLink } from "redux-first-router-link"
 import { API_URL } from "../../../../../contants/config"
+import "../../../../../assets/css/paymentFormModal.css"
+import PaymentFormComponent from "../../paymentForm/index"
+import { Modal, ModalBody } from "reactstrap"
 
 const displayName = "SearchForm"
 const propTypes = {
   followStatus: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  searchtoggle: PropTypes.func.isRequired,
+  searchmodal: PropTypes.bool.isRequired,
+  followId: PropTypes.number.isRequired
 }
 
-const Form = ({ users, followStatus }) => (
+const Form = ({ users, followStatus, searchtoggle, searchmodal, followId }) => (
   <div className="head-search-result-box box-shadow">
     {users.length ? (
       users.map(user => {
@@ -35,7 +41,7 @@ const Form = ({ users, followStatus }) => (
                 <NavLink
                   to="#"
                   className="btn-custom followed"
-                  onClick={() => followStatus(user.id)}
+                  onClick={() => followStatus(user.id, "unfollow", "")}
                 >
                   Unfollow
                 </NavLink>
@@ -43,7 +49,9 @@ const Form = ({ users, followStatus }) => (
                 <NavLink
                   to="#"
                   className="btn-custom"
-                  onClick={() => followStatus(user.id)}
+                  onClick={() =>
+                    followStatus(user.id, "follow", user.subOnFollow)
+                  }
                 >
                   Follow
                 </NavLink>
@@ -63,6 +71,27 @@ const Form = ({ users, followStatus }) => (
         See all
       </NavLink>
     </span>
+
+    <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      isOpen={searchmodal}
+      toggle={searchtoggle}
+      className="modal-profile"
+    >
+      <ModalBody className="profilem">
+        <button
+          type="button"
+          className="close"
+          onClick={searchtoggle}
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <PaymentFormComponent followId={followId} searchtoggle={searchtoggle} />
+      </ModalBody>
+    </Modal>
   </div>
 )
 

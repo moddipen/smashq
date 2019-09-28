@@ -21,7 +21,7 @@ exports.getProfile = async (req, res) => {
   My.query("select * from users where id = ? limit 1", [id]) //get username and email
     .then(result => {
       My.query(
-        "select id AS userprofile_id,description,website, photo,gender,phone,sas, facebook,instagram,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
+        "select id AS userprofile_id,description,website,motto, photo,gender,phone,sas, facebook,instagram,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
         [id]
       ) //get user profile details
         .then(result1 => {
@@ -166,7 +166,7 @@ exports.updateProfile = async (req, res) => {
     My.query("select * from users where id = ? limit 1", [id])
       .then(result => {
         My.query(
-          "select id AS userprofile_id,description,website, photo, facebook,instagram,gender,phone,sas,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
+          "select id AS userprofile_id,motto,description,website, photo, facebook,instagram,gender,phone,sas,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
           [req.user.id]
         )
           .then(result1 => {
@@ -199,7 +199,7 @@ exports.updateSocialMedia = async (req, res) => {
             My.query("select * from users where id = ? limit 1", [req.user.id])
               .then(result => {
                 My.query(
-                  "select id AS userprofile_id,description,website, photo, facebook,instagram,snapchat,twitter,youtube,gender,phone,sas,amazon from user_profiles where user_id = ? limit 1",
+                  "select id AS userprofile_id,motto,description,website, photo, facebook,instagram,snapchat,twitter,youtube,gender,phone,sas,amazon from user_profiles where user_id = ? limit 1",
                   [req.user.id]
                 )
                   .then(result1 => {
@@ -230,7 +230,7 @@ exports.updateSocialMedia = async (req, res) => {
     My.query("select * from users where id = ? limit 1", [req.user.id])
       .then(result => {
         My.query(
-          "select id AS userprofile_id,description,website, photo, facebook,instagram,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
+          "select id AS userprofile_id,motto,description,website, photo, facebook,instagram,snapchat,twitter,youtube,amazon from user_profiles where user_id = ? limit 1",
           [req.user.id]
         )
           .then(result1 => {
@@ -414,7 +414,6 @@ exports.follows = async (req, res) => {
                 )
                   .then(object5 => {
                     //subscription needed
-                    console.log(object5.value)
                     let creditCard = {
                       creditCardNumber: data.card,
                       expirationMonth: data.month,
@@ -448,7 +447,6 @@ exports.follows = async (req, res) => {
                           "id=" + req.body.user_id
                         )
                           .then(object => {
-                            console.log(object.username)
                             My.insert("transactions", {
                               user_id: req.user.id,
                               transaction_id: success.subscriptionId,
@@ -466,6 +464,19 @@ exports.follows = async (req, res) => {
                                     status: "follow",
                                     subOnFollow: 1
                                   }
+
+                                  var replace_var = {
+                                    name: req.user.name,
+                                    amount: plan.amount,
+                                    user: object.username
+                                  }
+                                  send_mail(
+                                    "followpaiduser.html",
+                                    replace_var,
+                                    req.user.email,
+                                    "Subscription success"
+                                  )
+
                                   return res.send(
                                     makeSuccess("Followed successfully.", {
                                       users: cred
@@ -657,7 +668,6 @@ exports.getAllUsers = async (req, res) => {
               })
             }
           }
-          console.log("users", results)
           return res.send(makeSuccess("", { users: results }))
         })
         .catch(err => {

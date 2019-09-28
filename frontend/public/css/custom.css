@@ -172,3 +172,22 @@ footer {
 .m-t-10 {
   margin-top: 10px;
 }
+.sub_follow {
+  margin-left: 25%;
+  top: 33px !important;
+}
+.resetpassform {
+  margin-bottom: 8% !important;
+}
+
+.edit-profile-avtar-text {
+  text-align: left;
+}
+
+.EditprofileModal .modal-body {
+  text-align: center;
+}
+
+.user-editprofile {
+  margin-bottom: 50px;
+}

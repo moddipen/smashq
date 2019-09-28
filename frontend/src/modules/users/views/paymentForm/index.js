@@ -2,21 +2,18 @@
 import { connect } from "react-redux"
 // import components
 import Page from "./Page"
-import { updateSocialMedia } from "../../store/actions"
+import { followStatus } from "../../store/actions"
 import { getAuthUserDetails } from "../../../../selectors"
 
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
-    initialLoad: state.auth.initialLoad,
     authUser: getAuthUserDetails(state)
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    profile: credentials => dispatch(updateSocialMedia(credentials))
-  }
+  return { followStatus: credentials => dispatch(followStatus(credentials)) }
 }
 
 export default connect(

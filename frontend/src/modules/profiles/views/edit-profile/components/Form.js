@@ -60,7 +60,7 @@ const Form = ({
       className="container container1030"
       style={{ display: initialLoad ? "block" : "none" }}
     >
-      <div className="user-profile-edit-box bordergray bgwhite">
+      <div className="user-profile-edit-box bordergray bgwhite user-editprofile">
         <div className="row">
           <ProfileTabComponent />
           <div className="col-lg-9 col-md-8 col-12 pl-0">
@@ -366,7 +366,7 @@ const Form = ({
       </div>
     </div>
 
-    <Modal isOpen={modal} toggle={toggle}>
+    <Modal isOpen={modal} toggle={toggle} className="EditprofileModal">
       <ModalHeader toggle={toggle}>Change Profile Photo</ModalHeader>
       <ModalBody>
         <div className="button-group">
@@ -381,9 +381,7 @@ const Form = ({
                 src={src}
               />
             </Col>
-            {/* <Col sm="4">
-              <img src={preview} alt="Preview" />
-            </Col> */}
+
             <Col sm="2"></Col>
           </Row>
           <button

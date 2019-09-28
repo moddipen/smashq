@@ -23,7 +23,7 @@ const Form = ({ resendLink }) => (
               Resend Verification Link
             </NavLink>
             <p className="m-t-10">
-              <NavLink to="/">
+              <NavLink to="/login">
                 <i className="fa fa-arrow-left"></i> Back to Login Page
               </NavLink>
             </p>

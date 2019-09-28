@@ -6,7 +6,7 @@
  * auth module.
  */
 
-import { push } from "redux-first-router";
+import { push } from "redux-first-router"
 import {
   AUTH_CHECK,
   AUTH_ECHO_SETUP,
@@ -14,16 +14,17 @@ import {
   AUTH_USER,
   UPDATE_PROFILE,
   UPDATE_SOCIAL_MEDIA,
-  UPDATE_PASSWORD
-} from "./action-types";
-import AsyncRequest from "../../../utils/AsyncRequest";
+  UPDATE_PASSWORD,
+  UPDATE_SETTINGS
+} from "./action-types"
+import AsyncRequest from "../../../utils/AsyncRequest"
 
-import { normalize, schema } from "normalizr";
+import { normalize, schema } from "normalizr"
 
 export function authCheck() {
   return {
     type: AUTH_CHECK
-  };
+  }
 }
 
 export const userLoad = () => {
@@ -34,10 +35,10 @@ export const userLoad = () => {
     normalize: response => {
       return {
         ...response.profiles
-      };
+      }
     }
-  });
-};
+  })
+}
 
 export const updateProfile = payload => {
   return AsyncRequest.createSimpleRequestFromObject(UPDATE_PROFILE, {
@@ -47,10 +48,10 @@ export const updateProfile = payload => {
     normalize: response => {
       return {
         ...response.profiles
-      };
+      }
     }
-  });
-};
+  })
+}
 
 export const updateSocialMedia = payload => {
   return AsyncRequest.createSimpleRequestFromObject(UPDATE_SOCIAL_MEDIA, {
@@ -60,10 +61,23 @@ export const updateSocialMedia = payload => {
     normalize: response => {
       return {
         ...response.profiles
-      };
+      }
     }
-  });
-};
+  })
+}
+
+export const updateSetttings = payload => {
+  return AsyncRequest.createSimpleRequestFromObject(UPDATE_SETTINGS, {
+    path: `/api/users/settings`,
+    data: payload,
+    method: "post",
+    normalize: response => {
+      return {
+        ...response.profiles
+      }
+    }
+  })
+}
 
 export const updatePassword = payload => {
   return AsyncRequest.createSimpleRequestFromObject(UPDATE_PASSWORD, {
@@ -71,21 +85,21 @@ export const updatePassword = payload => {
     data: payload,
     method: "post",
     onSuccess: () => {
-      push("/change-password");
+      push("/change-password")
     }
-  });
-};
+  })
+}
 
 export const authUser = payload => {
   return {
     type: AUTH_USER,
     payload
-  };
-};
+  }
+}
 
 export const authEchoSetup = payload => {
   return {
     type: AUTH_ECHO_SETUP,
     payload
-  };
-};
+  }
+}

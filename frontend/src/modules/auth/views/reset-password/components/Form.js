@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from "react"
+import PropTypes from "prop-types"
 
-const displayName = "ResetPasswordForm";
+const displayName = "ResetPasswordForm"
 const propTypes = {
   password: PropTypes.string.isRequired,
   password_confirmation: PropTypes.string.isRequired,
@@ -9,7 +9,7 @@ const propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   confirm_error: PropTypes.string.isRequired
-};
+}
 
 const Form = ({
   password,
@@ -22,7 +22,7 @@ const Form = ({
   <section className="pad-40 confirm-number-section">
     <div className="container container500">
       <div className="bgwhite bordergray">
-        <div className="commonsmall-box text-center">
+        <div className="commonsmall-box text-center ">
           <div className="top-box mb-30">
             <div className="border-box-icon">
               <i className="fa fa-key"></i>
@@ -64,7 +64,7 @@ const Form = ({
                 />
                 {errors.has("password_confirmation") && (
                   <div className="invalid-feedback">
-                    {errors.first("password_confirmation")}
+                    The confirm password field is required.
                   </div>
                 )}
                 {confirm_error != "" ? (
@@ -76,7 +76,7 @@ const Form = ({
                   </div>
                 ) : null}
               </div>
-              <div className="form-group">
+              <div className="form-group resetpassform">
                 <button className="btn-custom" type="submit">
                   Submit
                 </button>
@@ -87,9 +87,9 @@ const Form = ({
       </div>
     </div>
   </section>
-);
+)
 
-Form.displayName = displayName;
-Form.propTypes = propTypes;
+Form.displayName = displayName
+Form.propTypes = propTypes
 
-export default Form;
+export default Form

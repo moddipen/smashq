@@ -4,6 +4,7 @@ import PropTypes from "prop-types"
 import { Validator } from "ree-validate"
 // import components
 import Form from "./components/Form"
+import { buildFailureTestResult } from "@jest/test-result"
 
 // initialize component
 class Page extends React.Component {
@@ -112,74 +113,75 @@ class Page extends React.Component {
         this.setState({
           facebook_error: "The facebook field contains http or https."
         })
-      } else {
-        if (this.state.credentials.instagram) {
-          var userInput = this.state.credentials.instagram
-          var res = userInput.match(
-            "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
-          )
-          if (res === null) {
-            this.setState({
-              instagram_error: "The instagram field contains http or https."
-            })
-          } else {
-            if (this.state.credentials.snapchat) {
-              var userInput = this.state.credentials.snapchat
-              var res = userInput.match(
-                "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
-              )
-              if (res === null) {
-                this.setState({
-                  snapchat_error: "The snapchat field contains http or https."
-                })
-              } else {
-                if (this.state.credentials.twitter) {
-                  var userInput = this.state.credentials.twitter
-                  var res = userInput.match(
-                    "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
-                  )
-                  if (res === null) {
-                    this.setState({
-                      twitter_error: "The twitter field contains http or https."
-                    })
-                  } else {
-                    if (this.state.credentials.youtube) {
-                      var userInput = this.state.credentials.youtube
-                      var res = userInput.match(
-                        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
-                      )
-                      if (res === null) {
-                        this.setState({
-                          youtube_error:
-                            "The youtube field contains http or https."
-                        })
-                      } else {
-                        if (this.state.credentials.amazon) {
-                          var userInput = this.state.credentials.amazon
-                          var res = userInput.match(
-                            "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
-                          )
-                          if (res === null) {
-                            this.setState({
-                              amazon_error:
-                                "The amazon field contains http or https."
-                            })
-                          } else {
-                            this.props.profile(credentials)
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        return false
       }
-    } else {
-      this.props.profile(credentials)
     }
+
+    if (this.state.credentials.instagram) {
+      var userInput = this.state.credentials.instagram
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          instagram_error: "The instagram field contains http or https."
+        })
+        return false
+      }
+    }
+
+    if (this.state.credentials.snapchat) {
+      var userInput = this.state.credentials.snapchat
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          snapchat_error: "The snapchat field contains http or https."
+        })
+        return false
+      }
+    }
+
+    if (this.state.credentials.twitter) {
+      var userInput = this.state.credentials.twitter
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          twitter_error: "The twitter field contains http or https."
+        })
+        return false
+      }
+    }
+
+    if (this.state.credentials.youtube) {
+      var userInput = this.state.credentials.youtube
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          youtube_error: "The youtube field contains http or https."
+        })
+        return false
+      }
+    }
+
+    if (this.state.credentials.amazon) {
+      var userInput = this.state.credentials.amazon
+      var res = userInput.match(
+        "^http(s?)://[0-9a-zA-Z]([-.w]*[0-9a-zA-Z])*(:(0-9)*)*(/?)([a-zA-Z0-9-.?,'/\\+&amp;%$#_]*)?$"
+      )
+      if (res === null) {
+        this.setState({
+          amazon_error: "The amazon field contains http or https."
+        })
+        return false
+      }
+    }
+    this.props.profile(credentials)
   }
 
   // render component

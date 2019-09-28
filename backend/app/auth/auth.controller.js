@@ -69,9 +69,7 @@ exports.register = (req, res) => {
           My.insert("user_profiles", {
             user_id: result.insertId,
             description: ""
-          }).then(result => {
-            console.log("Profile inserted")
-          })
+          }).then(result => {})
           var replace_var = {
             username: req.body.username,
             link: process.env.SERVER_URL + "auth/verify-email/" + token
@@ -229,7 +227,6 @@ exports.verifyCode = async (req, res) => {
 exports.resendLink = async (req, res) => {
   const condition = "username = ? "
   const values = [req.body.username]
-  console.log("val", values)
   My.first(
     "users",
     ["id", "remember_token", "username", "email"],
@@ -240,9 +237,6 @@ exports.resendLink = async (req, res) => {
       if (!object) {
         return res.send(makeError("Something went wrong. Please try again !"))
       } else {
-        console.log(object)
-        console.log(object.username)
-
         var replace_var = {
           username: object.username,
           link:
