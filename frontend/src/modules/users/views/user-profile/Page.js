@@ -4,13 +4,26 @@ import React from "react"
 import Form from "./components/Form"
 import "../../../../assets/css/profileModal.css"
 import { back } from "redux-first-router"
+
+import { FilePond, registerPlugin } from "react-filepond"
+import FilePondPluginFileEncode from "filepond-plugin-file-encode"
+import "filepond/dist/filepond.min.css"
+import FilePondPluginImagePreview from "filepond-plugin-image-preview"
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css"
+registerPlugin(
+  FilePondPluginImagePreview,
+  FilePondPluginFileEncode,
+  FilePondPluginFileValidateType
+)
+
 // initialize component
 class Page extends React.Component {
   // set name of the component
   static displayName = "UserProfileForm"
   constructor(props) {
     super(props)
-
+    this.pond = ""
     // set the state of the app
     this.state = {
       tabs: {
@@ -20,7 +33,9 @@ class Page extends React.Component {
       modal: false,
       modal1: false,
       modal2: false,
-      followId: 0
+      followId: 0,
+      postModal: false,
+      files: []
       // profileUser: this.props.user,
       // metatitle: this.getmetatitle(this.props.user),
       // metadesc: this.getmetadesc(this.props.user)
@@ -30,6 +45,7 @@ class Page extends React.Component {
     this.toggle2 = this.toggle2.bind(this)
     this.toggle1 = this.toggle1.bind(this)
     this.toggle = this.toggle.bind(this)
+    this.postToggle = this.postToggle.bind(this)
   }
 
   //get meta title
@@ -117,10 +133,35 @@ class Page extends React.Component {
     }))
   }
 
+  postToggle() {
+    this.setState(prevState => ({
+      postModal: !prevState.postModal
+    }))
+  }
+
   componentWillUnmount() {
     this.setState(prevState => ({
       modal2: !prevState.modal2
     }))
+  }
+
+  onupdatefiles = fileItems => {}
+
+  handleSubmit(e) {
+    e.preventDefault()
+    console.log("e", e.target.elements.namedItem("filepond"))
+    let fileinput = e.target.elements.namedItem("filepond")
+    let myArray = Array.from(fileinput)
+    console.log(myArray)
+    // myArray.map(file => {
+    //   console.log("inp", JSON.parse(file.defaultValue))
+    // })
+
+    // console.log("value", ggg)
+  }
+
+  handleInit = () => {
+    console.log("FilePond instance has initialised", this.pond)
   }
 
   // render component
@@ -135,6 +176,7 @@ class Page extends React.Component {
       tabShow: this.tabShow,
       toggle: this.toggle,
       toggle1: this.toggle1,
+      postToggle: this.postToggle,
       modal: this.state.modal,
       modal1: this.state.modal1,
       handleBack: this.handleBack,
@@ -142,8 +184,13 @@ class Page extends React.Component {
       metatitle: this.getmetatitle(profileUser[0]),
       metadesc: this.getmetadesc(profileUser[0]),
       modal2: this.state.modal2,
+      postModal: this.state.postModal,
       toggle2: this.toggle2,
-      followId: this.state.followId
+      followId: this.state.followId,
+      handleInit: this.handleInit,
+      onupdatefiles: this.onupdatefiles,
+      pond: this.pond,
+      handleSubmit: this.handleSubmit
     }
     return <Form {...props} />
   }

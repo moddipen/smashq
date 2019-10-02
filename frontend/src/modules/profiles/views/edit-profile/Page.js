@@ -164,10 +164,12 @@ class Page extends React.Component {
             website_error: "he website field is not a valid URL."
           })
         } else {
+          console.log(credentials)
           this.props.profile(credentials)
         }
       }
     } else {
+      console.log(credentials)
       this.props.profile(credentials)
     }
   }

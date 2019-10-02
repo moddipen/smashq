@@ -85,7 +85,7 @@ const Form = ({ users, followStatus, toggle, modal, followId }) => (
         >
           <span aria-hidden="true">×</span>
         </button>
-        <PaymentFormComponent followId={followId} />
+        <PaymentFormComponent followId={followId} searchtoggle={toggle} />
       </ModalBody>
     </Modal>
   </section>

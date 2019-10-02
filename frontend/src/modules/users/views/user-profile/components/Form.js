@@ -2,17 +2,28 @@ import React from "react";
 import PropTypes from "prop-types";
 import { API_URL } from "../../../../../contants/config";
 import { NavLink } from "redux-first-router-link";
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import MetaTags from 'react-meta-tags';
-import PaymentFormComponent from "../../paymentForm/index"
+import PaymentFormComponent from "../../paymentForm/index";
+
+import { FilePond, registerPlugin } from 'react-filepond';
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import 'filepond/dist/filepond.min.css';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+registerPlugin(FilePondPluginImagePreview,FilePondPluginFileEncode,FilePondPluginFileValidateType);
 
 const displayName = "UserProfileForm";
+
+
 const propTypes = {
   
   users:PropTypes.object.isRequired,
   tabs: PropTypes.object.isRequired,
   tabShow: PropTypes.func.isRequired,
   toggle: PropTypes.func.isRequired,
+  postToggle: PropTypes.func.isRequired,
   toggle1: PropTypes.func.isRequired,
   modal: PropTypes.bool.isRequired,
   modal1: PropTypes.bool.isRequired,
@@ -22,11 +33,15 @@ const propTypes = {
   metadesc: PropTypes.string.isRequired,
   toggle2: PropTypes.func.isRequired,
   modal2: PropTypes.bool.isRequired,
-  followId: PropTypes.number.isRequired
-
+  followId: PropTypes.number.isRequired,
+  postModal: PropTypes.bool.isRequired,
+  handleInit: PropTypes.func.isRequired,
+  onupdatefiles : PropTypes.func.isRequired,
+  pond :PropTypes.string.isRequired, 
+  handleSubmit : PropTypes.func.isRequired
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId }) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, onupdatefiles,pond,handleSubmit}) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>    
       <meta id="meta-title" name="title" content={metatitle} />
@@ -60,10 +75,10 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
         <div className="profile-avtar">
           <div className="profile-avtar-border live">
             <div className="live-hori-img-wrap">
-              <a href="#" onClick={toggle} className="inline-popup">
+              <a href="#" onClick={postToggle} className="inline-popup">
                 <img src={ users.photo != "" ? API_URL + "/" + users.photo : "/img/noimg.png"} width="150" height="150" alt="" />
-
-                <div className="icon-plus">
+                {/* onClick={toggle} */}
+                <div className="icon-plus" >
                   <i className="fa fa-plus-circle"></i>
                 </div>
               </a>
@@ -660,8 +675,8 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
 					</div>
 				</div>
 			</div>
-       </ModalBody>
-    </Modal>
+    </ModalBody>
+  </Modal>
 
 
     <Modal
@@ -681,10 +696,44 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
         >
           <span aria-hidden="true">×</span>
         </button>
-        <PaymentFormComponent followId={followId} />
+        <PaymentFormComponent followId={followId} searchtoggle={toggle2}/>
       </ModalBody>
     </Modal>   
-
+ 
+    <Modal aria-labelledby="contained-modal-title-vcenter"
+      centered isOpen={postModal} toggle={postToggle} className="modal-post">        
+        <form
+          className="form-horizontal"
+          onSubmit={handleSubmit}
+          noValidate
+        >
+        <ModalBody className="profilem">
+        <button
+          type="button"
+          className="close"
+          onClick={postToggle}
+          aria-label="Close"
+        >
+        <span aria-hidden="true">×</span>
+        </button>
+        <div className="commonsmall-box text-center">
+        <FilePond 
+        ref={ref => pond = ref} 
+        allowMultiple={true} 
+        oninit={() => handleInit()} 
+        allowFileTypeValidation = {true}
+        acceptedFileTypes = {['image/*','video/mp4']}
+        labelFileTypeNotAllowed = {'File of invalid type'}
+        allowFileEncode = {true}
+        labelIdle = { 'Drag & Drop your posts or <span class="filepond--label-action"> Browse </span>'}
+        onupdatefiles={(fileItems) => onupdatefiles(fileItems)}/>
+        </div>
+        </ModalBody>
+        <ModalFooter>
+          <button type="submit" className="btn-custom m-2">Upload</button>
+        </ModalFooter>
+      </form>
+    </Modal>
   </section>
 );
 
