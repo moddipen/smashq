@@ -3,17 +3,19 @@ import Loadable from "react-loadable"
 // import components
 import LoadingComponent from "../../common/loader/index"
 import { updateMenu } from "./store/actions"
+import { getAuthUserPosts } from "../posts/store/actions"
 
 const pages = {
   HOME: {
     path: "/",
     auth: true,
     component: Loadable({
-      loader: () => import("./views/home/index"),
+      loader: () => import("../posts/views/stories"),
       loading: LoadingComponent
     }),
     thunk: async dispatch => {
       dispatch(updateMenu({}))
+      dispatch(getAuthUserPosts())
     }
   }
 }

@@ -15,10 +15,13 @@ import {
   QUICK_BAR_CHANGED,
   DETAIL_CHANGED,
   EVENT_FIRED
-} from './action-types'
+} from "./action-types"
+import AsyncRequest from "../../../utils/AsyncRequest"
+import { push } from "redux-first-router"
+import { normalize, schema } from "normalizr"
 
 export const updatePage = payload => {
-  if (typeof(payload) === 'string') {
+  if (typeof payload === "string") {
     payload = {
       name: payload,
       params: {}
@@ -26,12 +29,12 @@ export const updatePage = payload => {
   }
   return {
     type: PAGE_CHANGED,
-    payload,
+    payload
   }
 }
 
 export const updateMenu = payload => {
-  if (typeof(payload) === 'string') {
+  if (typeof payload === "string") {
     payload = {
       name: payload,
       params: {}
@@ -39,12 +42,12 @@ export const updateMenu = payload => {
   }
   return {
     type: MENU_CHANGED,
-    payload,
+    payload
   }
 }
 
 export const updateQuickBar = payload => {
-  if (typeof(payload) === 'string') {
+  if (typeof payload === "string") {
     payload = {
       name: payload,
       params: {}
@@ -52,12 +55,12 @@ export const updateQuickBar = payload => {
   }
   return {
     type: QUICK_BAR_CHANGED,
-    payload,
+    payload
   }
 }
 
-export const updateSelectedModal = (payload) => {
-  if (typeof(payload) === 'string') {
+export const updateSelectedModal = payload => {
+  if (typeof payload === "string") {
     payload = {
       name: payload,
       params: {}
@@ -65,32 +68,32 @@ export const updateSelectedModal = (payload) => {
   }
   return {
     type: MODAL_CHANGED,
-    payload,
+    payload
   }
 }
 
-export const addAlert = (payload) => {
+export const addAlert = payload => {
   return {
     type: ALERT_ADDED,
     payload
   }
 }
 
-export const removeAlert = (payload) => {
+export const removeAlert = payload => {
   return {
     type: ALERT_REMOVED,
     payload
   }
 }
 
-export const updateDetail = (payload) => {
+export const updateDetail = payload => {
   return {
     type: DETAIL_CHANGED,
     payload
   }
 }
 
-export const eventFired = (payload) => {
+export const eventFired = payload => {
   return {
     type: EVENT_FIRED,
     payload

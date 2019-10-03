@@ -495,8 +495,8 @@ exports.follows = async (req, res) => {
                           })
                       })
                       .catch(e => {
-                        console.log("error", e)
-                        return res.send(makeError(e))
+                        console.log("error65565656", e)
+                        return res.send(makeError(e.message))
                       })
                   })
                   .catch(err => {

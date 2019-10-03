@@ -35,13 +35,12 @@ const propTypes = {
   modal2: PropTypes.bool.isRequired,
   followId: PropTypes.number.isRequired,
   postModal: PropTypes.bool.isRequired,
-  handleInit: PropTypes.func.isRequired,
-  onupdatefiles : PropTypes.func.isRequired,
+  handleInit: PropTypes.func.isRequired,  
   pond :PropTypes.string.isRequired, 
   handleSubmit : PropTypes.func.isRequired
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, onupdatefiles,pond,handleSubmit}) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, pond,handleSubmit}) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>    
       <meta id="meta-title" name="title" content={metatitle} />
@@ -726,7 +725,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
         labelFileTypeNotAllowed = {'File of invalid type'}
         allowFileEncode = {true}
         labelIdle = { 'Drag & Drop your posts or <span class="filepond--label-action"> Browse </span>'}
-        onupdatefiles={(fileItems) => onupdatefiles(fileItems)}/>
+       />
         </div>
         </ModalBody>
         <ModalFooter>

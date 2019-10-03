@@ -133,6 +133,7 @@ class Page extends React.Component {
     }))
   }
 
+  //post modal
   postToggle() {
     this.setState(prevState => ({
       postModal: !prevState.postModal
@@ -145,23 +146,37 @@ class Page extends React.Component {
     }))
   }
 
-  onupdatefiles = fileItems => {}
-
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault()
-    console.log("e", e.target.elements.namedItem("filepond"))
     let fileinput = e.target.elements.namedItem("filepond")
-    let myArray = Array.from(fileinput)
-    console.log(myArray)
-    // myArray.map(file => {
-    //   console.log("inp", JSON.parse(file.defaultValue))
-    // })
+    let myArray = []
+    let posts = []
+    if (fileinput.length >= 2) {
+      myArray = Array.from(fileinput)
+      myArray.map(file => {
+        let dval = JSON.parse(file.defaultValue)
+        let dval2 = dval.data
+        let dval3 = dval.type
+        posts.push({ val: dval2, type: dval3 })
+      })
+    } else {
+      myArray = fileinput.value
+      let dval = JSON.parse(myArray)
+      let dval2 = dval.data
+      let dval3 = dval.type
+      posts.push({ val: dval2, type: dval3 })
+    }
+    this.submit(posts)
+  }
 
-    // console.log("value", ggg)
+  //for submit posts
+  submit = posts => {
+    console.log(posts)
+    this.props.uploadPosts(posts)
   }
 
   handleInit = () => {
-    console.log("FilePond instance has initialised", this.pond)
+    //console.log("FilePond instance has initialised", this.pond)
   }
 
   // render component
@@ -188,7 +203,6 @@ class Page extends React.Component {
       toggle2: this.toggle2,
       followId: this.state.followId,
       handleInit: this.handleInit,
-      onupdatefiles: this.onupdatefiles,
       pond: this.pond,
       handleSubmit: this.handleSubmit
     }

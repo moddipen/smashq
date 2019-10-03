@@ -12,6 +12,7 @@ import {
   INITIAL_SEARCH_USER,
   SEARCH_USER,
   FOLLOW_STATUS,
+  UPLOAD_POSTS,
   GET_USER_PROFILE
 } from "./action-types"
 import AsyncRequest from "../../../utils/AsyncRequest"
@@ -35,6 +36,19 @@ export const initialSearch = () => {
     method: "get",
     responseField: "data",
     normalize: response => {
+      return response
+    }
+  })
+}
+
+export const uploadPosts = payload => {
+  return AsyncRequest.createSimpleRequestFromObject(UPLOAD_POSTS, {
+    path: `/api/posts/upload`,
+    data: payload,
+    method: "post",
+    responseField: "data",
+    normalize: response => {
+      push("/")
       return response
     }
   })

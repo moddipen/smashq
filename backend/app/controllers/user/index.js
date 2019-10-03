@@ -11,6 +11,7 @@ router.post("/users/social/update", users.updateSocialMedia)
 router.post("/users/settings", users.updateSettings)
 router.post("/users/change-password", users.changePassword)
 router.post("/users/follows", users.follows)
+
 router.post("/users/search", users.search)
 router.get("/users/lists", users.getAllUsers)
 router.get("/users/user-profile/:Id", users.findOne)
