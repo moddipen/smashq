@@ -23,6 +23,7 @@ const getStateChannels = state => state.data.channels
 const getStateCompanies = state => state.data.companies
 const getStateProfiles = state => state.data.profiles
 const getStateUsers = state => state.data.users
+const getStatePosts = state => state.data.posts
 const getStateTransactions = state => state.data.wallets.transactions
 const getStateChannelMessages = state => state.data.channelMessages
 const getStateUnreadChannelMessages = state => state.data.unreadMessages
@@ -258,6 +259,37 @@ export const getSearchUsers = createSelector(
   users => {
     if (Object.values(users).length) {
       return Object.values(users)
+    } else {
+      return []
+    }
+  }
+)
+
+function groupBy(objectArray, property) {
+  return objectArray.reduce(function(acc, obj) {
+    var key = obj[property]
+    if (!acc[key]) {
+      acc[key] = []
+    }
+    acc[key].push(obj)
+    return acc
+  }, {})
+}
+
+export const getAuthUserPosts = createSelector(
+  [getStatePosts],
+  posts => {
+    if (Object.values(posts).length) {
+      let posts1 = Object.values(posts)
+      let stories = posts1.reduce((catsSoFar, { uniqueId, path }) => {
+        if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
+        catsSoFar[uniqueId].push(path)
+        return catsSoFar
+      }, {})
+
+      console.log("after", stories)
+
+      return Object.values(stories)
     } else {
       return []
     }

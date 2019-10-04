@@ -2,13 +2,14 @@
 import { connect } from "react-redux"
 // import components
 import Page from "./Page"
-import { getAuthUserDetails } from "../../../../selectors"
+import { getAuthUserDetails, getAuthUserPosts } from "../../../../selectors"
 
 const mapStateToProps = state => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
     initialLoad: state.auth.initialLoad,
-    authUser: getAuthUserDetails(state)
+    authUser: getAuthUserDetails(state),
+    posts: getAuthUserPosts(state)
   }
 }
 

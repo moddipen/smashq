@@ -111,7 +111,8 @@ class Page extends React.Component {
   }
 
   render () {
-	
+	const posts = this.props.posts;
+	console.log('posts render',posts)
 	const { activeIndex,authUserPhoto,authUser } = this.state; 
 	
     return (

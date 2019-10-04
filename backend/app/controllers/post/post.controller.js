@@ -9,7 +9,7 @@ const { body } = require("express-validator")
 exports.getPosts = async (req, res) => {
   let id = req.user.id
   let sql =
-    "SELECT path,unique_id,created_at FROM stories WHERE user_id = ? order by id desc"
+    "SELECT path,unique_id,created_at FROM posts WHERE user_id = ? order by id desc"
 
   My.query(sql, [id])
     .then(result => {
@@ -30,28 +30,23 @@ exports.uploadPosts = async (req, res) => {
   if (data && Object.keys(data).length > 0) {
     for (var j = 0; j < data.length; j++) {
       let path = "data:" + data[j].type + ";base64," + data[j].val
-
-      if (isBase64(path, { mimeRequired: true })) {
-        try {
-          let filepath = await uploadFileFromBase64(path, "posts", data[j].type)
-          My.insert("stories", {
-            path: filepath,
-            user_id: id,
-            unique_id: unique
+      try {
+        let filepath = await uploadFileFromBase64(path, "posts", data[j].type)
+        My.insert("posts", {
+          path: filepath,
+          user_id: id,
+          unique_id: unique
+        })
+          .then(result => {
+            return res.send(makeSuccess("Posts uploaded successfully ."))
           })
-            .then(result => {
-              return res.send(makeSuccess("Posts uploaded successfully ."))
-            })
-            .catch(e => {
-              delete filepath
-              console.log("error44", e)
-              return res.send(makeError(e))
-            })
-        } catch (e) {
-          await delete filepath
-        }
-      } else {
-        return res.send(makeError("Something went wrong !"))
+          .catch(e => {
+            delete filepath
+            console.log("error44", e)
+            return res.send(makeError(e))
+          })
+      } catch (e) {
+        await delete filepath
       }
     }
   } else {
