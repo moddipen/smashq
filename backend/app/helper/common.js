@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer")
 const path = require("path")
 const EmailTemplates = require("swig-email-templates")
 const templatesDir = path.join(__dirname, "../templates")
+const mime = require("mime")
 
 send_response = (data, is_error, message, status_code) => {
   var json = { data: data, is_error: is_error, message: message }
@@ -38,6 +39,32 @@ uploadImageFromBase64 = async (base64, model) => {
     }
   )
   return fileName
+}
+
+uploadFileFromBase64 = async (base64, model, type) => {
+  let base64Image = base64.split(";base64,").pop()
+  let extension = mime.extension(type)
+  let fileName = "public/uploads/" + model + "/" + Date.now() + "." + extension
+  var filepath = path.join(fileName)
+
+  await require("fs").writeFile(
+    filepath,
+    base64Image,
+    { encoding: "base64" },
+    err => {
+      console.log("File created")
+    }
+  )
+  return fileName
+}
+
+generateOTP = length => {
+  var digits = "0123456789"
+  let OTP = ""
+  for (let i = 0; i < length; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)]
+  }
+  return OTP
 }
 
 send_mail = (fileName, replace_var, toEmail, subject) => {

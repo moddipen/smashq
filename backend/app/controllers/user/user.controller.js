@@ -728,15 +728,28 @@ exports.findOne = async (req, res) => {
                       results[0].subOnFollow = "0"
                     }
                   })
-
-                  var obj = Object.assign(
-                    {},
-                    result[0],
-                    results[0],
-                    results1[0]
+                  // get all posts by id
+                  My.query(
+                    "select path,type,unique_id from posts where user_id = ? order by id desc",
+                    [id]
                   )
-                  console.log(obj)
-                  return res.send(makeSuccess("", { users: obj }))
+                    .then(results13 => {
+                      if (results13) {
+                        results[0].posts = results13
+                      } else {
+                        results[0].posts = {}
+                      }
+                      var obj = Object.assign(
+                        {},
+                        result[0],
+                        results[0],
+                        results1[0]
+                      )
+                      return res.send(makeSuccess("", { users: obj }))
+                    })
+                    .catch(err1 => {
+                      return res.send(makeError("Something went wrong !"))
+                    })
                 })
                 .catch(err => {
                   return res.send(makeError("Something went wrong !"))

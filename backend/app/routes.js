@@ -17,4 +17,7 @@ module.exports = app => {
 
   // wallet route include
   app.use("/api", Auth.isAuthenticated, require("./controllers/wallet"))
+
+  // post route include
+  app.use("/api", Auth.isAuthenticated, require("./controllers/post"))
 }

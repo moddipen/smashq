@@ -6,5 +6,7 @@ var router = express.Router()
 
 router.post("/posts/upload", posts.uploadPosts)
 router.get("/posts", posts.getPosts)
+router.get("/auth/posts", posts.getAuthPosts)
+router.post("/post/like", posts.likePosts)
 
 module.exports = router

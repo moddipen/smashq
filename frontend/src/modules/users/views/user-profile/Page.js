@@ -171,7 +171,6 @@ class Page extends React.Component {
 
   //for submit posts
   submit = posts => {
-    console.log(posts)
     this.props.uploadPosts(posts)
   }
 

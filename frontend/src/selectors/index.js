@@ -23,7 +23,9 @@ const getStateChannels = state => state.data.channels
 const getStateCompanies = state => state.data.companies
 const getStateProfiles = state => state.data.profiles
 const getStateUsers = state => state.data.users
+const getStateAuthPosts = state => state.data.authposts
 const getStatePosts = state => state.data.posts
+
 const getStateTransactions = state => state.data.wallets.transactions
 const getStateChannelMessages = state => state.data.channelMessages
 const getStateUnreadChannelMessages = state => state.data.unreadMessages
@@ -258,6 +260,17 @@ export const getSearchUsers = createSelector(
   [getStateUsers],
   users => {
     if (Object.values(users).length) {
+      for (var i = 0; i < Object.values(users).length; i++) {
+        if (users[i].posts !== undefined) {
+          let posts1 = Object.values(users[i].posts)
+          let stories = posts1.reduce((catsSoFar, { uniqueId, path, type }) => {
+            if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
+            catsSoFar[uniqueId].push({ path: path, type: type })
+            return catsSoFar
+          }, {})
+          users[i].posts = stories
+        }
+      }
       return Object.values(users)
     } else {
       return []
@@ -276,19 +289,35 @@ function groupBy(objectArray, property) {
   }, {})
 }
 
-export const getAuthUserPosts = createSelector(
+export const getUserPosts = createSelector(
   [getStatePosts],
   posts => {
     if (Object.values(posts).length) {
       let posts1 = Object.values(posts)
+
+      let stories = posts1.reduce((catsSoFar, { uniqueId, path, type }) => {
+        if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
+        catsSoFar[uniqueId].push({ path: path, type: type })
+        return catsSoFar
+      }, {})
+      return Object.values(stories)
+    } else {
+      return []
+    }
+  }
+)
+
+export const getAuthUserPosts = createSelector(
+  [getStateAuthPosts],
+  posts => {
+    if (Object.values(posts).length) {
+      let posts1 = Object.values(posts)
+      let path1 = []
       let stories = posts1.reduce((catsSoFar, { uniqueId, path }) => {
         if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
         catsSoFar[uniqueId].push(path)
         return catsSoFar
       }, {})
-
-      console.log("after", stories)
-
       return Object.values(stories)
     } else {
       return []

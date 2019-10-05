@@ -68,7 +68,7 @@ class Page extends React.Component {
 	this.onExited = this.onExited.bind(this);
 	this.toggle = this.toggle.bind(this);
 	this.toggle1 = this.toggle1.bind(this);
-	
+	this.likePost = this.likePost.bind(this)
   }
 
    //modal toggle
@@ -110,9 +110,18 @@ class Page extends React.Component {
     this.setState({ activeIndex: newIndex });
   }
 
+  likePost = (uniqueID,type) => {
+	console.log('uniqueID',uniqueID)
+	let obj = {
+		uniqueID : uniqueID,
+		type : type
+	}
+	this.props.likePost(obj)
+  }
+
   render () {
 	const posts = this.props.posts;
-	console.log('posts render',posts)
+	console.log('posts',posts)
 	const { activeIndex,authUserPhoto,authUser } = this.state; 
 	
     return (
@@ -276,7 +285,11 @@ class Page extends React.Component {
 			
 				<div className="user-home-post-wrap">
 			
-					<div className="user-home-post-box mb-30 bgwhite box-shadow">
+				{posts.length ? (
+					posts.map(post => {
+						
+						return (
+						<div key={post} className="user-home-post-box mb-30 bgwhite box-shadow">
 						<div className="user-home-post-head d-flex align-items-center">
 							<div className="user-home-profile-img">
 								<a href="#"><img src={authUserPhoto} alt=""/></a>
@@ -293,11 +306,22 @@ class Page extends React.Component {
 							previous={this.previous}
 							>
 							
-							{items.map(item => (
+							{post.map(item => (
 								<CarouselItem onExiting={this.onExiting}
 									onExited={this.onExited}
-									key={item.altText} >
-									<img src={item.src} alt={item.altText} />									
+									key={item.path} >
+
+										{ item.type === 'image/jpeg' || item.type === 'image/jpeg' || item.type === 'image/png' || item.type === 'image/gif' ? (
+											<img src={ API_URL + "/" + item.path} alt={item} />
+										) :(
+											<video controls="" >
+									    	<source src={ API_URL + "/" + item.path} type={item.type}/>
+											</video>
+										)
+										}
+									
+									
+								
 								</CarouselItem>            
 								))}
 							<CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
@@ -308,11 +332,12 @@ class Page extends React.Component {
 						<div className="user-home-post-foot">
 							<div className="user-home-post-likes-box d-flex align-items-center">
 								<div className="likes-icon">
-									<i className="fa fa-heart"></i>
-									<i className="fa fa-heart"></i>
+								{/* onClick={this.likePost('65409','like')} */}
+									<NavLink to="#" className="likeposticon" >
+									<i className="fa fa-heart-o" ></i></NavLink>
+									{/* <i className="fa fa-heart"></i> */}
 								</div>
 								<div className="likes-people">Liked by <span><a href="#" className="last-person">John</a></span> and <span><NavLink to="#" className="likes-popup" onClick={this.toggle}>106 Others</NavLink></span></div>
-
 															
 							</div>
 							<div className="user-home-post-content">
@@ -321,8 +346,13 @@ class Page extends React.Component {
 								<p>my website <a href="#">www.google.com</a></p>
 							</div>
 						</div>
-					</div>
-
+					</div>)
+					})
+					) : (
+					  <div className="no-record">
+						<h3>No Record Found.</h3>
+					  </div>
+					)}
 				
 					<div className="user-home-suggestion for-mobile">
 						<div className="user-home-suggestion-top-box">

@@ -40,7 +40,7 @@ const propTypes = {
   handleSubmit : PropTypes.func.isRequired
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, pond,handleSubmit}) => (
+const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, pond,handleSubmit}) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>    
       <meta id="meta-title" name="title" content={metatitle} />
@@ -204,157 +204,30 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
             id="tab1"
             style={{ display: tabs.tab1 ? "block" : "none" }}
           >
-            <div className="profile-all-post-list">
-              <div className="row">
-                <div className="col-4">
-                  <div className="profile-post-item ">
-                    <a
-                      href="#"
-                      onClick={toggle1}
-                      className="inline-popup"
-                      data-effect="mfp-zoom-in"
-                    >
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
+
+          <div className="profile-all-post-list">
+						<div className="row">
+									<div className="col-12">
+										<div className="profile-post-item">
+											<a href="#">
+												<div className="lock-blur-box">
+													<img src="/img/lock-img.jpg" alt=""/>
+													<div className="overlay-bg">
+														<div className="overlay-lock-content">
+															<i className="fa fa-lock"></i>
+															<div className="ctext">Unlock this post by becoming a patron</div>
+															<div className="btn-custom">Join Now</div>
+														</div>
+													</div>
+												</div>
+												<div className="lock-img-btm-box">
+													<div className="text">Chatting with a friend for over an hour</div>
+													<div className="likes">185 Likes</div>
+												</div>
+											</a>
+										</div>
+									</div>
                   </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a
-                      href="#profile-post-popup2"
-                      className="inline-popup"
-                      data-effect="mfp-zoom-in"
-                    >
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a
-                      href="#profile-post-popup3"
-                      className="inline-popup"
-                      data-effect="mfp-zoom-in"
-                    >
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="profile-post-item">
-                    <a href="#">
-                      <img src="/img/noimg.png" alt="" />
-                      <div className="overlay-bg">
-                        <div className="overlay-icon">
-                          <div className="overlay-icon-box">
-                            <i className="fa fa-heart"></i>
-                            <span>59</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div
@@ -724,7 +597,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1,handleBack, users,
         acceptedFileTypes = {['image/*','video/mp4']}
         labelFileTypeNotAllowed = {'File of invalid type'}
         allowFileEncode = {true}
-        labelIdle = { 'Drag & Drop your posts or <span class="filepond--label-action"> Browse </span>'}
+        labelIdle = { 'Drag & Drop your posts or <span className="filepond--label-action"> Browse </span>'}
        />
         </div>
         </ModalBody>

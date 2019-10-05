@@ -205,3 +205,21 @@ footer {
     margin-left: 20% !important;
   }
 }
+
+.carousel-item img {
+  width: 500px;
+  height: 500px !important;
+}
+
+.fa-heart {
+  color: red;
+  border-color: red;
+}
+.likeposticon {
+  color: black !important;
+}
+
+.fa-lock {
+  color: #fff !important;
+  font-size: 50px !important;
+}
