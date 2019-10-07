@@ -18,6 +18,9 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 // Require routes
 require("./app/routes.js")(app);
 
+// Require socket
+require("./app/socket.js");
+
 // Include Helper Functions
 require("./app/helper/common");
 
