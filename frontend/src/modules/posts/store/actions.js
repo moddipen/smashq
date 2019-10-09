@@ -7,7 +7,12 @@
  */
 import { push } from "redux-first-router"
 import { normalize, schema } from "normalizr"
-import { AUTHUSER_POST, POST_LIKE, USERS_POST } from "./action-types"
+import {
+  AUTHUSER_POST,
+  POST_LIKE,
+  USERS_POST,
+  LIKEUSERS_LIST
+} from "./action-types"
 import AsyncRequest from "../../../utils/AsyncRequest"
 
 export const getAuthUserPosts = () => {
@@ -40,6 +45,18 @@ export const likePost = payload => {
     responseField: "data",
     normalize: response => {
       push("/")
+      return response
+    }
+  })
+}
+
+export const likeUsers = payload => {
+  return AsyncRequest.createSimpleRequestFromObject(LIKEUSERS_LIST, {
+    path: `/api/post/likeusers`,
+    data: payload,
+    method: "post",
+    responseField: "data",
+    normalize: response => {
       return response
     }
   })

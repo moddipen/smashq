@@ -223,3 +223,11 @@ footer {
   color: #fff !important;
   font-size: 50px !important;
 }
+
+.align-center {
+  text-align: center;
+}
+
+.modal-post .modal-footer {
+  display: list-item !important;
+}

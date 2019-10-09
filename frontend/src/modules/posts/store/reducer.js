@@ -1,4 +1,8 @@
-import { AUTHUSER_POST_SUCCESS, USERS_POST_SUCCESS } from "./action-types"
+import {
+  AUTHUSER_POST_SUCCESS,
+  USERS_POST_SUCCESS,
+  POST_LIKE_SUCCESS
+} from "./action-types"
 
 const initialState = {}
 
@@ -8,9 +12,29 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return getauthuserPosts(state, payload)
     case USERS_POST_SUCCESS:
       return getuserPosts(state, payload)
+    case POST_LIKE_SUCCESS:
+      return getpostlikeStatus(state, payload)
+
     default:
       return state
   }
+}
+
+function getpostlikeStatus(state, payload) {
+  for (var i in state) {
+    if (payload.posts.status === "like") {
+      if (state[i].uniqueId == payload.posts.uniqueId) {
+        state[i].likeStatus = "1"
+        break
+      }
+    } else {
+      if (state[i].uniqueId == payload.posts.uniqueId) {
+        state[i].likeStatus = "0"
+        break
+      }
+    }
+  }
+  return Object.assign({}, state)
 }
 
 function getuserPosts(state, payload) {

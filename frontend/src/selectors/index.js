@@ -294,12 +294,35 @@ export const getUserPosts = createSelector(
   posts => {
     if (Object.values(posts).length) {
       let posts1 = Object.values(posts)
-
-      let stories = posts1.reduce((catsSoFar, { uniqueId, path, type }) => {
-        if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
-        catsSoFar[uniqueId].push({ path: path, type: type })
-        return catsSoFar
-      }, {})
+      let stories = posts1.reduce(
+        (
+          catsSoFar,
+          {
+            uniqueId,
+            path,
+            type,
+            userId,
+            username,
+            photo,
+            likeStatus,
+            likeCount
+          }
+        ) => {
+          if (!catsSoFar[uniqueId])
+            catsSoFar[uniqueId] = {
+              userId: userId,
+              username: username,
+              photo: photo,
+              posts: [],
+              uniqueId: uniqueId,
+              likeStatus: likeStatus,
+              likeCount: likeCount
+            }
+          catsSoFar[uniqueId].posts.push({ path: path, type: type })
+          return catsSoFar
+        },
+        {}
+      )
       return Object.values(stories)
     } else {
       return []

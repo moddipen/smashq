@@ -729,15 +729,39 @@ exports.findOne = async (req, res) => {
                     }
                   })
                   // get all posts by id
-                  My.query(
-                    "select path,type,unique_id from posts where user_id = ? order by id desc",
-                    [id]
-                  )
-                    .then(results13 => {
-                      if (results13) {
-                        results[0].posts = results13
+                  let sql =
+                    "SELECT path,type,unique_id,user_id,created_at from posts WHERE user_id = ?  order by posts.id desc"
+
+                  await My.query(sql, [id])
+                    .then(async results13 => {
+                      if (results13.length > 0) {
+                        for (var j = 0; j < results13.length; j++) {
+                          await My.query(
+                            "select id from postlikes where user_id = ? and unique_id=?",
+                            [id, results13[j].unique_id]
+                          ) //get post like status
+                            .then(async result3 => {
+                              if (Object.keys(result3).length === 0) {
+                                results13[j].likeStatus = "0"
+                              } else {
+                                results13[j].likeStatus = "1"
+                              }
+                              await My.query(
+                                "select count(*) as likeCount from postlikes where unique_id=? and user_id != ?",
+                                [results13[j].unique_id, id]
+                              ) //get post like count
+                                .then(async result4 => {
+                                  results13[j].likeCount = result4[0].likeCount
+                                })
+                            })
+                            .catch(e => {
+                              console.log("error45", e)
+                              return res.send(makeError(e))
+                            })
+                        }
+                        result[0].posts = results13
                       } else {
-                        results[0].posts = {}
+                        result[0].posts = []
                       }
                       var obj = Object.assign(
                         {},
@@ -745,6 +769,7 @@ exports.findOne = async (req, res) => {
                         results[0],
                         results1[0]
                       )
+                      console.log("profile", obj)
                       return res.send(makeSuccess("", { users: obj }))
                     })
                     .catch(err1 => {

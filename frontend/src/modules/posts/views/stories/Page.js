@@ -1,14 +1,17 @@
 import React from 'react'
-import {
-  Carousel as Car,
-  CarouselItem,
-  CarouselControl,
+import { 
   Modal, ModalHeader, ModalBody, ModalFooter, Nav
 } from 'reactstrap';
 import { NavLink } from "redux-first-router-link";
 import Carousel  from 'react-multi-carousel';
 import { API_URL } from "../../../../contants/config"
 import 'react-multi-carousel/lib/styles.css';
+import LikeuserComponent from "../likeusers/index"
+
+import AwesomeSlider from 'react-awesome-slider';
+import AwesomeSliderStyles from 'react-awesome-slider/src/styles';
+
+
 const responsive = {
 	superLargeDesktop: {
 	  // the naming can be any, depends on you.
@@ -29,23 +32,6 @@ const responsive = {
 	},
   };
 
-const items = [
-  {
-    src: '/img/noimg.png',
-    altText: 'Slide 1',
-    caption: ''
-  },
-  {
-    src: '/img/noimg.png',
-    altText: 'Slide 2',
-    caption: ''
-  },
-  {
-    src: '/img/noimg.png',
-    altText: 'Slide 3',
-    caption: ''
-  }
-];
 
 
 class Page extends React.Component {
@@ -53,7 +39,8 @@ class Page extends React.Component {
   static propTypes = {}
 
   constructor (props) {
-    super(props)   
+	super(props)   
+	
 	this.state = { activeIndex: 0 ,modal: false,modal1: false,
 	authUser: this.props.authUser,
 	authUserPhoto:
@@ -61,57 +48,36 @@ class Page extends React.Component {
 	  ? API_URL + "/" + this.props.authUser.photo
 	  : "/img/noimg.png",
 	};
-    this.next = this.next.bind(this);
-    this.previous = this.previous.bind(this);
-    this.goToIndex = this.goToIndex.bind(this);
-    this.onExiting = this.onExiting.bind(this);
-	this.onExited = this.onExited.bind(this);
+    
 	this.toggle = this.toggle.bind(this);
 	this.toggle1 = this.toggle1.bind(this);
-	this.likePost = this.likePost.bind(this)
+	
   }
 
    //modal toggle
-   toggle() {
+   toggle(uniqueID) {
+	console.log('unique',uniqueID)
     this.setState(prevState => ({
       modal: !prevState.modal
-    }));
+	}));
+
+	let obj = {
+        uniqueID: uniqueID
+      }
+	this.props.likeUsers(obj)
+
   }
 
-    //modal toggle
+	//modal toggle
 	toggle1() {
 		this.setState(prevState => ({
-		  modal1: !prevState.modal1
+			modal1: !prevState.modal1
 		}));
-	  }
+	}
+ 
 
-  onExiting() {
-    this.animating = true;
-  }
-
-  onExited() {
-    this.animating = false;
-  }
-
-  next() {
-    if (this.animating) return;
-    const nextIndex = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1;
-    this.setState({ activeIndex: nextIndex });
-  }
-
-  previous() {
-    if (this.animating) return;
-    const nextIndex = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1;
-    this.setState({ activeIndex: nextIndex });
-  }
-
-  goToIndex(newIndex) {
-    if (this.animating) return;
-    this.setState({ activeIndex: newIndex });
-  }
-
-  likePost = (uniqueID,type) => {
-	console.log('uniqueID',uniqueID)
+  likePost = (uniqueID,type) => {	
+	console.log('like uniqueID',uniqueID)
 	let obj = {
 		uniqueID : uniqueID,
 		type : type
@@ -120,9 +86,9 @@ class Page extends React.Component {
   }
 
   render () {
+	const authUser = this.props.authUser
 	const posts = this.props.posts;
-	console.log('posts',posts)
-	const { activeIndex,authUserPhoto,authUser } = this.state; 
+	const { authUserPhoto } = this.state; 
 	
     return (
       <section className="pad-4000 user-home-section">
@@ -284,70 +250,50 @@ class Page extends React.Component {
 				</div>
 			
 				<div className="user-home-post-wrap">
-			
 				{posts.length ? (
-					posts.map(post => {
-						
+					posts.map(post => {						
 						return (
-						<div key={post} className="user-home-post-box mb-30 bgwhite box-shadow">
+						<div key={post.uniqueId} className="user-home-post-box mb-30 bgwhite box-shadow">
 						<div className="user-home-post-head d-flex align-items-center">
 							<div className="user-home-profile-img">
-								<a href="#"><img src={authUserPhoto} alt=""/></a>
+								<a href="#"><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></a>
 							</div>
 							<div className="user-home-profile-name">
-								<a href="#">{authUser.name}</a>
+								<a href="#">{post.username}</a>
 							</div>
 						</div>
 						<div className="user-home-post-slider">           
-
-							<Car							
-							activeIndex={activeIndex}
-							next={this.next}
-							previous={this.previous}
-							>
-							
-							{post.map(item => (
-								<CarouselItem onExiting={this.onExiting}
-									onExited={this.onExited}
-									key={item.path} >
-
-										{ item.type === 'image/jpeg' || item.type === 'image/jpeg' || item.type === 'image/png' || item.type === 'image/gif' ? (
-											<img src={ API_URL + "/" + item.path} alt={item} />
-										) :(
-											<video controls="" >
-									    	<source src={ API_URL + "/" + item.path} type={item.type}/>
-											</video>
-										)
-										}
-									
-									
-								
-								</CarouselItem>            
-								))}
-							<CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-							<CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-							</Car>
-							
+							<AwesomeSlider infinite={false} bullets={false} cssModule={AwesomeSliderStyles}>
+							{post.posts.map(item => (
+							<div key={item.path} data-src={ API_URL + "/" + item.path} />
+    						))}
+       					    </AwesomeSlider>
             			</div>
 						<div className="user-home-post-foot">
 							<div className="user-home-post-likes-box d-flex align-items-center">
-								<div className="likes-icon">
-								{/* onClick={this.likePost('65409','like')} */}
-									<NavLink to="#" className="likeposticon" >
-									<i className="fa fa-heart-o" ></i></NavLink>
-									{/* <i className="fa fa-heart"></i> */}
+								<div className="likes-icon">									
+									{
+										post.likeStatus === '1'? <NavLink to="#" className="likeposticon" onClick={() => this.likePost(post.uniqueId,'dislike')}><i className="fa fa-heart"></i></NavLink> : <NavLink to="#" className="likeposticon" onClick={() => this.likePost(post.uniqueId,'like')}><i className="fa fa-heart-o"></i></NavLink>
+									}
 								</div>
-								<div className="likes-people">Liked by <span><a href="#" className="last-person">John</a></span> and <span><NavLink to="#" className="likes-popup" onClick={this.toggle}>106 Others</NavLink></span></div>
-															
-							</div>
-							<div className="user-home-post-content">
-								<p>Hey there, it’s <strong>Molly Bennett</strong> (@MollyX) Who wants to see how naughty my everyday life is? And maybe join me in the fun? Subscribe here to chat with me ? Let me blow your mind… and other things! </p>
-								<a href="#">#aboc</a>
-								<p>my website <a href="#">www.google.com</a></p>
+								{
+									post.likeStatus === '1' && post.likeCount > 0 ? <div className="likes-people">Liked by <span><NavLink to={'/edit-profile/'} className="last-person">You</NavLink></span>  and <span><NavLink to="#" className="likes-popup" onClick={() => this.toggle(post.uniqueId)}>{post.likeCount} Others</NavLink></span></div> 
+									:  ( post.likeCount === 0 && post.likeStatus === '1' ? <div className="likes-people">Liked by <span><NavLink  to={'/edit-profile/'} className="last-person">You</NavLink></span></div> : <div className="likes-people">{post.likeCount}</div>)
+								}
+																							
 							</div>
 						</div>
-					</div>)
-					})
+						<Modal isOpen={this.state.modal} toggle={() => this.toggle(post.uniqueId)} className="likeModal">
+							<ModalHeader toggle={() => this.toggle(post.uniqueId)}>Likes</ModalHeader>
+							<ModalBody>	
+							<div  className="likes-popup-list-box">	 
+							<LikeuserComponent/>
+							</div>
+							</ModalBody>        
+						</Modal>
+					</div>
+					)
+					})					
 					) : (
 					  <div className="no-record">
 						<h3>No Record Found.</h3>
@@ -403,20 +349,17 @@ class Page extends React.Component {
 								<a href="#" className="btn-custom followed">Unfollow</a>
 							</div>
 						</div>
-					</div>
-	
-					
+					</div>				
 				</div>
 
 		
 				<div className="user-home-profile-col scrolltofixed">
-			
 					<div className="user-home-profile-box d-flex align-items-center">
 						<div className="user-home-profile-box-img">
 							<a href="#"><img src={authUserPhoto} alt=""/></a>
 						</div>
 						<div className="user-home-profile-box-name">
-							<a href="#">{authUser.name}</a>
+							<a href="#">{authUser.username}</a>
 						</div>
 					</div>
 
@@ -503,215 +446,11 @@ class Page extends React.Component {
 
 			</div>
 
-		<Modal isOpen={this.state.modal} toggle={this.toggle} className="likeModal">
-          <ModalHeader toggle={this.toggle}>Likes</ModalHeader>
-          <ModalBody>
-		  <div className="likes-popup-list-box">
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt="/"/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="follow btn-custom">Follow</button>
-			</div>
-			<div className="likes-popup-profile-box d-flex align-items-center">
-				<div className="likes-popup-profile-img">
-					<a href="#"><img src="/img/noimg.png" alt=""/></a>
-				</div>
-				<div className="likes-popup-profile-name">
-					<a href="#">mollyxx</a>
-				</div>
-				<button className="unfollow btn-custom">Unfollow</button>
-			</div>
-			</div>
-          </ModalBody>         
-        </Modal>
+		
 	
 		<Modal aria-labelledby="contained-modal-title-vcenter"
-      centered isOpen={this.state.modal1} toggle={this.toggle1} className="modal-profile">
-      <ModalBody className="profilem">
+      	centered isOpen={this.state.modal1} toggle={this.toggle1} className="modal-profile">
+      	<ModalBody className="profilem">
         <button
           type="button"
           className="close"
