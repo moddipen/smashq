@@ -15,27 +15,30 @@ const paymentClient = new RocketGate.gateway({
 exports.login = (req, res) => {
   const condition = "username = ? "
   const values = [req.body.username]
-  My.first("users", ["id, password, status,remember_token"], condition, values)
+
+  let sql =
+    "SELECT users.id,users.name,users.username,users.email,users.password,users.status,users.remember_token,user_profiles.photo,user_coins.coins FROM users left join user_profiles on users.id=user_profiles.user_id left join user_coins on user_coins.user_id = users.id WHERE username = ? limit 1"
+  My.query(sql, [req.body.username])
     .then(object => {
       if (!object) {
         return res.send(makeError("Incorrect username or password !"))
       } else {
-        if (!bcrypt.compareSync(req.body.password, object.password)) {
+        if (!bcrypt.compareSync(req.body.password, object[0].password)) {
           return res.send(makeError("Incorrect username or password !"))
         } else {
-          if (!object.status) {
-            var obj = JSON.parse(JSON.stringify(object))
+          if (!object[0].status) {
+            var obj = JSON.parse(JSON.stringify(object[0]))
             return res.send(makeSuccess("Your account is not active !", obj))
-            return res.send(makeError("Your account is not active !", obj))
           }
           jwt.sign(
-            { id: object.id },
+            { id: object[0].id },
             privateKey,
             { expiresIn: "24h" },
             (err, token) => {
-              var obj = JSON.parse(JSON.stringify(object))
+              var obj = JSON.parse(JSON.stringify(object[0]))
               obj.accessToken = token
               delete obj.password
+
               return res.send(makeSuccess("User successfully logged in.", obj))
             }
           )

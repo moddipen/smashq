@@ -5,6 +5,12 @@ const util = require("util")
 const jwt = require("jsonwebtoken")
 const { body } = require("express-validator")
 
+function existCheck(id, arr) {
+  return arr.some(function(el) {
+    return el.follow_user_id === id
+  })
+}
+
 //for getting all users posts
 exports.getPosts = async (req, res) => {
   let id = req.user.id
@@ -41,7 +47,66 @@ exports.getPosts = async (req, res) => {
             })
         }
       }
-      return res.send(makeSuccess("", { posts: result }))
+
+      My.query(
+        "select users.id, users.username, users.email,user_profiles.photo,user_profiles.motto,user_profiles.description from users left join user_profiles on users.id = user_profiles.user_id where users.id!=? and users.status=?",
+        [id, 1]
+      ).then(results => {
+        My.query(
+          "select followers.follow_user_id from followers left join users on users.id = followers.follow_user_id where followers.user_id=? and users.status=?",
+          [id, 1]
+        )
+          .then(async results1 => {
+            if (results.length > 0) {
+              for (var j = 0; j < results.length; j++) {
+                var exists = existCheck(results[j].id, results1)
+                if (exists) {
+                  results[j].follow_user_id = results[j].id
+                } else {
+                  results[j].follow_user_id = null
+                }
+
+                //following count
+                await My.query(
+                  "select count(id) as following from followers where user_id = ?",
+                  [results[j].id]
+                ).then(async results11 => {
+                  results[j].following = results11[0].following
+
+                  //followers count
+                  await My.query(
+                    "select count(id) as followers from followers where follow_user_id = ?",
+                    [results[j].id]
+                  ).then(async results12 => {
+                    results[j].followers = results12[0].followers
+                    await My.first(
+                      "user_settings",
+                      ["value"],
+                      "user_id=" + results[j].id + " AND name='sub_on_follow'"
+                    ).then(results3 => {
+                      if (results3) {
+                        if (results3.value === "1") {
+                          results[j].subOnFollow = results3.value
+                        } else {
+                          results[j].subOnFollow = "0"
+                        }
+                      } else {
+                        results[j].subOnFollow = "0"
+                      }
+                    })
+                  })
+                })
+              }
+            }
+            result.users = results
+            console.log("final", result)
+            return res.send(makeSuccess("", { posts: result }))
+          })
+          .catch(err => {
+            console.log("err2", err)
+            return res.send(makeError("Something went wrong !"))
+          })
+      })
     })
     .catch(e => {
       console.log("error44", e)
@@ -54,7 +119,6 @@ exports.getAuthPosts = async (req, res) => {
   let id = req.user.id
   let sql =
     "SELECT path,type,unique_id,created_at FROM posts WHERE user_id = ? order by id desc"
-
   My.query(sql, [id])
     .then(result => {
       return res.send(makeSuccess("", { authposts: result }))
@@ -99,6 +163,7 @@ exports.likePosts = async (req, res) => {
       )
         .then(object5 => {
           if (object5) {
+            // console.log("object5", object5)
             My.delete("postlikes", "id = " + object5.id).then(() => {
               let object = {
                 unique_id: data.unique_id,

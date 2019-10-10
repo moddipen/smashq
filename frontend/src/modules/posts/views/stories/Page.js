@@ -244,8 +244,7 @@ class Page extends React.Component {
 							</div>
 							<span>John Doe</span>
 						</a>
-					</div>
-				
+					</div>				
 				</Carousel>					
 				</div>
 			
@@ -256,10 +255,12 @@ class Page extends React.Component {
 						<div key={post.uniqueId} className="user-home-post-box mb-30 bgwhite box-shadow">
 						<div className="user-home-post-head d-flex align-items-center">
 							<div className="user-home-profile-img">
-								<a href="#"><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></a>
+							{/* <NavLink to={`/user-profile/` + post.userId}><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></NavLink> */}
+							<NavLink to="#"><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></NavLink>
 							</div>
 							<div className="user-home-profile-name">
-								<a href="#">{post.username}</a>
+							{/* <NavLink to={`/user-profile/` + post.userId}>{post.username}</NavLink> */}
+							<NavLink to="#">{post.username}</NavLink>
 							</div>
 						</div>
 						<div className="user-home-post-slider">           
@@ -293,7 +294,7 @@ class Page extends React.Component {
 						</Modal>
 					</div>
 					)
-					})					
+					})
 					) : (
 					  <div className="no-record">
 						<h3>No Record Found.</h3>

@@ -183,9 +183,12 @@ class Page extends React.Component {
     let profileUser = this.props.user.filter(
       word => word.id === this.props.params.id
     )
+    console.log("user render", profileUser[0])
+    console.log("user render", profileUser[0].posts)
 
     const props = {
       users: profileUser[0],
+      posts: profileUser[0].posts,
       tabs: this.state.tabs,
       tabShow: this.tabShow,
       toggle: this.toggle,

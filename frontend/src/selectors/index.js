@@ -263,12 +263,25 @@ export const getSearchUsers = createSelector(
       for (var i = 0; i < Object.values(users).length; i++) {
         if (users[i].posts !== undefined) {
           let posts1 = Object.values(users[i].posts)
-          let stories = posts1.reduce((catsSoFar, { uniqueId, path, type }) => {
-            if (!catsSoFar[uniqueId]) catsSoFar[uniqueId] = []
-            catsSoFar[uniqueId].push({ path: path, type: type })
-            return catsSoFar
-          }, {})
-          users[i].posts = stories
+          let stories = posts1.reduce(
+            (
+              catsSoFar,
+              { uniqueId, path, type, userId, likeStatus, likeCount }
+            ) => {
+              if (!catsSoFar[uniqueId])
+                catsSoFar[uniqueId] = {
+                  userId: userId,
+                  posts: [],
+                  uniqueId: uniqueId,
+                  likeStatus: likeStatus,
+                  likeCount: likeCount
+                }
+              catsSoFar[uniqueId].posts.push({ path: path, type: type })
+              return catsSoFar
+            },
+            {}
+          )
+          users[i].posts = Object.values(stories)
         }
       }
       return Object.values(users)

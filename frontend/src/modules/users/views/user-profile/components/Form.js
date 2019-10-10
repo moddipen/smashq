@@ -16,9 +16,8 @@ registerPlugin(FilePondPluginImagePreview,FilePondPluginFileEncode,FilePondPlugi
 
 const displayName = "UserProfileForm";
 
-
 const propTypes = {
-  
+  posts:PropTypes.array.isRequired,
   users:PropTypes.object.isRequired,
   tabs: PropTypes.object.isRequired,
   tabShow: PropTypes.func.isRequired,
@@ -40,7 +39,7 @@ const propTypes = {
   handleSubmit : PropTypes.func.isRequired
 };
 
-const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, pond,handleSubmit}) => (
+const Form = ({ posts,tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users,followStatus,metadesc,metatitle, toggle2, modal2, followId ,postModal,postToggle, handleInit, pond,handleSubmit}) => (
   <section className="pad-40 user-profile-section">
     <MetaTags>    
       <meta id="meta-title" name="title" content={metatitle} />
@@ -62,7 +61,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users
           </div>
           <div className="col-3 text-right">
             <div className="top-back-coin-need">
-              Q <span>{ users.coins !== null ? users.coin : '0' }</span>
+              Q <span>{ users.coins !== null ? users.coins : '0' }</span>
             </div>
           </div>
         </div>
@@ -85,8 +84,7 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users
           </div>
         </div>
         <div className="profile-follow-detail">
-          
-            <div className="profile-follow-top-row mb-20">
+          <div className="profile-follow-top-row mb-20">
 							<div className="row">
 								<div className="col-4 text-center">
 									<div className="icons"><a href="#"><i className="fa fa-comments"></i></a></div>
@@ -120,7 +118,6 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users
             Follow
           </NavLink>
             )}
-
           </div>
         </div>
         <div className="profile-about-info clearfix pt-20">
@@ -208,25 +205,41 @@ const Form = ({ tabs, tabShow, toggle, modal, toggle1, modal1, handleBack, users
           <div className="profile-all-post-list">
 						<div className="row">
 									<div className="col-12">
-										<div className="profile-post-item">
-											<a href="#">
-												<div className="lock-blur-box">
-													<img src="/img/lock-img.jpg" alt=""/>
-													<div className="overlay-bg">
-														<div className="overlay-lock-content">
-															<i className="fa fa-lock"></i>
-															<div className="ctext">Unlock this post by becoming a patron</div>
-															<div className="btn-custom">Join Now</div>
-														</div>
-													</div>
-												</div>
-												<div className="lock-img-btm-box">
-													<div className="text">Chatting with a friend for over an hour</div>
-													<div className="likes">185 Likes</div>
-												</div>
-											</a>
-										</div>
-									</div>
+
+                   {/* {posts.length > 0 ? (
+                   
+                    posts.map(post => {						
+                      return (
+                        <div className="profile-post-item">
+                          <a href="#">
+                            <div className="lock-blur-box">
+                              <img src="/img/lock-img.jpg" alt=""/>
+                              <div className="overlay-bg">
+                                <div className="overlay-lock-content">
+                                  <i className="fa fa-lock"></i>
+                                  <div className="ctext">Unlock this post by becoming a patron</div>
+                                  <div className="btn-custom">Join Now</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="lock-img-btm-box">
+                              <div className="text">Chatting with a friend for over an hour</div>
+                              <div className="likes">185 Likes</div>
+                            </div>
+                          </a>
+                        </div>                  
+
+                      )
+                    })
+                  ) : (
+                    <div className="no-record">
+                    <h3>No Record Found.</h3>
+                    </div>
+                  )}  */}
+
+
+										
+                  </div>
                   </div>
             </div>
           </div>

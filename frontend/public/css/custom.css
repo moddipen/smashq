@@ -231,3 +231,8 @@ footer {
 .modal-post .modal-footer {
   display: list-item !important;
 }
+
+.likeModal .modal-body {
+  max-height: 350px;
+  overflow-y: auto;
+}

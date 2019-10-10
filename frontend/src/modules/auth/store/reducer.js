@@ -83,14 +83,18 @@ function login(state, payload) {
       ...state,
       isAuthenticated: true,
       checked: true,
-      initialLoad: false
+      initialLoad: false,
+      authUser: payload,
+      userId: payload.id
     }
   } else {
     return {
       ...state,
       isAuthenticated: false,
       checked: false,
-      initialLoad: false
+      initialLoad: false,
+      authUser: payload,
+      userId: payload.id
     }
   }
 }

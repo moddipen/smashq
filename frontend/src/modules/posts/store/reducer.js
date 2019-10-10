@@ -14,7 +14,6 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return getuserPosts(state, payload)
     case POST_LIKE_SUCCESS:
       return getpostlikeStatus(state, payload)
-
     default:
       return state
   }
@@ -38,6 +37,7 @@ function getpostlikeStatus(state, payload) {
 }
 
 function getuserPosts(state, payload) {
+  // state.users = payload.posts.users
   return Object.assign({}, payload.posts)
 }
 
