@@ -236,3 +236,7 @@ footer {
   max-height: 350px;
   overflow-y: auto;
 }
+
+.overlay-lock-content .btn-custom a {
+  color: black !important;
+}

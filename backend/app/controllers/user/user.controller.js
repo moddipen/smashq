@@ -665,9 +665,44 @@ exports.getAllUsers = async (req, res) => {
                     }
                   })
                 })
+
+                let sql =
+                  "SELECT path,type,unique_id,user_id,created_at from posts WHERE user_id = ?  order by posts.id desc"
+                await My.query(sql, [results[j].id]).then(async results13 => {
+                  if (results13.length > 0) {
+                    for (var i = 0; i < results13.length; i++) {
+                      await My.query(
+                        "select id from postlikes where user_id = ? and unique_id=?",
+                        [results[j].id, results13[i].unique_id]
+                      ) //get post like status
+                        .then(async result3 => {
+                          if (Object.keys(result3).length === 0) {
+                            results13[i].likeStatus = "0"
+                          } else {
+                            results13[i].likeStatus = "1"
+                          }
+                          await My.query(
+                            "select count(*) as likeCount from postlikes where unique_id=? and user_id != ?",
+                            [results13[i].unique_id, results[j].id]
+                          ) //get post like count
+                            .then(async result4 => {
+                              results13[i].likeCount = result4[0].likeCount
+                            })
+                        })
+                        .catch(e => {
+                          console.log("error45", e)
+                          return res.send(makeError(e))
+                        })
+                    }
+                    results[j].posts = results13
+                  } else {
+                    results[j].posts = []
+                  }
+                })
               })
             }
           }
+          console.log("results", results)
           return res.send(makeSuccess("", { users: results }))
         })
         .catch(err => {

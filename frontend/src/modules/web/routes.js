@@ -4,6 +4,7 @@ import Loadable from "react-loadable"
 import LoadingComponent from "../../common/loader/index"
 import { updateMenu } from "./store/actions"
 import { getUserPosts } from "../posts/store/actions"
+import { initialSearch } from "../users/store/actions"
 
 const pages = {
   HOME: {
@@ -16,6 +17,7 @@ const pages = {
     thunk: async dispatch => {
       dispatch(updateMenu({}))
       dispatch(getUserPosts())
+      dispatch(initialSearch())
     }
   }
 }

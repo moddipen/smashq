@@ -174,9 +174,7 @@ class Page extends React.Component {
     this.props.uploadPosts(posts)
   }
 
-  handleInit = () => {
-    //console.log("FilePond instance has initialised", this.pond)
-  }
+  handleInit = () => {}
 
   // render component
   render() {
@@ -184,7 +182,6 @@ class Page extends React.Component {
       word => word.id === this.props.params.id
     )
     console.log("user render", profileUser[0])
-    console.log("user render", profileUser[0].posts)
 
     const props = {
       users: profileUser[0],

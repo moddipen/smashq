@@ -22,14 +22,12 @@ const reducer = (state = initialState, { type, payload = null }) => {
 function getpostlikeStatus(state, payload) {
   for (var i in state) {
     if (payload.posts.status === "like") {
-      if (state[i].uniqueId == payload.posts.uniqueId) {
+      if (state[i].uniqueId === payload.posts.uniqueId) {
         state[i].likeStatus = "1"
-        break
       }
     } else {
-      if (state[i].uniqueId == payload.posts.uniqueId) {
+      if (state[i].uniqueId === payload.posts.uniqueId) {
         state[i].likeStatus = "0"
-        break
       }
     }
   }

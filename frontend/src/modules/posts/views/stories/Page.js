@@ -43,10 +43,7 @@ class Page extends React.Component {
 	
 	this.state = { activeIndex: 0 ,modal: false,modal1: false,
 	authUser: this.props.authUser,
-	authUserPhoto:
-	this.props.authUser.photo != ""
-	  ? API_URL + "/" + this.props.authUser.photo
-	  : "/img/noimg.png",
+	
 	};
     
 	this.toggle = this.toggle.bind(this);
@@ -55,18 +52,16 @@ class Page extends React.Component {
   }
 
    //modal toggle
-   toggle(uniqueID) {
-	console.log('unique',uniqueID)
-    this.setState(prevState => ({
-      modal: !prevState.modal
-	}));
-
-	let obj = {
-        uniqueID: uniqueID
-      }
-	this.props.likeUsers(obj)
-
-  }
+   	toggle(uniqueID) {
+		console.log('unique',uniqueID)
+		this.setState(prevState => ({
+		modal: !prevState.modal
+		}));
+		let obj = {
+			uniqueID: uniqueID
+		}
+		this.props.likeUsers(obj)
+  	}
 
 	//modal toggle
 	toggle1() {
@@ -76,8 +71,7 @@ class Page extends React.Component {
 	}
  
 
-  likePost = (uniqueID,type) => {	
-	console.log('like uniqueID',uniqueID)
+   likePost = (uniqueID,type) => {
 	let obj = {
 		uniqueID : uniqueID,
 		type : type
@@ -88,7 +82,6 @@ class Page extends React.Component {
   render () {
 	const authUser = this.props.authUser
 	const posts = this.props.posts;
-	const { authUserPhoto } = this.state; 
 	
     return (
       <section className="pad-4000 user-home-section">
@@ -255,12 +248,12 @@ class Page extends React.Component {
 						<div key={post.uniqueId} className="user-home-post-box mb-30 bgwhite box-shadow">
 						<div className="user-home-post-head d-flex align-items-center">
 							<div className="user-home-profile-img">
-							{/* <NavLink to={`/user-profile/` + post.userId}><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></NavLink> */}
-							<NavLink to="#"><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></NavLink>
+							
+							<NavLink to={`/user-profile/` + post.userId}><img src= { post.photo != "" ? API_URL + "/" + post.photo : "/img/noimg.png" } alt="User Profile"/></NavLink>
 							</div>
 							<div className="user-home-profile-name">
-							{/* <NavLink to={`/user-profile/` + post.userId}>{post.username}</NavLink> */}
-							<NavLink to="#">{post.username}</NavLink>
+							
+							<NavLink to={`/user-profile/` + post.userId}>{post.username}</NavLink>
 							</div>
 						</div>
 						<div className="user-home-post-slider">           
@@ -287,7 +280,7 @@ class Page extends React.Component {
 						<Modal isOpen={this.state.modal} toggle={() => this.toggle(post.uniqueId)} className="likeModal">
 							<ModalHeader toggle={() => this.toggle(post.uniqueId)}>Likes</ModalHeader>
 							<ModalBody>	
-							<div  className="likes-popup-list-box">	 
+							<div className="likes-popup-list-box">	 
 							<LikeuserComponent/>
 							</div>
 							</ModalBody>        
@@ -352,15 +345,15 @@ class Page extends React.Component {
 						</div>
 					</div>				
 				</div>
-
 		
 				<div className="user-home-profile-col scrolltofixed">
 					<div className="user-home-profile-box d-flex align-items-center">
 						<div className="user-home-profile-box-img">
-							<a href="#"><img src={authUserPhoto} alt=""/></a>
+							<NavLink to={"/edit-profile"}><img src={ authUser.photo != ""
+	  ? API_URL + "/" + authUser.photo : "/img/noimg.png"} alt=""/></NavLink>
 						</div>
 						<div className="user-home-profile-box-name">
-							<a href="#">{authUser.username}</a>
+							<NavLink to={"/edit-profile"}>{authUser.username}</NavLink>
 						</div>
 					</div>
 

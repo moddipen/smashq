@@ -15,9 +15,11 @@ const paymentClient = new RocketGate.gateway({
 exports.login = (req, res) => {
   const condition = "username = ? "
   const values = [req.body.username]
+  // let sql =
+  //   "SELECT users.id,users.name,users.username,users.email,users.password,users.status,users.remember_token,user_profiles.photo,user_coins.coins,user_profiles.website,user_profiles.motto,user_profiles.description,user_profiles.phone,user_profiles.gender,user_profiles.sas,user_profiles.facebook,user_profiles.instagram,user_profiles.snapchat,user_profiles.twitter,user_profiles.youtube,user_profiles.amazone FROM users left join user_profiles on users.id=user_profiles.user_id left join user_coins on user_coins.user_id = users.id WHERE username = ? limit 1"
 
   let sql =
-    "SELECT users.id,users.name,users.username,users.email,users.password,users.status,users.remember_token,user_profiles.photo,user_coins.coins FROM users left join user_profiles on users.id=user_profiles.user_id left join user_coins on user_coins.user_id = users.id WHERE username = ? limit 1"
+    "SELECT users.id,users.name,users.username,users.email,users.password,users.status,users.remember_token,user_profiles.photo,user_coins.coins,user_profiles.website,user_profiles.motto,user_profiles.description,user_profiles.phone,user_profiles.gender,user_profiles.sas FROM users left join user_profiles on users.id=user_profiles.user_id left join user_coins on user_coins.user_id = users.id WHERE username = ? limit 1"
   My.query(sql, [req.body.username])
     .then(object => {
       if (!object) {

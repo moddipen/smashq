@@ -83,7 +83,7 @@ function login(state, payload) {
       ...state,
       isAuthenticated: true,
       checked: true,
-      initialLoad: false,
+      initialLoad: true,
       authUser: payload,
       userId: payload.id
     }
@@ -92,7 +92,7 @@ function login(state, payload) {
       ...state,
       isAuthenticated: false,
       checked: false,
-      initialLoad: false,
+      initialLoad: true,
       authUser: payload,
       userId: payload.id
     }

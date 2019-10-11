@@ -6,8 +6,6 @@ import {
   LIKEUSERS_LIST_SUCCESS
 } from "./action-types"
 
-import { AUTH_LOGIN_SUCCESS } from "../../auth/store/action-types"
-
 const initialState = {}
 
 const reducer = (state = initialState, { type, payload = null }) => {
@@ -22,7 +20,6 @@ const reducer = (state = initialState, { type, payload = null }) => {
       return getUserProfile(state, payload)
     case LIKEUSERS_LIST_SUCCESS:
       return getusersLike(state, payload)
-
     default:
       return state
   }
@@ -41,12 +38,10 @@ function setFollowStatus(state, payload) {
     if (payload.users.status === "follow") {
       if (state[i].id == payload.users.id) {
         state[i].followUserId = payload.users.id
-        break
       }
     } else {
       if (state[i].id == payload.users.id) {
         state[i].followUserId = null
-        break
       }
     }
   }

@@ -5,7 +5,8 @@ import { NavLink } from "redux-first-router-link";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import MetaTags from 'react-meta-tags';
 import PaymentFormComponent from "../../paymentForm/index";
-
+import AwesomeSlider from 'react-awesome-slider';
+import AwesomeSliderStyles from 'react-awesome-slider/src/styles';
 import { FilePond, registerPlugin } from 'react-filepond';
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
@@ -15,7 +16,6 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 registerPlugin(FilePondPluginImagePreview,FilePondPluginFileEncode,FilePondPluginFileValidateType);
 
 const displayName = "UserProfileForm";
-
 const propTypes = {
   posts:PropTypes.array.isRequired,
   users:PropTypes.object.isRequired,
@@ -206,39 +206,51 @@ const Form = ({ posts,tabs, tabShow, toggle, modal, toggle1, modal1, handleBack,
 						<div className="row">
 									<div className="col-12">
 
-                   {/* {posts.length > 0 ? (
-                   
-                    posts.map(post => {						
+                   { posts.length ? (                  
+                    posts.map(post => {					
                       return (
-                        <div className="profile-post-item">
-                          <a href="#">
-                            <div className="lock-blur-box">
-                              <img src="/img/lock-img.jpg" alt=""/>
-                              <div className="overlay-bg">
-                                <div className="overlay-lock-content">
-                                  <i className="fa fa-lock"></i>
-                                  <div className="ctext">Unlock this post by becoming a patron</div>
-                                  <div className="btn-custom">Join Now</div>
-                                </div>
+                        <div key={post.uniqueId} className="profile-post-item"> 
+                          
+                        { users.followUserId !== null ? 
+                            (<div className="lock-blur-box">
+                              <AwesomeSlider infinite={false} bullets={false} cssModule=  {AwesomeSliderStyles}>
+                              {post.posts.map(item => (
+                              <div key={item.path} data-src={ API_URL + "/" + item.path} />
+                                ))}
+                            </AwesomeSlider>
+                            
+                          </div>)
+                          : 
+                          (<div className="lock-blur-box">
+                            <img src="/img/lock-img.jpg" alt=""/>
+                            <div className="overlay-bg">
+                              <div className="overlay-lock-content">
+                                <i className="fa fa-lock"></i>
+                                <div className="ctext">Unlock this post by becoming a patron</div>
+                                <div className="btn-custom"><NavLink
+                                  to="#"
+                                
+                                  onClick={() =>  followStatus(users.id, "follow", users.subOnFollow)}
+                                >
+                                  Follow
+                                </NavLink></div>
+                                
                               </div>
                             </div>
-                            <div className="lock-img-btm-box">
-                              <div className="text">Chatting with a friend for over an hour</div>
-                              <div className="likes">185 Likes</div>
-                            </div>
-                          </a>
-                        </div>                  
+                          </div>)
+                        }
 
+                          <div className="lock-img-btm-box">                            
+                            <div className="likes">{post.likeCount} Likes</div>
+                          </div>
+                        </div>
                       )
                     })
                   ) : (
                     <div className="no-record">
                     <h3>No Record Found.</h3>
                     </div>
-                  )}  */}
-
-
-										
+                  )}                  										
                   </div>
                   </div>
             </div>

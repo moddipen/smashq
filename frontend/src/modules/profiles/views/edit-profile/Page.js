@@ -16,7 +16,7 @@ class Page extends React.Component {
 
   constructor(props) {
     super(props)
-    const src = "/img/e1.png"
+
     this.validator = new Validator({
       name: "required",
       username: "required|min:6|max:15",
